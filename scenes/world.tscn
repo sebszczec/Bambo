@@ -1,3 +1,16 @@
-[gd_scene format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=3 format=3 uid="uid://3r5m53y3clh3"]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0mn65"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3w0yk"]
+
+[node name="World" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(575, 320)
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+material = SubResource("CanvasItemMaterial_0mn65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_3w0yk")
