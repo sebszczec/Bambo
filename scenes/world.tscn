@@ -1,16 +1,30 @@
-[gd_scene load_steps=3 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=6 format=3 uid="uid://3r5m53y3clh3"]
+
+[ext_resource type="Texture2D" uid="uid://be2351h11qup6" path="res://resources/kenney_particle_pack/window_04.png" id="1_6d8hq"]
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_wpjnt"]
+[ext_resource type="Texture2D" uid="uid://bh23cnn2smugk" path="res://resources/kenney_particle_pack/magic_03.png" id="2_xp2fp"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0mn65"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3w0yk"]
+size = Vector2(15.5564, 15.5564)
 
 [node name="World" type="Node2D"]
 
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(575, 320)
+position = Vector2(576, 324)
+script = ExtResource("1_wpjnt")
 
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
+[node name="MainBody" type="Sprite2D" parent="Player"]
 material = SubResource("CanvasItemMaterial_0mn65")
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_6d8hq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+rotation = 0.785398
 shape = SubResource("RectangleShape2D_3w0yk")
+
+[node name="Satelite" type="Sprite2D" parent="Player"]
+position = Vector2(0, -25)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_xp2fp")
