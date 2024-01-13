@@ -5,6 +5,7 @@ extends CharacterBody2D
 
 @export var PlayerMaxVelocity = 200
 @export var PlayerAcceleration = 10
+@export var TurboFactor = 2
 @export var PlayerFriction = 5
 @export var SateliteRotationSpeed = 5
 @export var SateliteRadius = 25
@@ -13,22 +14,34 @@ extends CharacterBody2D
 var sateliteAngle = 0
 var playerAngle = 0
 var direction = Vector2(0, 0)
+var calculatedMaxVelocity = PlayerMaxVelocity
+var calculatedAcceleration = PlayerAcceleration
 
 func _physics_process(delta):
 	calculatePlayerRotation(delta)
 	calculateSatelitePosition(delta)
 	
+	if Input.is_action_pressed("ui_accelerate"):
+		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
+		calculatedAcceleration = PlayerAcceleration * TurboFactor
+	else:
+		calculatedMaxVelocity = PlayerMaxVelocity
+		calculatedAcceleration = PlayerAcceleration
+	
+	calculateVelocity(delta)
+	
+	move_and_slide()
+	
+	
+func calculateVelocity(delta):
 	direction.x = Input.get_axis("ui_left", "ui_right")
 	direction.y = Input.get_axis("ui_up", "ui_down")
 	
 	if direction.length() == 0:
 		velocity = velocity.move_toward(Vector2(0, 0), PlayerFriction)
 	else:
-		velocity = velocity.move_toward(direction.normalized() * PlayerMaxVelocity, PlayerAcceleration)
-	
-	
-	move_and_slide()
-	
+		velocity = velocity.move_toward(direction.normalized() * calculatedMaxVelocity, calculatedAcceleration)
+
 
 func calculateSatelitePosition(delta):
 	sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
