@@ -35,15 +35,19 @@ func _physics_process(delta):
 func handleZoom():
 	if Input.is_action_just_pressed("ui_zoom"):
 		camera.zoom = Vector2(ZoomFactor, ZoomFactor)
+		return
+		
 	if Input.is_action_just_released("ui_zoom"):
 		camera.zoom = Vector2(1, 1)
 
 
-func calculateAcceleration(): # TODO: consider to change to is_action_just_pressed
-	if Input.is_action_pressed("ui_accelerate"):
+func calculateAcceleration():
+	if Input.is_action_just_pressed("ui_accelerate"):
 		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 		calculatedAcceleration = PlayerAcceleration * TurboFactor
-	else:
+		return
+	
+	if Input.is_action_just_released("ui_accelerate"):
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 
