@@ -20,20 +20,22 @@ var calculatedAcceleration = PlayerAcceleration
 func _physics_process(delta):
 	calculatePlayerRotation(delta)
 	calculateSatelitePosition(delta)
+	calculateAcceleration()
+	calculateVelocity()
 	
+	move_and_slide()
+
+
+func calculateAcceleration():
 	if Input.is_action_pressed("ui_accelerate"):
 		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 		calculatedAcceleration = PlayerAcceleration * TurboFactor
 	else:
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
-	
-	calculateVelocity(delta)
-	
-	move_and_slide()
-	
-	
-func calculateVelocity(delta):
+
+
+func calculateVelocity():
 	direction.x = Input.get_axis("ui_left", "ui_right")
 	direction.y = Input.get_axis("ui_up", "ui_down")
 	
