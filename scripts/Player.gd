@@ -1,15 +1,19 @@
 extends CharacterBody2D
 
 @onready var satelite = $Satelite
+@onready var mainBody = $MainBody
 
 @export var PlayerVelocity = 200
 @export var SateliteRotationSpeed = 5
 @export var SateliteRadius = 25
+@export var PlayerRotationSpeed = 5
 
-var angle = 0
+var sateliteAngle = 0
+var playerAngle = 0
 var direction = Vector2(0, 0)
 
 func _physics_process(delta):
+	calculatePlayerRotation(delta)
 	calculateSatelitePosition(delta)
 	
 	direction.x = Input.get_axis("ui_left", "ui_right")
@@ -21,7 +25,11 @@ func _physics_process(delta):
 	
 
 func calculateSatelitePosition(delta):
-	angle = angle + SateliteRotationSpeed * delta
-	satelite.position.x = SateliteRadius * cos(angle)
-	satelite.position.y = SateliteRadius * sin(angle)
+	sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
+	satelite.position.x = SateliteRadius * cos(sateliteAngle)
+	satelite.position.y = SateliteRadius * sin(sateliteAngle)
 	
+
+func calculatePlayerRotation(delta):
+	playerAngle = playerAngle + PlayerRotationSpeed * delta
+	mainBody.rotation = -playerAngle
