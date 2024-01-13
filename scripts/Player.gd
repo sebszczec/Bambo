@@ -2,7 +2,9 @@ extends CharacterBody2D
 
 @onready var satelite = $Satelite
 @onready var mainBody = $MainBody
+@onready var camera = $Camera2D
 
+@export_category("Player")
 @export var PlayerMaxVelocity = 200
 @export var PlayerAcceleration = 10
 @export var TurboFactor = 2
@@ -11,6 +13,9 @@ extends CharacterBody2D
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
 
+@export_category("Camera")
+@export var ZoomFactor = 0.2
+
 var sateliteAngle = 0
 var playerAngle = 0
 var direction = Vector2(0, 0)
@@ -18,6 +23,7 @@ var calculatedMaxVelocity = PlayerMaxVelocity
 var calculatedAcceleration = PlayerAcceleration
 
 func _physics_process(delta):
+	handleZoom()	
 	calculatePlayerRotation(delta)
 	calculateSatelitePosition(delta)
 	calculateAcceleration()
@@ -26,7 +32,14 @@ func _physics_process(delta):
 	move_and_slide()
 
 
-func calculateAcceleration():
+func handleZoom():
+	if Input.is_action_just_pressed("ui_zoom"):
+		camera.zoom = Vector2(ZoomFactor, ZoomFactor)
+	if Input.is_action_just_released("ui_zoom"):
+		camera.zoom = Vector2(1, 1)
+
+
+func calculateAcceleration(): # TODO: consider to change to is_action_just_pressed
 	if Input.is_action_pressed("ui_accelerate"):
 		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 		calculatedAcceleration = PlayerAcceleration * TurboFactor
