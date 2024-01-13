@@ -143,11 +143,13 @@ sources/0 = SubResource("TileSetAtlasSource_3aoy2")
 [node name="World" type="Node2D"]
 
 [node name="Player" type="CharacterBody2D" parent="."]
+z_index = 1
 position = Vector2(576, 324)
 collision_mask = 2
 script = ExtResource("1_wpjnt")
 
 [node name="MainBody" type="Sprite2D" parent="Player"]
+modulate = Color(0, 0, 1, 1)
 material = SubResource("CanvasItemMaterial_0mn65")
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_6d8hq")
@@ -157,6 +159,7 @@ rotation = 0.785398
 shape = SubResource("CircleShape2D_ohx2n")
 
 [node name="Satelite" type="Sprite2D" parent="Player"]
+modulate = Color(1, 1, 0, 1)
 position = Vector2(0, -25)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("2_xp2fp")
