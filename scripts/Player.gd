@@ -71,3 +71,7 @@ func calculateSatelitePosition(delta):
 func calculatePlayerRotation(delta):
 	playerAngle = playerAngle + PlayerRotationSpeed * delta
 	mainBody.rotation = -playerAngle
+
+
+func getShootingVector():
+	return satelite.position
