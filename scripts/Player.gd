@@ -21,6 +21,8 @@ var playerAngle = 0
 var direction = Vector2(0, 0)
 var calculatedMaxVelocity = PlayerMaxVelocity
 var calculatedAcceleration = PlayerAcceleration
+var aim_vector = Vector2(0, 0)
+var aim_angle = 0
 
 func _physics_process(delta):
 	handleZoom()	
@@ -63,9 +65,15 @@ func calculateVelocity():
 
 
 func calculateSatelitePosition(delta):
-	sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
-	satelite.position.x = SateliteRadius * cos(sateliteAngle)
-	satelite.position.y = SateliteRadius * sin(sateliteAngle)
+	#sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
+	#satelite.position.x = SateliteRadius * cos(sateliteAngle)
+	#satelite.position.y = SateliteRadius * sin(sateliteAngle)
+	
+	aim_vector.x = Input.get_axis("ui_aim_left", "ui_aim_right")
+	aim_vector.y = Input.get_axis("ui_aim_up", "ui_aim_down")
+	aim_angle = atan2(aim_vector.y, aim_vector.x)
+	satelite.position.x = SateliteRadius * cos(aim_angle)
+	satelite.position.y = SateliteRadius * sin(aim_angle)
 	
 
 func calculatePlayerRotation(delta):

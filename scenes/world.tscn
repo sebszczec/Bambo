@@ -140,7 +140,7 @@ sources/0 = SubResource("TileSetAtlasSource_3aoy2")
 script = ExtResource("1_af6i4")
 
 [node name="ShootingTimer" type="Timer" parent="InputHandler"]
-wait_time = 0.3
+wait_time = 0.1
 one_shot = true
 
 [node name="Player" parent="." instance=ExtResource("1_6neka")]
