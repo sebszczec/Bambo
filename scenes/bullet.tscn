@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b527126t4byjy" path="res://resources/kenney_particle_pack/star_06.png" id="2_qlikn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6l7qy"]
+radius = 3.0
 
 [node name="Bullet" type="StaticBody2D"]
 position = Vector2(505, 270)

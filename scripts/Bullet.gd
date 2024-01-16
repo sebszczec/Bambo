@@ -11,6 +11,7 @@ func _ready():
 	lifeTimer.start()
 
 
+@warning_ignore("unused_parameter")
 func _physics_process(delta):
 	velocity = velocity.normalized() * Speed
 	var collision = move_and_collide(velocity)
