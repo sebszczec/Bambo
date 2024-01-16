@@ -73,10 +73,14 @@ func calculateSatelitePosition(delta):
 	aim_angle = atan2(aim_vector.y, aim_vector.x)
 	
 	if (aim_vector.x == 0 and aim_vector.y == 0):
+		sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
+		satelite.position.x = SateliteRadius * cos(sateliteAngle)
+		satelite.position.y = SateliteRadius * sin(sateliteAngle)
 		return
 	
 	satelite.position.x = SateliteRadius * cos(aim_angle)
 	satelite.position.y = SateliteRadius * sin(aim_angle)
+	sateliteAngle = aim_angle
 	
 
 func calculatePlayerRotation(delta):
