@@ -18,6 +18,7 @@ extends CharacterBody2D
 
 var sateliteAngle = 0
 var playerAngle = 0
+var playerRotationDirection = 1
 var direction = Vector2(0, 0)
 var calculatedMaxVelocity = PlayerMaxVelocity
 var calculatedAcceleration = PlayerAcceleration
@@ -47,11 +48,13 @@ func calculateAcceleration():
 	if Input.is_action_just_pressed("ui_accelerate"):
 		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 		calculatedAcceleration = PlayerAcceleration * TurboFactor
+		playerRotationDirection = -2
 		return
 	
 	if Input.is_action_just_released("ui_accelerate"):
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
+		playerRotationDirection = 1
 
 
 func calculateVelocity():
@@ -65,19 +68,19 @@ func calculateVelocity():
 
 
 func calculateSatelitePosition(delta):
-	#sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
-	#satelite.position.x = SateliteRadius * cos(sateliteAngle)
-	#satelite.position.y = SateliteRadius * sin(sateliteAngle)
-	
 	aim_vector.x = Input.get_axis("ui_aim_left", "ui_aim_right")
 	aim_vector.y = Input.get_axis("ui_aim_up", "ui_aim_down")
 	aim_angle = atan2(aim_vector.y, aim_vector.x)
+	
+	if (aim_vector.x == 0 and aim_vector.y == 0):
+		return
+	
 	satelite.position.x = SateliteRadius * cos(aim_angle)
 	satelite.position.y = SateliteRadius * sin(aim_angle)
 	
 
 func calculatePlayerRotation(delta):
-	playerAngle = playerAngle + PlayerRotationSpeed * delta
+	playerAngle = playerAngle + PlayerRotationSpeed * playerRotationDirection * delta 
 	mainBody.rotation = -playerAngle
 
 
