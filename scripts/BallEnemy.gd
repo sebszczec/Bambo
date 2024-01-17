@@ -27,11 +27,11 @@ func _physics_process(delta):
 	
 	collisionShape.shape.radius = collisionShape.shape.radius + collisionShapeResizeSpeed * resizeFactor * delta
 	
-	velocity = velocity.move_toward(velocity.normalized() * Speed, Acceleration)
-	var collision = move_and_collide(velocity)
-	
-	if collision != null:
-		velocity = velocity.bounce(collision.get_normal())
+	#velocity = velocity.move_toward(velocity.normalized() * Speed, Acceleration)
+	#var collision = move_and_collide(velocity)
+	#
+	#if collision != null:
+		#velocity = velocity.bounce(collision.get_normal())
 
 
 func _on_resize_timer_timeout():

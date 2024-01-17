@@ -20,6 +20,6 @@ scale = Vector2(0.05, 0.05)
 texture = ExtResource("2_qlikn")
 
 [node name="LifeTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 0.5
 
 [connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]
