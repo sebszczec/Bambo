@@ -12,7 +12,7 @@ func _ready():
 	player = owner.find_child("Player")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if Input.is_action_pressed("ui_shoot"):
 		if canShoot:
 			canShoot = false

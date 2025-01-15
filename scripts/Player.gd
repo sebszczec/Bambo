@@ -3,6 +3,7 @@ extends CharacterBody2D
 @onready var satelite = $Satelite
 @onready var mainBody = $MainBody
 @onready var camera = $Camera2D
+@onready var life_bar = $LifeBar
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -12,6 +13,7 @@ extends CharacterBody2D
 @export var SateliteRotationSpeed = 5
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
+@export var ShowLifeBar = true
 
 @export_category("Camera")
 @export var ZoomFactor = 0.2
@@ -24,6 +26,11 @@ var calculatedMaxVelocity = PlayerMaxVelocity
 var calculatedAcceleration = PlayerAcceleration
 var aim_vector = Vector2(0, 0)
 var aim_angle = 0
+
+var timers = {}
+
+func _ready() -> void:
+	life_bar.visible = ShowLifeBar
 
 func _physics_process(delta):
 	handleZoom()	
@@ -90,3 +97,39 @@ func calculatePlayerRotation(delta):
 
 func getShootingVector():
 	return satelite.position
+
+
+func _on_life_box_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Enemy"):
+		var enemy = area.get_parent()
+		var id = enemy.get_instance_id()
+		
+		life_bar.value = life_bar.value - enemy.Damage
+		if life_bar.value == 0:
+			pass # handle end of the game
+		
+		if enemy.IsDamageOverTime == true:
+			var timer = Timer.new()
+			timer.one_shot = false
+			timer.wait_time = enemy.DamageTickTime
+			timer.connect("timeout", _on_take_damage_timeout.bind(enemy))
+			add_child(timer)
+			timer.start()
+			
+			timers[id] = timer
+
+
+func _on_take_damage_timeout(enemy):
+	life_bar.value = life_bar.value - enemy.Damage
+	
+	if life_bar.value == 0:
+		pass # handle end of the game
+
+
+func _on_life_box_area_exited(area: Area2D) -> void:
+	if area.is_in_group("Enemy"):
+		var enemy = area.get_parent()
+		var id = enemy.get_instance_id()
+		
+		if timers.has(id):
+			timers[id].stop()

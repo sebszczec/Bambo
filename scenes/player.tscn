@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cl0ta7xxx5arv"]
+[gd_scene load_steps=7 format=3 uid="uid://cl0ta7xxx5arv"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_yf2p4"]
 [ext_resource type="Texture2D" uid="uid://be2351h11qup6" path="res://resources/kenney_particle_pack/window_04.png" id="2_fn6ev"]
@@ -8,6 +8,9 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ohx2n"]
 radius = 11.3137
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_or0rj"]
+radius = 11.0454
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 1
@@ -32,3 +35,21 @@ scale = Vector2(0.05, 0.05)
 texture = ExtResource("3_raa0x")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="LifeBar" type="ProgressBar" parent="."]
+modulate = Color(1, 0, 0, 1)
+offset_left = -26.0
+offset_top = -19.0
+offset_right = 26.0
+offset_bottom = -13.0
+step = -1.0
+value = 100.0
+show_percentage = false
+
+[node name="LifeBox" type="Area2D" parent="." groups=["player"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LifeBox"]
+shape = SubResource("CircleShape2D_or0rj")
+
+[connection signal="area_entered" from="LifeBox" to="." method="_on_life_box_area_entered"]
+[connection signal="area_exited" from="LifeBox" to="." method="_on_life_box_area_exited"]
