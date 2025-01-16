@@ -6,6 +6,8 @@ extends StaticBody2D
 
 var velocity = Vector2(0, 0)
 
+signal freeing
+
 
 func _ready():
 	lifeTimer.start()
@@ -21,4 +23,5 @@ func _physics_process(delta):
 
 
 func _on_life_timer_timeout():
+	freeing.emit()
 	queue_free()

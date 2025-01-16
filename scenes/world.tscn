@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=8 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" path="res://scripts/InputHandler.gd" id="1_af6i4"]
 [ext_resource type="Script" path="res://scripts/game_logic.gd" id="1_ib5o5"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_twfab"]
+[ext_resource type="Script" path="res://scripts/information_box.gd" id="2_0s2sw"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(2939, 1364, -1598, 1365.99, -1598, -1616, 2939, -1616.99)
@@ -14,24 +15,30 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(2949, 1374, -1608, 1376
 [node name="World" type="Node2D"]
 script = ExtResource("1_twfab")
 
-[node name="Control" type="Control" parent="."]
+[node name="InformationBox" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("2_0s2sw")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Control"]
+[node name="CanvasLayer" type="CanvasLayer" parent="InformationBox"]
 
-[node name="BoxContainer" type="BoxContainer" parent="Control/CanvasLayer"]
+[node name="BoxContainer" type="BoxContainer" parent="InformationBox/CanvasLayer"]
 offset_right = 40.0
 offset_bottom = 40.0
 vertical = true
 
-[node name="FpsCounter" type="Label" parent="Control/CanvasLayer/BoxContainer"]
+[node name="FpsCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
 layout_mode = 2
 
-[node name="EnemyCounter" type="Label" parent="Control/CanvasLayer/BoxContainer"]
+[node name="EnemyCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
 layout_mode = 2
+text = "Enemies: 0"
+
+[node name="BulletCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
+layout_mode = 2
+text = "Bullets: 0"
 
 [node name="GameLogic" type="Node" parent="."]
 script = ExtResource("1_ib5o5")

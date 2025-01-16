@@ -5,7 +5,7 @@ extends Node
 var enemy_count = 0
 var world = null
 var player = null
-var enemy_counter_label = null
+var informationBox = null
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 
@@ -15,7 +15,7 @@ var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 func _ready() -> void:
 	world = get_parent()
 	player = world.find_child("Player")
-	enemy_counter_label = world.find_child("EnemyCounter")
+	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
 
 
@@ -44,5 +44,5 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	world.add_child(enemy)
 	
 	enemy_count = enemy_count + 1
-	enemy_counter_label.text = "Enemies: " + str(enemy_count)
+	informationBox.increaseEnemyCount()
 	
