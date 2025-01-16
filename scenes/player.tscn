@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cl0ta7xxx5arv"]
+[gd_scene load_steps=8 format=3 uid="uid://cl0ta7xxx5arv"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_yf2p4"]
 [ext_resource type="Texture2D" uid="uid://be2351h11qup6" path="res://resources/kenney_particle_pack/window_04.png" id="2_fn6ev"]
 [ext_resource type="Texture2D" uid="uid://bh23cnn2smugk" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
+[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_ajyqe"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0mn65"]
 
@@ -36,15 +37,7 @@ texture = ExtResource("3_raa0x")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="LifeBar" type="ProgressBar" parent="."]
-modulate = Color(1, 0, 0, 1)
-offset_left = -26.0
-offset_top = -19.0
-offset_right = 26.0
-offset_bottom = -13.0
-step = -1.0
-value = 100.0
-show_percentage = false
+[node name="LifeBar" parent="." instance=ExtResource("4_ajyqe")]
 
 [node name="LifeBox" type="Area2D" parent="." groups=["player"]]
 

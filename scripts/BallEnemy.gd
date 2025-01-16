@@ -4,14 +4,17 @@ extends CharacterBody2D
 @onready var resizeTimer = $ResizeTimer
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionshape = $HitBox/HitBoxCollisionShape
+@onready var lifeBar = $LifeBar
 
 @export var ResizeSpeed = 0.05
 @export_category("Movemement")
-@export var Speed = 2
+@export var Speed = 3000
 @export var Acceleration = 0.1
 @export var Damage = 10
 @export var IsDamageOverTime = true
 @export var DamageTickTime = 0.5
+@export var ShowLifeBar = true
+@export var Life = 100
 
 @onready var agent = $NavigationAgent2D
 
@@ -22,6 +25,8 @@ var player = null
 func _ready():	
 	set_physics_process(false)
 	call_deferred("skip_frame")
+	lifeBar.setColor(Color(0, 255, 0))
+	lifeBar.visible = ShowLifeBar
 	
 	resizeTimer.start()
 
@@ -51,7 +56,7 @@ func _physics_process(delta):
 		next_position = agent.get_next_path_position()
 	
 	var direction = global_position.direction_to(next_position)
-	var vel = direction * 3000 * delta
+	var vel = direction * Speed * delta
 	
 	agent.velocity = vel
 		
@@ -70,3 +75,22 @@ func _on_navigation_agent_2d_navigation_finished() -> void:
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = velocity.move_toward(safe_velocity, 100)
 	move_and_slide()
+
+
+func _on_hit_box_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Bullet"):
+		var bullet = area.get_parent()
+		
+		if handleDamage(bullet.Damage) == false:
+			queue_free()
+			pass # handle enemy killed
+
+
+func handleDamage(damage):
+	Life = Life - damage
+	lifeBar.setValue(Life)
+	
+	if Life == 0:
+		return false
+	
+	return true

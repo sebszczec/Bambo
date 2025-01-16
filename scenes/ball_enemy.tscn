@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ca6sxsibqlyef"]
+[gd_scene load_steps=6 format=3 uid="uid://ca6sxsibqlyef"]
 
 [ext_resource type="Script" path="res://scripts/BallEnemy.gd" id="1_lo5sg"]
 [ext_resource type="Texture2D" uid="uid://tju24jdhjg17" path="res://resources/kenney_particle_pack/circle_02.png" id="2_r5nxe"]
+[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_o04pc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
 radius = 7.0
@@ -26,6 +27,10 @@ texture = ExtResource("2_r5nxe")
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 avoidance_enabled = true
 
+[node name="LifeBar" parent="." instance=ExtResource("3_o04pc")]
+offset_top = -25.0
+offset_bottom = -19.0
+
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
 
 [node name="HitBoxCollisionShape" type="CollisionShape2D" parent="HitBox"]
@@ -34,3 +39,4 @@ shape = SubResource("CircleShape2D_o5b0c")
 [connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
 [connection signal="navigation_finished" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_navigation_finished"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]

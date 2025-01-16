@@ -1,6 +1,7 @@
 extends StaticBody2D
 
 @export var Speed = 20
+@export var Damage = 20
 
 @onready var lifeTimer = $LifeTimer
 
