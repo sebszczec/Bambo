@@ -1,5 +1,7 @@
 extends Control
 
+@onready var resumeButton = $GridContainer/ResumeButton
+
 var isPaused = false
 
 func _ready() -> void:
@@ -9,6 +11,9 @@ func setPause(value):
 	isPaused = value
 	get_tree().paused = isPaused
 	visible = isPaused
+	
+	if isPaused:
+		resumeButton.grab_focus()
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ui_pause"):
