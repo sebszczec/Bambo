@@ -28,7 +28,7 @@ avoidance_enabled = true
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+[node name="HitBoxCollisionShape" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource("CircleShape2D_o5b0c")
 
 [connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]

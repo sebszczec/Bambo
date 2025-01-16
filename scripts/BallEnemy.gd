@@ -3,6 +3,7 @@ extends CharacterBody2D
 @onready var sprite = $Sprite2D
 @onready var resizeTimer = $ResizeTimer
 @onready var collisionShape = $CollisionShape2D
+@onready var hitBoxCollisionshape = $HitBox/HitBoxCollisionShape
 
 @export var ResizeSpeed = 0.05
 @export_category("Movemement")
@@ -15,7 +16,6 @@ extends CharacterBody2D
 @onready var agent = $NavigationAgent2D
 
 var resizeFactor = 1
-var collisionShapeResizeSpeed = 0
 
 var player = null
 
@@ -24,7 +24,6 @@ func _ready():
 	call_deferred("skip_frame")
 	
 	resizeTimer.start()
-	collisionShapeResizeSpeed = 40 * ResizeSpeed
 
 	player = get_node("/root/World/Player")
 	
@@ -38,7 +37,11 @@ func skip_frame():
 func _physics_process(delta):
 	sprite.scale.x = sprite.scale.x + ResizeSpeed * resizeFactor * delta
 	sprite.scale.y = sprite.scale.x
-	collisionShape.shape.radius = collisionShape.shape.radius + collisionShapeResizeSpeed * resizeFactor * delta
+	collisionShape.scale.x = collisionShape.scale.x + ResizeSpeed * resizeFactor * delta * 5
+	collisionShape.scale.y = collisionShape.scale.x
+	hitBoxCollisionshape.scale.x = hitBoxCollisionshape.scale.x + ResizeSpeed * resizeFactor * delta * 5
+	hitBoxCollisionshape.scale.y = hitBoxCollisionshape.scale.x
+	
 	
 	var dist_to_player = player.position - global_position;
 	var next_position = Vector2()
