@@ -18,6 +18,8 @@ extends CharacterBody2D
 
 @onready var agent = $NavigationAgent2D
 
+signal killed
+
 var resizeFactor = 1
 
 var player = null
@@ -82,6 +84,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		var bullet = area.get_parent()
 		
 		if handleDamage(bullet.Damage) == false:
+			killed.emit()
 			queue_free()
 			pass # handle enemy killed
 

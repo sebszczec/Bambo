@@ -29,6 +29,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 		return
 	
 	var enemy = ball_enemy_scene.instantiate()
+	enemy.connect("killed", _on_enemy_killed)
 	
 	var left_or_right = -1
 	if randi_range(0, 1) == 1:
@@ -46,3 +47,6 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
 	
+func _on_enemy_killed():
+	enemy_count = enemy_count - 1
+	informationBox.decreaseEnemyCount()
