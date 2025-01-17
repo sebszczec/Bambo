@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+var floatingTextScene = preload("res://scenes/floating_text.tscn")
+
 @onready var satelite = $Satelite
 @onready var mainBody = $MainBody
 @onready var camera = $Camera2D
@@ -128,6 +130,10 @@ func _on_take_damage_timeout(enemy):
 
 
 func handleDamage(damage):
+	var damageText = floatingTextScene.instantiate()
+	damageText.Amount = damage
+	add_child(damageText)
+	
 	Life = Life - damage
 	lifeBar.setValue(Life)
 	

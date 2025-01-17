@@ -12,6 +12,7 @@ signal freeing
 
 func _ready():
 	lifeTimer.start()
+	Damage = randi_range(10, 20)
 
 
 @warning_ignore("unused_parameter")

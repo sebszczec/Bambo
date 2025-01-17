@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+var floatingTextScene = preload("res://scenes/floating_text.tscn")
+
 @onready var sprite = $Sprite2D
 @onready var resizeTimer = $ResizeTimer
 @onready var collisionShape = $CollisionShape2D
@@ -90,10 +92,14 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 
 func handleDamage(damage):
+	var damageText = floatingTextScene.instantiate()
+	damageText.Amount = damage
+	add_child(damageText)
+		
 	Life = Life - damage
 	lifeBar.setValue(Life)
 	
-	if Life == 0:
+	if Life <= 0:
 		return false
 	
 	return true
