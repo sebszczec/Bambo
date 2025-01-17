@@ -15,7 +15,6 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var SateliteRotationSpeed = 5
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
-@export var ShowLifeBar = true
 @export var Life = 100
 
 @export_category("Camera")
@@ -29,14 +28,19 @@ var calculatedMaxVelocity = PlayerMaxVelocity
 var calculatedAcceleration = PlayerAcceleration
 var aim_vector = Vector2(0, 0)
 var aim_angle = 0
+var showLifeBar = true
+var showDamage = true
 
 var timers = {}
 
 func _ready() -> void:
 	lifeBar.setColor(Color(255, 0, 0))
 	
+	var visualSettings = ConfigFIleHandler.load_visuals()
+	showLifeBar = visualSettings["show_player_lifebar"]
+	showDamage = visualSettings["show_damage_taken"]
 	lifeBar.setMaxValue(Life)
-	lifeBar.visible = ShowLifeBar
+	lifeBar.visible = showLifeBar
 
 func _physics_process(delta):
 	handleZoom()	
@@ -130,9 +134,10 @@ func _on_take_damage_timeout(enemy):
 
 
 func handleDamage(damage):
-	var damageText = floatingTextScene.instantiate()
-	damageText.Amount = damage
-	add_child(damageText)
+	if showDamage:
+		var damageText = floatingTextScene.instantiate()
+		damageText.Amount = damage
+		add_child(damageText)
 	
 	Life = Life - damage
 	lifeBar.setValue(Life)

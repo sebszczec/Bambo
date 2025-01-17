@@ -15,7 +15,6 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var Damage = 10
 @export var IsDamageOverTime = true
 @export var DamageTickTime = 0.5
-@export var ShowLifeBar = true
 @export var Life = 100
 
 @onready var agent = $NavigationAgent2D
@@ -23,14 +22,20 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 signal killed
 
 var resizeFactor = 1
+var showLifeBar = true
+var showDamage = true
 
 var player = null
 
 func _ready():	
 	set_physics_process(false)
 	call_deferred("skip_frame")
+	
+	var visualSettings = ConfigFIleHandler.load_visuals()
+	showLifeBar = visualSettings["show_enemies_lifebar"]
+	showDamage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color(0, 255, 0))
-	lifeBar.visible = ShowLifeBar
+	lifeBar.visible = showLifeBar
 	
 	resizeTimer.start()
 
@@ -92,9 +97,10 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 
 func handleDamage(damage):
-	var damageText = floatingTextScene.instantiate()
-	damageText.Amount = damage
-	add_child(damageText)
+	if showDamage:
+		var damageText = floatingTextScene.instantiate()
+		damageText.Amount = damage
+		add_child(damageText)
 		
 	Life = Life - damage
 	lifeBar.setValue(Life)

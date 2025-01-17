@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/image="res://resources/bruxa logo.png"
 config/icon="res://icon.svg"
 
+[autoload]
+
+ConfigFIleHandler="*res://singletons/ConfigFileHandler.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"

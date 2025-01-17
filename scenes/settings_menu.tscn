@@ -83,4 +83,9 @@ layout_mode = 2
 layout_mode = 2
 text = "Back"
 
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowFpsCB" to="." method="_on_show_fps_cb_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowPlayerLifebarCB" to="." method="_on_show_player_lifebar_cb_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowEnemiesLifebarCB" to="." method="_on_show_enemies_lifebar_cb_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowDamageTakenCB" to="." method="_on_show_damage_taken_cb_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowDamageGivenCB" to="." method="_on_show_damage_given_cb_toggled"]
 [connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]
