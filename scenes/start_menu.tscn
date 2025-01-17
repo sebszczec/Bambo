@@ -38,7 +38,7 @@ theme_override_constants/v_separation = 8
 [node name="NewGame" type="Button" parent="GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "New game"
+text = " New game "
 
 [node name="Settings" type="Button" parent="GridContainer"]
 layout_mode = 2
