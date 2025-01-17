@@ -8,6 +8,7 @@ extends StaticBody2D
 var velocity = Vector2(0, 0)
 
 signal freeing
+var isSetToFree = false
 
 
 func _ready():
@@ -24,6 +25,10 @@ func _physics_process(delta):
 		velocity = velocity.bounce(collision.get_normal())
 
 func dispose():
+	if !isSetToFree:
+		isSetToFree = true
+		return
+		
 	freeing.emit()
 	queue_free()
 
