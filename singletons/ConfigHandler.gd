@@ -11,6 +11,8 @@ func _ready() -> void:
 		config.set_value("Visuals", "show_enemies_lifebar", true)
 		config.set_value("Visuals", "show_damage_taken", true)
 		config.set_value("Visuals", "show_damage_given", true)
+		config.set_value("Visuals", "show_bullets_count", true)
+		config.set_value("Visuals", "show_enemies_count", true)
 		
 		config.save(SETTINGS_FILE_PATH)
 	else:

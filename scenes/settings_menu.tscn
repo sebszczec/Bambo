@@ -44,6 +44,14 @@ layout_mode = 2
 layout_mode = 2
 text = "Show FPS"
 
+[node name="ShowBulletsCountLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+layout_mode = 2
+text = "Show bullets count"
+
+[node name="ShowEnemiesCountLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+layout_mode = 2
+text = "Show enemies count"
+
 [node name="ShowPlayerLifebarLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show player lifebar"
@@ -64,28 +72,36 @@ text = "Show damage given"
 [node name="Checks" type="VBoxContainer" parent="GridContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="ShowFpsCB" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="Fps" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="ShowPlayerLifebarCB" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="PlayerLifeBar" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="ShowEnemiesLifebarCB" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="EnemyLifeBar" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="ShowDamageTakenCB" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="PlayerDamage" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="ShowDamageGivenCB" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="EnemyDamage" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+layout_mode = 2
+
+[node name="BulletsCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+layout_mode = 2
+
+[node name="EnemiesCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
 [node name="BackButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Back"
 
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowFpsCB" to="." method="_on_show_fps_cb_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowPlayerLifebarCB" to="." method="_on_show_player_lifebar_cb_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowEnemiesLifebarCB" to="." method="_on_show_enemies_lifebar_cb_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowDamageTakenCB" to="." method="_on_show_damage_taken_cb_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/ShowDamageGivenCB" to="." method="_on_show_damage_given_cb_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/PlayerLifeBar" to="." method="_on_player_life_bar_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemyLifeBar" to="." method="_on_enemy_life_bar_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/PlayerDamage" to="." method="_on_player_damage_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/BulletsCount" to="." method="_on_bullets_count_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemiesCount" to="." method="_on_enemies_count_toggled"]
 [connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]

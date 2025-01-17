@@ -36,7 +36,7 @@ var timers = {}
 func _ready() -> void:
 	lifeBar.setColor(Color(255, 0, 0))
 	
-	var visualSettings = ConfigFIleHandler.load_visuals()
+	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_player_lifebar"]
 	showDamage = visualSettings["show_damage_taken"]
 	lifeBar.setMaxValue(Life)

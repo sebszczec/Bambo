@@ -31,7 +31,7 @@ func _ready():
 	set_physics_process(false)
 	call_deferred("skip_frame")
 	
-	var visualSettings = ConfigFIleHandler.load_visuals()
+	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_enemies_lifebar"]
 	showDamage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color(0, 255, 0))
