@@ -9,12 +9,51 @@
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
-vertices = PackedVector2Array(2939, 1364, -1598, 1365.99, -1598, -1616, 2939, -1616.99)
+vertices = PackedVector2Array(2940, 1658, -1599.99, 1658, -1598, -1616, 2939, -1616.99)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(2949, 1374, -1608, 1376, -1608, -1626, 2949, -1627)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(2950, 1668, -1610, 1668, -1608, -1626, 2949, -1627)])
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_twfab")
+
+[node name="GUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_group_ = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="GUI"]
+
+[node name="Panel" type="Panel" parent="GUI/CanvasLayer"]
+offset_left = 3.0
+offset_top = 971.0
+offset_right = 405.0
+offset_bottom = 1076.0
+
+[node name="Label" type="Label" parent="GUI/CanvasLayer/Panel"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 45.0
+offset_bottom = 28.0
+text = "Life:
+"
+
+[node name="Label2" type="Label" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 37.0
+offset_right = 60.0
+offset_bottom = 86.0
+text = "Thrust:"
+
+[node name="Label3" type="Label" parent="GUI/CanvasLayer/Panel"]
+offset_left = 5.0
+offset_top = 69.0
+offset_right = 57.0
+offset_bottom = 92.0
+text = "Shield:
+"
 
 [node name="InformationBox" type="Control" parent="."]
 layout_mode = 3
@@ -54,16 +93,16 @@ wait_time = 0.1
 one_shot = true
 
 [node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -1609.0
-offset_top = -2038.0
-offset_right = 2947.0
-offset_bottom = 962.0
+offset_left = -1600.0
+offset_top = -1752.0
+offset_right = 2956.0
+offset_bottom = 1248.0
 texture = ExtResource("1_2wts2")
 
 [node name="Player" parent="." instance=ExtResource("1_6neka")]
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-position = Vector2(-2, -408)
+position = Vector2(2, -388)
 navigation_polygon = SubResource("NavigationPolygon_y1cda")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
