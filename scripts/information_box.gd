@@ -16,6 +16,8 @@ func _ready() -> void:
 	var visualSettings = ConfigHandler.load_visuals()
 	
 	showFps = visualSettings["show_fps"]
+	showEnemyCount = visualSettings["show_enemies_count"]
+	showBulletCount = visualSettings["show_bullets_count"]
 	
 	fps_counter.visible = showFps
 	enemy_counter.visible = showEnemyCount
