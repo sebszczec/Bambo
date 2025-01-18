@@ -75,6 +75,12 @@ layout_mode = 2
 [node name="Fps" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
+[node name="BulletsCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+layout_mode = 2
+
+[node name="EnemiesCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+layout_mode = 2
+
 [node name="PlayerLifeBar" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
@@ -87,21 +93,15 @@ layout_mode = 2
 [node name="EnemyDamage" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="BulletsCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="EnemiesCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
-layout_mode = 2
-
 [node name="BackButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 text = "Back"
 
 [connection signal="toggled" from="GridContainer/HBoxContainer/Checks/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/BulletsCount" to="." method="_on_bullets_count_toggled"]
+[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemiesCount" to="." method="_on_enemies_count_toggled"]
 [connection signal="toggled" from="GridContainer/HBoxContainer/Checks/PlayerLifeBar" to="." method="_on_player_life_bar_toggled"]
 [connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemyLifeBar" to="." method="_on_enemy_life_bar_toggled"]
 [connection signal="toggled" from="GridContainer/HBoxContainer/Checks/PlayerDamage" to="." method="_on_player_damage_toggled"]
 [connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/BulletsCount" to="." method="_on_bullets_count_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemiesCount" to="." method="_on_enemies_count_toggled"]
 [connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]
