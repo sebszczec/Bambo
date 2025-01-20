@@ -33,6 +33,8 @@ var showDamage = true
 
 var timers = {}
 
+signal damage_taken(lifeLeft: int)
+
 func _ready() -> void:
 	lifeBar.setColor(Color(255, 0, 0))
 	
@@ -141,6 +143,8 @@ func handleDamage(damage):
 	
 	Life = Life - damage
 	lifeBar.setValue(Life)
+	
+	damage_taken.emit(Life)
 	
 	if Life == 0:
 		return false

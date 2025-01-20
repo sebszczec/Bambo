@@ -35,12 +35,8 @@ offset_top = 971.0
 offset_right = 405.0
 offset_bottom = 1076.0
 
-<<<<<<< HEAD
 [node name="LifeLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
 layout_mode = 0
-=======
-[node name="Label" type="Label" parent="GUI/CanvasLayer/Panel"]
->>>>>>> 322c56b78032ee8e0af8efc6adc8888f44529a8a
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 45.0
@@ -48,26 +44,16 @@ offset_bottom = 28.0
 text = "Life:
 "
 
-<<<<<<< HEAD
 [node name="AfterburnerLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
-=======
-[node name="Label2" type="Label" parent="GUI/CanvasLayer/Panel"]
->>>>>>> 322c56b78032ee8e0af8efc6adc8888f44529a8a
 layout_mode = 0
 offset_left = 5.0
 offset_top = 37.0
 offset_right = 60.0
 offset_bottom = 86.0
-<<<<<<< HEAD
 text = "Afterburner:"
 
 [node name="ShieldLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
 layout_mode = 0
-=======
-text = "Thrust:"
-
-[node name="Label3" type="Label" parent="GUI/CanvasLayer/Panel"]
->>>>>>> 322c56b78032ee8e0af8efc6adc8888f44529a8a
 offset_left = 5.0
 offset_top = 69.0
 offset_right = 57.0
@@ -75,7 +61,6 @@ offset_bottom = 92.0
 text = "Shield:
 "
 
-<<<<<<< HEAD
 [node name="LifeBar" type="TextureProgressBar" parent="GUI/CanvasLayer/Panel"]
 layout_mode = 0
 offset_left = 132.0
@@ -105,8 +90,6 @@ offset_bottom = 113.0
 texture_under = ExtResource("2_r3oad")
 texture_progress = ExtResource("5_mptyy")
 
-=======
->>>>>>> 322c56b78032ee8e0af8efc6adc8888f44529a8a
 [node name="InformationBox" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -154,11 +137,7 @@ texture = ExtResource("1_2wts2")
 [node name="Player" parent="." instance=ExtResource("1_6neka")]
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-<<<<<<< HEAD
 position = Vector2(8, -416)
-=======
-position = Vector2(2, -388)
->>>>>>> 322c56b78032ee8e0af8efc6adc8888f44529a8a
 navigation_polygon = SubResource("NavigationPolygon_y1cda")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

@@ -6,6 +6,7 @@ var enemy_count = 0
 var world = null
 var player = null
 var informationBox = null
+var lifeBar = null
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 
@@ -14,7 +15,12 @@ var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	world = get_parent()
+	
+	lifeBar = world.find_child("LifeBar")
+	
 	player = world.find_child("Player")
+	player.connect("damage_taken", _on_player_damage_taken)
+	
 	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
 
@@ -45,3 +51,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 func _on_enemy_killed():
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
+
+
+func _on_player_damage_taken(lifeLeft):
+	lifeBar.value = lifeLeft
