@@ -25,10 +25,11 @@ func _physics_process(delta):
 		velocity = velocity.bounce(collision.get_normal())
 
 func dispose():
-	if !isSetToFree:
-		isSetToFree = true
+	if isSetToFree:
 		return
-		
+	
+	isSetToFree = true
+	
 	freeing.emit()
 	queue_free()
 

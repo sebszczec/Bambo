@@ -15,7 +15,7 @@ func _ready() -> void:
 	fps.button_pressed = visualSettings["show_fps"]
 	playerLifebar.button_pressed = visualSettings["show_player_lifebar"]
 	enemyLifebar.button_pressed = visualSettings["show_enemies_lifebar"]
-	playerDamage.button_pressed = visualSettings["show_player_lifebar"]
+	playerDamage.button_pressed = visualSettings["show_damage_taken"]
 	enemyDamage.button_pressed = visualSettings["show_damage_given"]
 	bulletsCount.button_pressed = visualSettings["show_bullets_count"]
 	enemiesCount.button_pressed = visualSettings["show_enemies_count"]
