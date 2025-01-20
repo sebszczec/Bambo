@@ -7,6 +7,7 @@ var world = null
 var player = null
 var informationBox = null
 var lifeBar = null
+var afterburnerBar = null
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 
@@ -17,9 +18,11 @@ func _ready() -> void:
 	world = get_parent()
 	
 	lifeBar = world.find_child("LifeBar")
+	afterburnerBar = world.find_child("AfterburnerBar")
 	
 	player = world.find_child("Player")
-	player.connect("damage_taken", _on_player_damage_taken)
+	player.connect("update_life", _on_player_damage_taken)
+	player.connect("update_afterburner", _on_player_update_afterburner)
 	
 	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
@@ -53,5 +56,8 @@ func _on_enemy_killed():
 	informationBox.decreaseEnemyCount()
 
 
-func _on_player_damage_taken(lifeLeft):
-	lifeBar.value = lifeLeft
+func _on_player_damage_taken(value):
+	lifeBar.value = value
+	
+func _on_player_update_afterburner(value):
+	afterburnerBar.value = value

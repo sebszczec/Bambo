@@ -16,6 +16,8 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
 @export var Life = 100
+@export var AfterBurner = 100
+var afterBurnerStep = 5
 
 @export_category("Camera")
 @export var ZoomFactor = 0.2
@@ -31,9 +33,12 @@ var aim_angle = 0
 var showLifeBar = true
 var showDamage = true
 
-var timers = {}
+var enemyDamagetimers = {}
+var useAfterburderTimer = Timer.new()
+var regenerateAfterBurnerTimer = Timer.new()
 
-signal damage_taken(lifeLeft: int)
+signal update_life(value: int)
+signal update_afterburner(value: int)
 
 func _ready() -> void:
 	lifeBar.setColor(Color(255, 0, 0))
@@ -43,6 +48,15 @@ func _ready() -> void:
 	showDamage = visualSettings["show_damage_taken"]
 	lifeBar.setMaxValue(Life)
 	lifeBar.visible = showLifeBar
+	
+	useAfterburderTimer.one_shot = false
+	useAfterburderTimer.wait_time = 0.25
+	useAfterburderTimer.connect("timeout", _on_use_afterburner_timeout)
+	add_child(useAfterburderTimer)
+	regenerateAfterBurnerTimer.one_shot = false
+	regenerateAfterBurnerTimer.wait_time = 0.5
+	regenerateAfterBurnerTimer.connect("timeout", _on_regenerate_afterburner_timeout)
+	add_child(regenerateAfterBurnerTimer)
 
 func _physics_process(delta):
 	handleZoom()	
@@ -65,12 +79,18 @@ func handleZoom():
 
 func calculateAcceleration():
 	if Input.is_action_just_pressed("ui_accelerate"):
+		if AfterBurner <= 0:
+			return
+		regenerateAfterBurnerTimer.stop()
+		useAfterburderTimer.start()
 		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 		calculatedAcceleration = PlayerAcceleration * TurboFactor
 		playerRotationDirection = -2
 		return
 	
 	if Input.is_action_just_released("ui_accelerate"):
+		useAfterburderTimer.stop()
+		regenerateAfterBurnerTimer.start()
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
@@ -127,7 +147,7 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 			add_child(timer)
 			timer.start()
 			
-			timers[id] = timer
+			enemyDamagetimers[id] = timer
 
 
 func _on_take_damage_timeout(enemy):
@@ -144,7 +164,7 @@ func handleDamage(damage):
 	Life = Life - damage
 	lifeBar.setValue(Life)
 	
-	damage_taken.emit(Life)
+	update_life.emit(Life)
 	
 	if Life == 0:
 		return false
@@ -156,5 +176,23 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		var enemy = area.get_parent()
 		var id = enemy.get_instance_id()
 		
-		if timers.has(id):
-			timers[id].stop()
+		if enemyDamagetimers.has(id):
+			enemyDamagetimers[id].stop()
+			enemyDamagetimers.erase(id)
+
+func updateAfterBurner(value):
+	AfterBurner += value
+	update_afterburner.emit(AfterBurner)
+
+func _on_use_afterburner_timeout():
+	if AfterBurner <= 0:
+		return
+		
+	updateAfterBurner(-afterBurnerStep)
+
+
+func _on_regenerate_afterburner_timeout():
+	if AfterBurner >= 100:
+		return
+	
+	updateAfterBurner(afterBurnerStep)
