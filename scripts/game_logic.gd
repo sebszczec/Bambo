@@ -8,10 +8,13 @@ var player = null
 var informationBox = null
 var lifeBar = null
 var afterburnerBar = null
+var canShoot = true
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
+var bulletScene = preload("res://scenes/bullet.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
+@onready var shootingTimer = $ShootingTimer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -27,6 +30,25 @@ func _ready() -> void:
 	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
 
+func _physics_process(_delta):
+	if Input.is_action_pressed("ui_shoot"):
+		if canShoot:
+			canShoot = false
+			var bullet = bulletScene.instantiate()
+			bullet.position = player.position
+			bullet.velocity = player.getShootingVector()
+			bullet.connect("freeing", _on_bullet_freeing)
+			add_child(bullet)
+			shootingTimer.start()
+			
+			informationBox.increaseBulletCount()
+
+
+func _on_shooting_timer_timeout() -> void:
+	canShoot = true
+
+func _on_bullet_freeing():
+	informationBox.decreaseBulletCount()
 
 func _on_enemy_spawn_timer_timeout() -> void:
 	if enemy_count == MaxEnemyCount:

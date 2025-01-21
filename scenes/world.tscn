@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=12 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
-[ext_resource type="Script" path="res://scripts/InputHandler.gd" id="1_af6i4"]
 [ext_resource type="Script" path="res://scripts/game_logic.gd" id="1_ib5o5"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_twfab"]
 [ext_resource type="Script" path="res://scripts/information_box.gd" id="2_0s2sw"]
@@ -120,10 +119,7 @@ script = ExtResource("1_ib5o5")
 
 [node name="EnemySpawnTimer" type="Timer" parent="GameLogic"]
 
-[node name="InputHandler" type="Node" parent="."]
-script = ExtResource("1_af6i4")
-
-[node name="ShootingTimer" type="Timer" parent="InputHandler"]
+[node name="ShootingTimer" type="Timer" parent="GameLogic"]
 wait_time = 0.1
 one_shot = true
 
@@ -145,4 +141,4 @@ navigation_polygon = SubResource("NavigationPolygon_y1cda")
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("7_cxjtb")]
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
-[connection signal="timeout" from="InputHandler/ShootingTimer" to="InputHandler" method="_on_shooting_timer_timeout"]
+[connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
