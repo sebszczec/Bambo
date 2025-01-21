@@ -122,7 +122,11 @@ func calculateSatelitePosition(delta):
 	satelite.position.x = SateliteRadius * cos(aim_angle)
 	satelite.position.y = SateliteRadius * sin(aim_angle)
 	sateliteAngle = aim_angle
-	
+
+
+func getSatelitePosition() -> Vector2:
+	return satelite.get_global_position()
+
 
 func calculatePlayerRotation(delta):
 	playerAngle = playerAngle + PlayerRotationSpeed * playerRotationDirection * delta 

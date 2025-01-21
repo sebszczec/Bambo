@@ -36,7 +36,7 @@ func _physics_process(_delta):
 		if canShoot:
 			canShoot = false
 			var bullet = bulletScene.instantiate()
-			bullet.position = player.position
+			bullet.position = player.getSatelitePosition()
 			bullet.velocity = player.getShootingVector()
 			bullet.connect("freeing", _on_bullet_freeing)
 			add_child(bullet)
