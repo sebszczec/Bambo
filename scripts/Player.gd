@@ -16,8 +16,10 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
 @export var Life = 100
-@export var AfterBurner = 100
-var afterBurnerStep = 5
+@export var Afterburner = 100
+var currentAfterburner = Afterburner
+var afterBurnerStep = 10
+var burn = false
 
 @export_category("Camera")
 @export var ZoomFactor = 0.2
@@ -34,8 +36,6 @@ var showLifeBar = true
 var showDamage = true
 
 var enemyDamagetimers = {}
-var useAfterburderTimer = Timer.new()
-var regenerateAfterBurnerTimer = Timer.new()
 
 signal update_life(value: int)
 signal update_afterburner(value: int)
@@ -48,15 +48,7 @@ func _ready() -> void:
 	showDamage = visualSettings["show_damage_taken"]
 	lifeBar.setMaxValue(Life)
 	lifeBar.visible = showLifeBar
-	
-	useAfterburderTimer.one_shot = false
-	useAfterburderTimer.wait_time = 0.25
-	useAfterburderTimer.connect("timeout", _on_use_afterburner_timeout)
-	add_child(useAfterburderTimer)
-	regenerateAfterBurnerTimer.one_shot = false
-	regenerateAfterBurnerTimer.wait_time = 0.5
-	regenerateAfterBurnerTimer.connect("timeout", _on_regenerate_afterburner_timeout)
-	add_child(regenerateAfterBurnerTimer)
+
 
 func _physics_process(delta):
 	handleZoom()	
@@ -64,6 +56,7 @@ func _physics_process(delta):
 	calculateSatelitePosition(delta)
 	calculateAcceleration()
 	calculateVelocity()
+	calculateAfterburner(delta)
 	
 	move_and_slide()
 
@@ -77,25 +70,31 @@ func handleZoom():
 		camera.zoom = Vector2(1, 1)
 
 
+func calculateAfterburner(delta):
+	if burn && currentAfterburner > 0:
+		updateAfterBurner(-afterBurnerStep * delta)
+		
+	if !burn && currentAfterburner < Afterburner:
+		updateAfterBurner(afterBurnerStep * delta)
+
+
 func calculateAcceleration():
-	if AfterBurner > 0:
+	if currentAfterburner > 0:
 		if Input.is_action_just_pressed("ui_accelerate"):
-			regenerateAfterBurnerTimer.stop()
-			useAfterburderTimer.start()
 			calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 			calculatedAcceleration = PlayerAcceleration * TurboFactor
 			playerRotationDirection = -2
+			burn = true
 	else:
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
 		
 	if Input.is_action_just_released("ui_accelerate"):
-		useAfterburderTimer.stop()
-		regenerateAfterBurnerTimer.start()
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
+		burn = false
 		
 
 
@@ -184,18 +183,5 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 			enemyDamagetimers.erase(id)
 
 func updateAfterBurner(value):
-	AfterBurner += value
-	update_afterburner.emit(AfterBurner)
-
-func _on_use_afterburner_timeout():
-	if AfterBurner <= 0:
-		return
-		
-	updateAfterBurner(-afterBurnerStep)
-
-
-func _on_regenerate_afterburner_timeout():
-	if AfterBurner >= 100:
-		return
-	
-	updateAfterBurner(afterBurnerStep)
+	currentAfterburner += value
+	update_afterburner.emit(currentAfterburner)
