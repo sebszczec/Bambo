@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0wnali7yow5s"]
+
+[ext_resource type="Script" path="res://scripts/big_bullet.gd" id="1_bn5nm"]
+[ext_resource type="Texture2D" uid="uid://biyu5ekjrb84l" path="res://resources/kenney_particle_pack/star_09.png" id="2_yl7g1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ibul5"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kvesy"]
+radius = 5.7496
+
+[node name="BigBullet" type="StaticBody2D" node_paths=PackedStringArray("HitBox")]
+script = ExtResource("1_bn5nm")
+Speed = 10
+MinDamage = 15
+MaxDamage = 30
+HitBox = NodePath("HitBox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ibul5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_yl7g1")
+
+[node name="LifeTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="HitBox" type="Area2D" parent="." groups=["Bullet"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+scale = Vector2(1.1, 1.1)
+shape = SubResource("CircleShape2D_kvesy")

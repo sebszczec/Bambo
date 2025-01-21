@@ -1,11 +1,16 @@
 extends StaticBody2D
 
+class_name Bullet
+
 @export var Speed = 20
-@export var Damage = 20
+@export var MinDamage = 10
+@export var MaxDamage = 20
+@export var HitBox : Area2D
 
 @onready var lifeTimer = $LifeTimer
 
 var velocity = Vector2(0, 0)
+var Damage = 0
 
 signal freeing
 var isSetToFree = false
@@ -13,11 +18,10 @@ var isSetToFree = false
 
 func _ready():
 	lifeTimer.start()
-	Damage = randi_range(10, 20)
+	Damage = randi_range(MinDamage, MaxDamage)
 
 
-@warning_ignore("unused_parameter")
-func _physics_process(delta):
+func _physics_process(_delta):
 	velocity = velocity.normalized() * Speed
 	var collision = move_and_collide(velocity)
 	

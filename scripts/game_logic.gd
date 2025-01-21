@@ -11,7 +11,8 @@ var afterburnerBar = null
 var canShoot = true
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
-var bulletScene = preload("res://scenes/bullet.tscn")
+#var bulletScene = preload("res://scenes/bullet.tscn")
+var bulletScene = preload("res://scenes/BigBullet.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
