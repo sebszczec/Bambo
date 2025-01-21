@@ -1,6 +1,6 @@
 extends Control
 
-var delays = [0.2, 1, 0.2, 1, 0.2, 1, 0.2, 1]
+var delays = [0.1, 0.5, 0.1, 0.5, 0.1, 0.5, 0.1, 0.5]
 var numbers = ["3", "3", "2", "2", "1", "1", "START!", "START!"]
 var visibility = [false, true, false, true, false, true, false, true]
 var step = 0

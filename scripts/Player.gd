@@ -78,22 +78,25 @@ func handleZoom():
 
 
 func calculateAcceleration():
-	if Input.is_action_just_pressed("ui_accelerate"):
-		if AfterBurner <= 0:
-			return
-		regenerateAfterBurnerTimer.stop()
-		useAfterburderTimer.start()
-		calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
-		calculatedAcceleration = PlayerAcceleration * TurboFactor
-		playerRotationDirection = -2
-		return
-	
+	if AfterBurner > 0:
+		if Input.is_action_just_pressed("ui_accelerate"):
+			regenerateAfterBurnerTimer.stop()
+			useAfterburderTimer.start()
+			calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
+			calculatedAcceleration = PlayerAcceleration * TurboFactor
+			playerRotationDirection = -2
+	else:
+		calculatedMaxVelocity = PlayerMaxVelocity
+		calculatedAcceleration = PlayerAcceleration
+		playerRotationDirection = 1
+		
 	if Input.is_action_just_released("ui_accelerate"):
 		useAfterburderTimer.stop()
 		regenerateAfterBurnerTimer.start()
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
+		
 
 
 func calculateVelocity():
