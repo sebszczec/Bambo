@@ -1,6 +1,7 @@
 extends Node
 
-@export_range (1, 400) var MaxEnemyCount : = 100
+@export_range (1, 400) var MaxEnemyCount : int = 100
+@export_range (0, 100) var ChanceForLifePerk : int = 5
 
 var enemy_count = 0
 var world = null
@@ -13,8 +14,10 @@ var weapon = null
 var weapons = {}
 
 enum WEAPONS {SMALL, BIG, SMALL_WAVE}
+enum PERKS {Life}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
+var life_perk_scene = preload("res://scenes/life_perk.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
@@ -90,9 +93,11 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
 	
-func _on_enemy_killed():
+func _on_enemy_killed(enemy_position : Vector2):
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
+	
+	addPerk(PERKS.Life, enemy_position)
 
 
 func _on_player_damage_taken(value):
@@ -101,6 +106,14 @@ func _on_player_damage_taken(value):
 func _on_player_update_afterburner(value):
 	afterburnerBar.value = value
 
+func addPerk(type: PERKS, pos : Vector2):
+	if type == PERKS.Life:
+		var chance = randi_range(0, 100)
+		if chance > ChanceForLifePerk:
+			return
+		var perk = life_perk_scene.instantiate()
+		perk.position = pos
+		add_child(perk)
 
 class Weapon:
 	var canShoot = true
