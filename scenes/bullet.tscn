@@ -22,7 +22,7 @@ shape = SubResource("CircleShape2D_6l7qy")
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("2_qlikn")
 
-[node name="LifeTimer" type="Timer" parent="."]
+[node name="LifeTimer" type="Timer" parent="." groups=["Bullet"]]
 
 [node name="HitBox" type="Area2D" parent="." groups=["Bullet"]]
 

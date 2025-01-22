@@ -9,7 +9,7 @@ radius = 6.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_kvesy"]
 radius = 5.7496
 
-[node name="BigBullet" type="StaticBody2D" node_paths=PackedStringArray("HitBox")]
+[node name="BigBullet" type="StaticBody2D" node_paths=PackedStringArray("HitBox") groups=["Bullet"]]
 script = ExtResource("1_bn5nm")
 Speed = 10
 MinDamage = 15

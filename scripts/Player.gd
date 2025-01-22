@@ -15,11 +15,12 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var SateliteRotationSpeed = 5
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
-@export var Life = 100
+@export var MaxLife = 100
 @export var Afterburner = 100
 var currentAfterburner = Afterburner
 var afterBurnerStep = 10
 var burn = false
+var life = MaxLife
 
 @export_category("Camera")
 @export var ZoomFactor = 0.2
@@ -47,7 +48,7 @@ func _ready() -> void:
 	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_player_lifebar"]
 	showDamage = visualSettings["show_damage_taken"]
-	lifeBar.setMaxValue(Life)
+	lifeBar.setMaxValue(MaxLife)
 	lifeBar.visible = showLifeBar
 	
 	var controlSettings = ConfigHandler.load_controls()
@@ -179,15 +180,24 @@ func handleDamage(damage):
 		damageText.Amount = damage
 		add_child(damageText)
 	
-	Life = Life - damage
-	lifeBar.setValue(Life)
+	updateLife(-damage)
 	
-	update_life.emit(Life)
-	
-	if Life == 0:
+	if MaxLife == 0:
 		return false
 	
 	return true
+
+func updateLife(value):
+	life += value
+	
+	if life < 0:
+		life = 0
+	
+	if life > MaxLife:
+		life = MaxLife
+	
+	lifeBar.setValue(life)
+	update_life.emit(life)
 
 func _on_life_box_area_exited(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
@@ -197,6 +207,10 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		if enemyDamagetimers.has(id):
 			enemyDamagetimers[id].stop()
 			enemyDamagetimers.erase(id)
+		return
+	
+	if area.is_in_group("LifePerk"):
+		updateLife(area.Life)
 
 func updateAfterBurner(value):
 	currentAfterburner += value

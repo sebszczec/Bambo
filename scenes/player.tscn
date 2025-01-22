@@ -39,7 +39,7 @@ texture = ExtResource("3_raa0x")
 
 [node name="LifeBar" parent="." instance=ExtResource("4_ajyqe")]
 
-[node name="LifeBox" type="Area2D" parent="." groups=["player"]]
+[node name="LifeBox" type="Area2D" parent="." groups=["Player"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LifeBox"]
 shape = SubResource("CircleShape2D_or0rj")
