@@ -12,7 +12,7 @@ var canShoot = true
 var weapon = null
 var weapons = {}
 
-enum WEAPONS {SMALL, BIG}
+enum WEAPONS {SMALL, BIG, SMALL_WAVE}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 
@@ -41,6 +41,8 @@ func init_weapons():
 	weapons[WEAPONS.SMALL].type = WEAPONS.SMALL
 	weapons[WEAPONS.BIG] = BigBullet.new()
 	weapons[WEAPONS.BIG].type = WEAPONS.BIG
+	weapons[WEAPONS.SMALL_WAVE] = SmallBulletWave.new()
+	weapons[WEAPONS.SMALL_WAVE].type = WEAPONS.SMALL_WAVE
 	
 	for w in weapons.values():
 		w.register_internal_nodes(self)
@@ -124,12 +126,12 @@ class Weapon:
 	func register_internal_nodes(owner: Node):
 		owner.add_child(timer)
 	
-	func shoot(owner: Node, start_position: Vector2, start_velocity: Vector2):
+	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
 			canShoot = false
 			var bullet = bulletScene.instantiate()
 			bullet.position = start_position
-			bullet.velocity = start_velocity
+			bullet.velocity = direction
 			bullet.connect("freeing", _on_bullet_freeing)
 			owner.add_child(bullet)
 			timer.start()
@@ -152,3 +154,34 @@ class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
 		bulletScene = preload("res://scenes/BigBullet.tscn")
+
+class SmallBulletWave extends SmallBullet:
+	var size = 30
+	var speed = 5
+	var min_damage = 25
+	var max_damage = 50
+	var life_time = 1
+	
+	func setup():
+		super.setup()
+		shooting_delay = 1
+		
+	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
+		if canShoot:
+			canShoot = false
+			var radial_increment = (2.0 * PI) / float(size)
+			for i in range (0, size):
+				var bullet = bulletScene.instantiate()
+				bullet.Speed = speed
+				bullet.MinDamage = min_damage
+				bullet.MaxDamage = max_damage
+				bullet.LifeTime = life_time
+				
+				var radial_v = Vector2(1, 0).rotated(i * radial_increment)
+				bullet.position = start_position + radial_v
+				bullet.velocity = radial_v
+				bullet.connect("freeing", _on_bullet_freeing)
+				owner.add_child(bullet)
+			
+			timer.start()	
+			updateBulletNumber(size)

@@ -5,6 +5,7 @@ class_name Bullet
 @export var Speed = 20
 @export var MinDamage = 10
 @export var MaxDamage = 20
+@export var LifeTime = 0.5
 @export var HitBox : Area2D
 
 @onready var lifeTimer = $LifeTimer
@@ -18,6 +19,7 @@ var isSetToFree = false
 
 func _ready():
 	lifeTimer.connect("timeout", _on_life_timer_timeout)
+	lifeTimer.wait_time = LifeTime
 	lifeTimer.start()
 	HitBox.connect("area_entered", _on_hit_box_area_entered)
 	Damage = randi_range(MinDamage, MaxDamage)
