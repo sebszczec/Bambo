@@ -17,7 +17,9 @@ var isSetToFree = false
 
 
 func _ready():
+	lifeTimer.connect("timeout", _on_life_timer_timeout)
 	lifeTimer.start()
+	HitBox.connect("area_entered", _on_hit_box_area_entered)
 	Damage = randi_range(MinDamage, MaxDamage)
 
 
