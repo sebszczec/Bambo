@@ -6,6 +6,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var mainBody = $MainBody
 @onready var camera = $Camera2D
 @onready var lifeBar = $LifeBar
+@onready var shieldBar = $ShieldBar
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -16,11 +17,13 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var SateliteRadius = 25
 @export var PlayerRotationSpeed = 5
 @export var MaxLife = 100
-@export var Afterburner = 100
-var currentAfterburner = Afterburner
+@export var MaxAfterburner = 100
+@export var MaxShield = 100
+var currentAfterburner = MaxAfterburner
 var afterBurnerStep = 10
 var burn = false
 var life = MaxLife
+var shield = MaxShield
 
 @export_category("Camera")
 @export var ZoomFactor = 0.2
@@ -41,15 +44,19 @@ var enemyDamagetimers = {}
 
 signal update_life(value: int)
 signal update_afterburner(value: int)
+signal update_shield(value: int)
 
 func _ready() -> void:
-	lifeBar.setColor(Color(255, 0, 0))
+	lifeBar.setColor(Color.RED)
+	shieldBar.setColor(Color.DODGER_BLUE)
 	
 	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_player_lifebar"]
 	showDamage = visualSettings["show_damage_taken"]
 	lifeBar.setMaxValue(MaxLife)
 	lifeBar.visible = showLifeBar
+	shieldBar.setMaxValue(MaxShield)
+	shieldBar.visible = showLifeBar
 	
 	var controlSettings = ConfigHandler.load_controls()
 	useGamePad = controlSettings["use_gamepad"]
@@ -79,7 +86,7 @@ func calculateAfterburner(delta):
 	if burn && currentAfterburner > 0:
 		updateAfterBurner(-afterBurnerStep * delta)
 		
-	if !burn && currentAfterburner < Afterburner:
+	if !burn && currentAfterburner < MaxAfterburner:
 		updateAfterBurner(afterBurnerStep * delta)
 
 
@@ -133,7 +140,6 @@ func calculateSatelitePosition(delta):
 		mouse_pos = get_global_mouse_position() - position
 		satelite.position = mouse_pos.normalized() * SateliteRadius
 	
-	
 
 func getSatelitePosition() -> Vector2:
 	return satelite.get_global_position()
@@ -175,17 +181,47 @@ func _on_take_damage_timeout(enemy):
 func handleDamage(damage):
 	Input.start_joy_vibration(0, 0.5, 0.5, 0.1)
 	
-	if showDamage:
+	var real_damage = damage
+	if shield > 0:
+		real_damage -= shield
+		if real_damage < 0:
+			real_damage = 0
+		var tmp = updateShield(-damage)
+		if showDamage:
+			var damageText = floatingTextScene.instantiate()
+			damageText.set_color(Color.DODGER_BLUE)
+			damageText.Amount = tmp
+			add_child(damageText)
+		
+	if showDamage && real_damage > 0:
 		var damageText = floatingTextScene.instantiate()
-		damageText.Amount = damage
+		damageText.set_color(Color.RED)
+		damageText.Amount = real_damage
 		add_child(damageText)
 	
-	updateLife(-damage)
+	updateLife(-real_damage)
 	
 	if MaxLife == 0:
 		return false
 	
 	return true
+
+func updateShield(value):
+	shield += value
+	
+	var tmp = value
+	if shield < 0:
+		tmp = shield + value
+		shield = 0
+	
+	if shield > MaxShield:
+		shield = MaxShield
+		
+	shieldBar.setValue(shield)
+	update_shield.emit(shield)
+	
+	return tmp
+	
 
 func updateLife(value):
 	life += value
@@ -211,6 +247,11 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 	
 	if area.is_in_group("LifePerk"):
 		updateLife(area.Life)
+		return
+		
+	if area.is_in_group("ShieldPerk"):
+		updateShield(area.Shield)
+		return
 
 func updateAfterBurner(value):
 	currentAfterburner += value

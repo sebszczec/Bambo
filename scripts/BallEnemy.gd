@@ -99,6 +99,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 func handleDamage(damage):
 	if showDamage:
 		var damageText = floatingTextScene.instantiate()
+		damageText.set_color(Color.WHITE)
 		damageText.Amount = damage
 		add_child(damageText)
 		

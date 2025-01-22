@@ -2,22 +2,25 @@ extends Node
 
 @export_range (1, 400) var MaxEnemyCount : int = 100
 @export_range (0, 100) var ChanceForLifePerk : int = 5
+@export_range (0, 100) var ChanceForShieldPerk : int = 5
 
 var enemy_count = 0
 var world = null
 var player = null
 var informationBox = null
 var lifeBar = null
+var shieldBar = null
 var afterburnerBar = null
 var canShoot = true
 var weapon = null
 var weapons = {}
 
 enum WEAPONS {SMALL, BIG, SMALL_WAVE}
-enum PERKS {Life}
+enum PERKS {LIFE, SHIELD}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
+var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
@@ -30,11 +33,17 @@ func _ready() -> void:
 	weapon = weapons[WEAPONS.SMALL]
 	
 	lifeBar = world.find_child("LifeBar")
+	shieldBar = world.find_child("ShieldBar")
 	afterburnerBar = world.find_child("AfterburnerBar")
 	
 	player = world.find_child("Player")
 	player.connect("update_life", _on_player_damage_taken)
 	player.connect("update_afterburner", _on_player_update_afterburner)
+	player.connect("update_shield", _on_player_update_shield)
+	
+	lifeBar.value = player.MaxLife
+	shieldBar.value = player.MaxShield
+	afterburnerBar.value = player.MaxAfterburner
 	
 	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
@@ -97,7 +106,7 @@ func _on_enemy_killed(enemy_position : Vector2):
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
 	
-	addPerk(PERKS.Life, enemy_position)
+	addPerk(enemy_position)
 
 
 func _on_player_damage_taken(value):
@@ -105,15 +114,29 @@ func _on_player_damage_taken(value):
 	
 func _on_player_update_afterburner(value):
 	afterburnerBar.value = value
+	
+func _on_player_update_shield(value):
+	shieldBar.value = value
 
-func addPerk(type: PERKS, pos : Vector2):
-	if type == PERKS.Life:
+func addPerk(pos : Vector2):
+	var type = randi_range(0, 1)
+	
+	if type == PERKS.LIFE:
 		var chance = randi_range(0, 100)
 		if chance > ChanceForLifePerk:
 			return false
 		var perk = life_perk_scene.instantiate()
 		perk.position = pos
-		add_child(perk)
+		call_deferred("add_child", perk)
+		return true
+		
+	if type == PERKS.SHIELD:
+		var chance = randi_range(0, 100)
+		if chance > ChanceForLifePerk:
+			return false
+		var perk = shield_perk_scene.instantiate()
+		perk.position = pos
+		call_deferred("add_child", perk)
 		return true
 
 class Weapon:

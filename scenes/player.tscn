@@ -38,6 +38,12 @@ texture = ExtResource("3_raa0x")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="LifeBar" parent="." instance=ExtResource("4_ajyqe")]
+offset_top = -20.0
+offset_bottom = -14.0
+
+[node name="ShieldBar" parent="." instance=ExtResource("4_ajyqe")]
+offset_top = -28.0
+offset_bottom = -22.0
 
 [node name="LifeBox" type="Area2D" parent="." groups=["Player"]]
 
