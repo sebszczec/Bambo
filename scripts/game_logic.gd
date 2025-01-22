@@ -110,10 +110,11 @@ func addPerk(type: PERKS, pos : Vector2):
 	if type == PERKS.Life:
 		var chance = randi_range(0, 100)
 		if chance > ChanceForLifePerk:
-			return
+			return false
 		var perk = life_perk_scene.instantiate()
 		perk.position = pos
 		add_child(perk)
+		return true
 
 class Weapon:
 	var canShoot = true

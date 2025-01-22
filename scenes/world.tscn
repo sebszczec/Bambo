@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=13 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bqnlp20gumq0o" path="res://resources/kenney_ui/green_bar.png" id="4_ntn4d"]
 [ext_resource type="Texture2D" uid="uid://d2l2mqkf7t8ci" path="res://resources/kenney_ui/blue_bar.png" id="5_mptyy"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
+[ext_resource type="PackedScene" uid="uid://oj124bkc0r8r" path="res://scenes/shield_perk.tscn" id="11_hfv22"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(2940, 1658, -1599.99, 1658, -1598, -1616, 2939, -1616.99)
@@ -139,6 +140,9 @@ navigation_polygon = SubResource("NavigationPolygon_y1cda")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("7_cxjtb")]
+
+[node name="shield_perk" parent="." instance=ExtResource("11_hfv22")]
+position = Vector2(472, 240)
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
