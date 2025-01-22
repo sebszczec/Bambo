@@ -177,7 +177,7 @@ class SmallBulletWave extends SmallBullet:
 				bullet.MaxDamage = max_damage
 				bullet.LifeTime = life_time
 				
-				var radial_v = Vector2(1, 0).rotated(i * radial_increment)
+				var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)
 				bullet.position = start_position + radial_v
 				bullet.velocity = radial_v
 				bullet.connect("freeing", _on_bullet_freeing)
