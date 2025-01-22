@@ -10,6 +10,9 @@ var lifeBar = null
 var afterburnerBar = null
 var canShoot = true
 var weapon = null
+var weapons = {}
+
+enum WEAPONS {SMALL, BIG}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 
@@ -20,9 +23,8 @@ var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 func _ready() -> void:
 	world = get_parent()
 	
-	weapon = Weapon2.new()
-	weapon.register_internal_nodes(self)
-	weapon.connect("bulletNumerChange", _on_weapon_bullet_number_change)
+	init_weapons()
+	weapon = weapons[WEAPONS.SMALL]
 	
 	lifeBar = world.find_child("LifeBar")
 	afterburnerBar = world.find_child("AfterburnerBar")
@@ -33,11 +35,27 @@ func _ready() -> void:
 	
 	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
+
+func init_weapons():
+	weapons[WEAPONS.SMALL] = SmallBullet.new()
+	weapons[WEAPONS.SMALL].type = WEAPONS.SMALL
+	weapons[WEAPONS.BIG] = BigBullet.new()
+	weapons[WEAPONS.BIG].type = WEAPONS.BIG
+	
+	for w in weapons.values():
+		w.register_internal_nodes(self)
+		w.connect("bulletNumerChange", _on_weapon_bullet_number_change)
 	
 
 func _physics_process(_delta):
 	if Input.is_action_pressed("ui_shoot"):
 		weapon.shoot(self, player.getSatelitePosition(), player.getShootingVector())
+	
+	if Input.is_action_just_pressed("ui_weapon_change"):
+		if weapon.type == WEAPONS.size() - 1:
+			weapon = weapons[0]
+		else:
+			weapon = weapons[weapon.type + 1]
 
 
 func _on_weapon_bullet_number_change(value):
@@ -88,6 +106,7 @@ class Weapon:
 	var shooting_delay = 0
 	var bulletScene = null
 	var bulletNumber = 0
+	var type : WEAPONS
 	signal bulletNumerChange
 	
 	func _init() -> void:
@@ -126,7 +145,10 @@ class Weapon:
 		bulletNumerChange.emit(bulletNumber)
 
 
-class Weapon2 extends Weapon:
+class SmallBullet extends Weapon:
+	pass
+
+class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
 		bulletScene = preload("res://scenes/BigBullet.tscn")
