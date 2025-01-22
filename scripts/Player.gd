@@ -107,7 +107,7 @@ func calculateVelocity():
 	else:
 		velocity = velocity.move_toward(direction.normalized() * calculatedMaxVelocity, calculatedAcceleration)
 
-
+var last_mouse_pos = Vector2(0, 0)
 func calculateSatelitePosition(delta):
 	aim_vector.x = Input.get_axis("ui_aim_left", "ui_aim_right")
 	aim_vector.y = Input.get_axis("ui_aim_up", "ui_aim_down")
@@ -122,7 +122,12 @@ func calculateSatelitePosition(delta):
 	satelite.position.x = SateliteRadius * cos(aim_angle)
 	satelite.position.y = SateliteRadius * sin(aim_angle)
 	sateliteAngle = aim_angle
-
+	
+	#var mouse_pos = get_global_mouse_position()
+	#mouse_pos = get_global_mouse_position() - position
+	#satelite.position = mouse_pos.normalized() * SateliteRadius
+	
+	
 
 func getSatelitePosition() -> Vector2:
 	return satelite.get_global_position()
@@ -162,6 +167,8 @@ func _on_take_damage_timeout(enemy):
 
 
 func handleDamage(damage):
+	Input.start_joy_vibration(0, 0.5, 0.5, 0.1)
+	
 	if showDamage:
 		var damageText = floatingTextScene.instantiate()
 		damageText.Amount = damage
