@@ -1,17 +1,19 @@
 extends Control
 
-@onready var fps = $GridContainer/HBoxContainer/Checks/Fps
-@onready var playerLifebar = $GridContainer/HBoxContainer/Checks/PlayerLifeBar
-@onready var enemyLifebar = $GridContainer/HBoxContainer/Checks/EnemyLifeBar
-@onready var playerDamage = $GridContainer/HBoxContainer/Checks/PlayerDamage
-@onready var enemyDamage = $GridContainer/HBoxContainer/Checks/EnemyDamage
-@onready var bulletsCount = $GridContainer/HBoxContainer/Checks/BulletsCount
-@onready var enemiesCount = $GridContainer/HBoxContainer/Checks/EnemiesCount
+@onready var fps = $TabContainer/Visuals/HBoxContainer/Checks/Fps
+@onready var playerLifebar = $TabContainer/Visuals/HBoxContainer/Checks/PlayerLifeBar
+@onready var enemyLifebar = $TabContainer/Visuals/HBoxContainer/Checks/EnemyLifeBar
+@onready var playerDamage = $TabContainer/Visuals/HBoxContainer/Checks/PlayerDamage
+@onready var enemyDamage = $TabContainer/Visuals/HBoxContainer/Checks/EnemyDamage
+@onready var bulletsCount = $TabContainer/Visuals/HBoxContainer/Checks/BulletsCount
+@onready var enemiesCount = $TabContainer/Visuals/HBoxContainer/Checks/EnemiesCount
+@onready var useGamepad = $TabContainer/Controls/HBoxContainer/Checks/UseGamepad
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-
 	var visualSettings = ConfigHandler.load_visuals()
+	var controlSettings = ConfigHandler.load_controls()
+	
 	fps.button_pressed = visualSettings["show_fps"]
 	playerLifebar.button_pressed = visualSettings["show_player_lifebar"]
 	enemyLifebar.button_pressed = visualSettings["show_enemies_lifebar"]
@@ -19,7 +21,8 @@ func _ready() -> void:
 	enemyDamage.button_pressed = visualSettings["show_damage_given"]
 	bulletsCount.button_pressed = visualSettings["show_bullets_count"]
 	enemiesCount.button_pressed = visualSettings["show_enemies_count"]
-
+	useGamepad.button_pressed = controlSettings["use_gamepad"]
+	
 	fps.grab_focus()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,3 +61,7 @@ func _on_bullets_count_toggled(toggled_on: bool) -> void:
 
 func _on_enemies_count_toggled(toggled_on: bool) -> void:
 	ConfigHandler.save_visuals_setting("show_enemies_count", toggled_on)
+
+
+func _on_use_gamepad_toggled(toggled_on: bool) -> void:
+	ConfigHandler.save_controls_setting("use_gamepad", toggled_on)

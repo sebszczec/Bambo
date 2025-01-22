@@ -20,88 +20,123 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0.0235294, 1)
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-offset_bottom = 40.0
+offset_left = -97.0
+offset_top = -129.0
+offset_right = 97.0
+offset_bottom = 129.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GridContainer"]
+[node name="Visuals" type="GridContainer" parent="TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Visuals"]
 layout_mode = 2
 
-[node name="Labes" type="VBoxContainer" parent="GridContainer/HBoxContainer"]
+[node name="Labes" type="VBoxContainer" parent="TabContainer/Visuals/HBoxContainer"]
 layout_mode = 2
 
-[node name="ShowFpsLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowFpsLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show FPS"
 
-[node name="ShowBulletsCountLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowBulletsCountLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show bullets count"
 
-[node name="ShowEnemiesCountLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowEnemiesCountLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show enemies count"
 
-[node name="ShowPlayerLifebarLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowPlayerLifebarLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show player lifebar"
 
-[node name="ShowEnemiesLifebarLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowEnemiesLifebarLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show enemies lifebar"
 
-[node name="ShowDamageTakenLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowDamageTakenLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show damage taken
 "
 
-[node name="ShowDamageGivenLabel" type="Label" parent="GridContainer/HBoxContainer/Labes"]
+[node name="ShowDamageGivenLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
 layout_mode = 2
 text = "Show damage given"
 
-[node name="Checks" type="VBoxContainer" parent="GridContainer/HBoxContainer"]
+[node name="Checks" type="VBoxContainer" parent="TabContainer/Visuals/HBoxContainer"]
 layout_mode = 2
 
-[node name="Fps" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="Fps" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="BulletsCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="BulletsCount" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="EnemiesCount" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="EnemiesCount" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="PlayerLifeBar" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="PlayerLifeBar" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="EnemyLifeBar" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="EnemyLifeBar" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="PlayerDamage" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="PlayerDamage" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="EnemyDamage" type="CheckBox" parent="GridContainer/HBoxContainer/Checks"]
+[node name="EnemyDamage" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
 layout_mode = 2
 
-[node name="BackButton" type="Button" parent="GridContainer"]
+[node name="BackButton" type="Button" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Back"
 
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/Fps" to="." method="_on_fps_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/BulletsCount" to="." method="_on_bullets_count_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemiesCount" to="." method="_on_enemies_count_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/PlayerLifeBar" to="." method="_on_player_life_bar_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemyLifeBar" to="." method="_on_enemy_life_bar_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/PlayerDamage" to="." method="_on_player_damage_toggled"]
-[connection signal="toggled" from="GridContainer/HBoxContainer/Checks/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
-[connection signal="pressed" from="GridContainer/BackButton" to="." method="_on_back_button_pressed"]
+[node name="Controls" type="GridContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Labels" type="VBoxContainer" parent="TabContainer/Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UseGamepadLabel" type="Label" parent="TabContainer/Controls/HBoxContainer/Labels"]
+layout_mode = 2
+text = "Use gamepad"
+
+[node name="Checks" type="VBoxContainer" parent="TabContainer/Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="UseGamepad" type="CheckBox" parent="TabContainer/Controls/HBoxContainer/Checks"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="TabContainer/Controls"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/BulletsCount" to="." method="_on_bullets_count_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemiesCount" to="." method="_on_enemies_count_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/PlayerLifeBar" to="." method="_on_player_life_bar_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemyLifeBar" to="." method="_on_enemy_life_bar_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/PlayerDamage" to="." method="_on_player_damage_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
+[connection signal="pressed" from="TabContainer/Visuals/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="toggled" from="TabContainer/Controls/HBoxContainer/Checks/UseGamepad" to="." method="_on_use_gamepad_toggled"]
+[connection signal="pressed" from="TabContainer/Controls/BackButton" to="." method="_on_back_button_pressed"]

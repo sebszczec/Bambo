@@ -34,6 +34,7 @@ var aim_vector = Vector2(0, 0)
 var aim_angle = 0
 var showLifeBar = true
 var showDamage = true
+var useGamePad = true
 
 var enemyDamagetimers = {}
 
@@ -48,6 +49,9 @@ func _ready() -> void:
 	showDamage = visualSettings["show_damage_taken"]
 	lifeBar.setMaxValue(Life)
 	lifeBar.visible = showLifeBar
+	
+	var controlSettings = ConfigHandler.load_controls()
+	useGamePad = controlSettings["use_gamepad"]
 
 
 func _physics_process(delta):
@@ -109,23 +113,24 @@ func calculateVelocity():
 
 var last_mouse_pos = Vector2(0, 0)
 func calculateSatelitePosition(delta):
-	aim_vector.x = Input.get_axis("ui_aim_left", "ui_aim_right")
-	aim_vector.y = Input.get_axis("ui_aim_up", "ui_aim_down")
-	aim_angle = atan2(aim_vector.y, aim_vector.x)
-	
-	if (aim_vector.x == 0 and aim_vector.y == 0):
-		sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
-		satelite.position.x = SateliteRadius * cos(sateliteAngle)
-		satelite.position.y = SateliteRadius * sin(sateliteAngle)
-		return
-	
-	satelite.position.x = SateliteRadius * cos(aim_angle)
-	satelite.position.y = SateliteRadius * sin(aim_angle)
-	sateliteAngle = aim_angle
-	
-	#var mouse_pos = get_global_mouse_position()
-	#mouse_pos = get_global_mouse_position() - position
-	#satelite.position = mouse_pos.normalized() * SateliteRadius
+	if useGamePad:
+		aim_vector.x = Input.get_axis("ui_aim_left", "ui_aim_right")
+		aim_vector.y = Input.get_axis("ui_aim_up", "ui_aim_down")
+		aim_angle = atan2(aim_vector.y, aim_vector.x)
+		
+		if (aim_vector.x == 0 and aim_vector.y == 0):
+			sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
+			satelite.position.x = SateliteRadius * cos(sateliteAngle)
+			satelite.position.y = SateliteRadius * sin(sateliteAngle)
+			return
+		
+		satelite.position.x = SateliteRadius * cos(aim_angle)
+		satelite.position.y = SateliteRadius * sin(aim_angle)
+		sateliteAngle = aim_angle
+	else:
+		var mouse_pos = get_global_mouse_position()
+		mouse_pos = get_global_mouse_position() - position
+		satelite.position = mouse_pos.normalized() * SateliteRadius
 	
 	
 

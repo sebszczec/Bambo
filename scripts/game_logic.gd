@@ -166,7 +166,7 @@ class SmallBulletWave extends SmallBullet:
 		super.setup()
 		shooting_delay = 1
 		
-	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
+	func shoot(owner: Node, start_position: Vector2, _direction: Vector2):
 		if canShoot:
 			canShoot = false
 			var radial_increment = (2.0 * PI) / float(size)
