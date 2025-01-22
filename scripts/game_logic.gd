@@ -12,8 +12,6 @@ var canShoot = true
 var weapon = null
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
-#var bulletScene = preload("res://scenes/bullet.tscn")
-var bulletScene = preload("res://scenes/BigBullet.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
@@ -24,6 +22,7 @@ func _ready() -> void:
 	
 	weapon = Weapon2.new()
 	weapon.register_internal_nodes(self)
+	weapon.connect("bulletNumerChange", _on_weapon_bullet_number_change)
 	
 	lifeBar = world.find_child("LifeBar")
 	afterburnerBar = world.find_child("AfterburnerBar")
@@ -38,24 +37,15 @@ func _ready() -> void:
 
 func _physics_process(_delta):
 	if Input.is_action_pressed("ui_shoot"):
-		#if canShoot:
-			#canShoot = false
-			#var bullet = bulletScene.instantiate()
-			#bullet.position = player.getSatelitePosition()
-			#bullet.velocity = player.getShootingVector()
-			#bullet.connect("freeing", _on_bullet_freeing)
-			#add_child(bullet)
-			#shootingTimer.start()
-			#
-			#informationBox.increaseBulletCount()
 		weapon.shoot(self, player.getSatelitePosition(), player.getShootingVector())
+
+
+func _on_weapon_bullet_number_change(value):
+	informationBox.setBulletCount(value)
 
 
 func _on_shooting_timer_timeout() -> void:
 	canShoot = true
-
-func _on_bullet_freeing():
-	informationBox.decreaseBulletCount()
 
 func _on_enemy_spawn_timer_timeout() -> void:
 	if enemy_count == MaxEnemyCount:
@@ -97,25 +87,23 @@ class Weapon:
 	var timer = Timer.new()
 	var shooting_delay = 0
 	var bulletScene = null
+	var bulletNumber = 0
+	signal bulletNumerChange
 	
 	func _init() -> void:
 		setup()
 		timer.wait_time = shooting_delay
 		timer.connect("timeout", _on_timer_timeout)
 	
-	
 	func setup():
 		shooting_delay = 0.1
 		bulletScene = preload("res://scenes/bullet.tscn")
 	
-	
 	func _on_timer_timeout():
 		canShoot = true
 	
-	
 	func register_internal_nodes(owner: Node):
 		owner.add_child(timer)
-	
 	
 	func shoot(owner: Node, start_position: Vector2, start_velocity: Vector2):
 		if canShoot:
@@ -127,11 +115,15 @@ class Weapon:
 			owner.add_child(bullet)
 			timer.start()
 				
-				#informationBox.increaseBulletCount()
-	#
+			updateBulletNumber(1)
+	
 	func _on_bullet_freeing():
-		#informationBox.decreaseBulletCount()
-		pass
+		updateBulletNumber(-1)
+
+		
+	func updateBulletNumber(diff):
+		bulletNumber += diff
+		bulletNumerChange.emit(bulletNumber)
 
 
 class Weapon2 extends Weapon:

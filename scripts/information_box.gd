@@ -48,3 +48,7 @@ func increaseBulletCount():
 
 func decreaseBulletCount():
 	bulletCount = bulletCount - 1
+
+
+func setBulletCount(value):
+	bulletCount = value
