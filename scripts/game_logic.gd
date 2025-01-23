@@ -67,7 +67,7 @@ func init_weapons():
 
 
 func init_points_dict():
-	points_dict["BallEnemy"] = 50
+	points_dict["BallEnemy"] = 10
 
 
 func _physics_process(_delta):
