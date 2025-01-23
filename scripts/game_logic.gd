@@ -18,7 +18,7 @@ var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-enum WEAPONS {SMALL, BIG, SMALL_WAVE}
+enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING}
 enum PERKS {LIFE, SHIELD}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
@@ -57,10 +57,17 @@ func _ready() -> void:
 func init_weapons():
 	weapons[WEAPONS.SMALL] = SmallBullet.new()
 	weapons[WEAPONS.SMALL].type = WEAPONS.SMALL
+	weapons[WEAPONS.SMALL].set_owner(self)
 	weapons[WEAPONS.BIG] = BigBullet.new()
 	weapons[WEAPONS.BIG].type = WEAPONS.BIG
+	weapons[WEAPONS.BIG].set_owner(self)
 	weapons[WEAPONS.SMALL_WAVE] = SmallBulletWave.new()
 	weapons[WEAPONS.SMALL_WAVE].type = WEAPONS.SMALL_WAVE
+	weapons[WEAPONS.SMALL_WAVE].set_owner(self)
+	weapons[WEAPONS.SMALL_HOMING] = SmallHomingBullet.new()
+	weapons[WEAPONS.SMALL_HOMING].type = WEAPONS.SMALL_HOMING
+	weapons[WEAPONS.SMALL_HOMING].set_owner(self)
+	
 	
 	for w in weapons.values():
 		w.register_internal_nodes(self)
@@ -166,6 +173,7 @@ func find_nearest_enemy():
 
 
 class Weapon:
+	var object_owner = null
 	var canShoot = true
 	var timer = Timer.new()
 	var shooting_delay = 0
@@ -182,6 +190,9 @@ class Weapon:
 	func setup():
 		shooting_delay = 0.1
 		bulletScene = preload("res://scenes/bullet.tscn")
+		
+	func set_owner(owner):
+		object_owner = owner
 	
 	func _on_timer_timeout():
 		canShoot = true
@@ -212,6 +223,14 @@ class Weapon:
 
 class SmallBullet extends Weapon:
 	pass
+	
+class SmallHomingBullet extends SmallBullet:
+	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
+		var enemy = object_owner.find_nearest_enemy()
+		if enemy != null:
+			super.shoot(owner, start_position, enemy.position - start_position)
+		else:
+			super.shoot(owner, start_position, direction)
 
 class BigBullet extends Weapon:
 	func setup():
