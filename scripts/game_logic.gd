@@ -16,6 +16,7 @@ var canShoot = true
 var weapon = null
 var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
+var active_enemies : Dictionary = {}
 
 enum WEAPONS {SMALL, BIG, SMALL_WAVE}
 enum PERKS {LIFE, SHIELD}
@@ -93,6 +94,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 		return
 	
 	var enemy = ball_enemy_scene.instantiate()
+	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	
 	var left_or_right = -1
@@ -111,12 +113,13 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
 	
-func _on_enemy_killed(name: String, enemy_position : Vector2):
+func _on_enemy_killed(id : int):
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
-	score.add_score(points_dict[name])
-	
-	addPerk(enemy_position)
+	var enemy = active_enemies[id]
+	score.add_score(points_dict[enemy.get_enemy_name()])
+	active_enemies.erase(id)
+	addPerk(enemy.position)
 
 
 func _on_player_damage_taken(value):
@@ -148,6 +151,19 @@ func addPerk(pos : Vector2):
 		perk.position = pos
 		call_deferred("add_child", perk)
 		return true
+
+
+func find_nearest_enemy():
+	var result = null
+	var tmp = 1000000 # TODO: define max distance
+	for enemy in active_enemies.values():
+		var distance = player.position.distance_squared_to(enemy.position)
+		if distance < tmp:
+			tmp = distance
+			result = enemy
+	
+	return result
+
 
 class Weapon:
 	var canShoot = true
