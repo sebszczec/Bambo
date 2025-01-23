@@ -201,20 +201,20 @@ func handleDamage(damage):
 	return true
 
 
-func createFloatingText(value: String, color: Color, scale: float = 1):
+func createFloatingText(value: String, color: Color, scale_factor: float = 1):
 	var damageText = floatingTextScene.instantiate()
-	damageText.scale = Vector2(scale, scale)
+	damageText.scale = Vector2(scale_factor, scale_factor)
 	damageText.set_color(color)
 	damageText.Amount = value
 	add_child(damageText)
 
 
-func createLifeFloatingText(value, scale: float = 1):
-	createFloatingText(value, Color.RED, scale)
+func createLifeFloatingText(value, scale_factor: float = 1):
+	createFloatingText(value, Color.RED, scale_factor)
 	
 	
-func createShieldFloatingText(value, scale: float = 1):
-	createFloatingText(value, Color.DODGER_BLUE, scale)
+func createShieldFloatingText(value, scale_factor: float = 1):
+	createFloatingText(value, Color.DODGER_BLUE, scale_factor)
 
 
 func updateShield(value):
