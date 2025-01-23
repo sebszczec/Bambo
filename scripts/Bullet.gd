@@ -14,7 +14,6 @@ var velocity = Vector2(0, 0)
 var Damage = 0
 
 signal freeing
-var isSetToFree = false
 
 
 func _ready():
@@ -33,10 +32,8 @@ func _physics_process(_delta):
 		velocity = velocity.bounce(collision.get_normal())
 
 func dispose():
-	if isSetToFree:
+	if is_queued_for_deletion():
 		return
-	
-	isSetToFree = true
 	
 	freeing.emit()
 	queue_free()

@@ -94,12 +94,10 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 			dispose()
 			pass # handle enemy killed
 
-var isSetToFree = false
 func dispose():
-	if !isSetToFree:
+	if !is_queued_for_deletion():
 		killed.emit(position)
 		queue_free()
-		isSetToFree = true
 
 
 func handleDamage(damage):
