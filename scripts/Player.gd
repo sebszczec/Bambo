@@ -188,16 +188,10 @@ func handleDamage(damage):
 			real_damage = 0
 		var tmp = updateShield(-damage)
 		if showDamage:
-			var damageText = floatingTextScene.instantiate()
-			damageText.set_color(Color.DODGER_BLUE)
-			damageText.Amount = tmp
-			add_child(damageText)
+			createShieldFloatingText(-tmp)
 		
 	if showDamage && real_damage > 0:
-		var damageText = floatingTextScene.instantiate()
-		damageText.set_color(Color.RED)
-		damageText.Amount = real_damage
-		add_child(damageText)
+		createLifeFloatingText(real_damage)
 	
 	updateLife(-real_damage)
 	
@@ -205,6 +199,22 @@ func handleDamage(damage):
 		return false
 	
 	return true
+
+
+func createFloatingText(value: int, color: Color):
+	var damageText = floatingTextScene.instantiate()
+	damageText.set_color(color)
+	damageText.Amount = value
+	add_child(damageText)
+
+
+func createLifeFloatingText(value):
+	createFloatingText(value, Color.RED)
+	
+	
+func createShieldFloatingText(value):
+	createFloatingText(value, Color.DODGER_BLUE)
+
 
 func updateShield(value):
 	shield += value
