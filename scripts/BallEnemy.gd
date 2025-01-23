@@ -104,7 +104,7 @@ func handleDamage(damage):
 	if showDamage:
 		var damageText = floatingTextScene.instantiate()
 		damageText.set_color(Color.WHITE)
-		damageText.Amount = damage
+		damageText.Amount = str(damage)
 		add_child(damageText)
 		
 	Life = Life - damage

@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var Amount = 0
+@export var Amount : String = "0"
 var velocity = Vector2()
 var color: Color
 

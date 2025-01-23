@@ -188,10 +188,10 @@ func handleDamage(damage):
 			real_damage = 0
 		var tmp = updateShield(-damage)
 		if showDamage:
-			createShieldFloatingText(-tmp)
+			createShieldFloatingText(str(-tmp))
 		
 	if showDamage && real_damage > 0:
-		createLifeFloatingText(real_damage)
+		createLifeFloatingText(str(real_damage))
 	
 	updateLife(-real_damage)
 	
@@ -201,19 +201,20 @@ func handleDamage(damage):
 	return true
 
 
-func createFloatingText(value: int, color: Color):
+func createFloatingText(value: String, color: Color, scale: float = 1):
 	var damageText = floatingTextScene.instantiate()
+	damageText.scale = Vector2(scale, scale)
 	damageText.set_color(color)
 	damageText.Amount = value
 	add_child(damageText)
 
 
-func createLifeFloatingText(value):
-	createFloatingText(value, Color.RED)
+func createLifeFloatingText(value, scale: float = 1):
+	createFloatingText(value, Color.RED, scale)
 	
 	
-func createShieldFloatingText(value):
-	createFloatingText(value, Color.DODGER_BLUE)
+func createShieldFloatingText(value, scale: float = 1):
+	createFloatingText(value, Color.DODGER_BLUE, scale)
 
 
 func updateShield(value):
@@ -256,10 +257,12 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		return
 	
 	if area.is_in_group("LifePerk"):
+		createLifeFloatingText("+" + str(area.Life), 2)
 		updateLife(area.Life)
 		return
 		
 	if area.is_in_group("ShieldPerk"):
+		createShieldFloatingText("+" + str(area.Shield), 2)
 		updateShield(area.Shield)
 		return
 
