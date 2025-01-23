@@ -91,9 +91,15 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		var bullet = area.get_parent()
 		
 		if handleDamage(bullet.Damage) == false:
-			killed.emit(position)
-			queue_free()
+			dispose()
 			pass # handle enemy killed
+
+var isSetToFree = false
+func dispose():
+	if !isSetToFree:
+		killed.emit(position)
+		queue_free()
+		isSetToFree = true
 
 
 func handleDamage(damage):
