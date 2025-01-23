@@ -43,6 +43,10 @@ func _ready():
 	
 	make_path(Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y)))
 
+#
+#func get_name():
+	#return "BallEnemy"
+
 
 func skip_frame():
 	await get_tree().physics_frame
@@ -96,7 +100,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 func dispose():
 	if !is_queued_for_deletion():
-		killed.emit(position)
+		killed.emit("BallEnemy", position)
 		queue_free()
 
 

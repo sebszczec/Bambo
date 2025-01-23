@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=14 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cptp57bt4v2y0" path="res://resources/kenney_ui/red_bar.png" id="3_p7qxo"]
 [ext_resource type="Texture2D" uid="uid://bqnlp20gumq0o" path="res://resources/kenney_ui/green_bar.png" id="4_ntn4d"]
 [ext_resource type="Texture2D" uid="uid://d2l2mqkf7t8ci" path="res://resources/kenney_ui/blue_bar.png" id="5_mptyy"]
+[ext_resource type="PackedScene" uid="uid://snwsk5j436tk" path="res://scenes/score.tscn" id="6_btsp4"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 [ext_resource type="PackedScene" uid="uid://oj124bkc0r8r" path="res://scenes/shield_perk.tscn" id="11_hfv22"]
 
@@ -87,6 +88,9 @@ offset_right = 372.0
 offset_bottom = 113.0
 texture_under = ExtResource("2_r3oad")
 texture_progress = ExtResource("5_mptyy")
+
+[node name="Score" parent="GUI/CanvasLayer" instance=ExtResource("6_btsp4")]
+position = Vector2(960, -8)
 
 [node name="InformationBox" type="Control" parent="."]
 layout_mode = 3

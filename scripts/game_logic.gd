@@ -6,6 +6,7 @@ extends Node
 
 var enemy_count = 0
 var world = null
+var score = null
 var player = null
 var informationBox = null
 var lifeBar = null
@@ -13,7 +14,8 @@ var shieldBar = null
 var afterburnerBar = null
 var canShoot = true
 var weapon = null
-var weapons = {}
+var weapons : Dictionary = {}
+var points_dict : Dictionary = {}
 
 enum WEAPONS {SMALL, BIG, SMALL_WAVE}
 enum PERKS {LIFE, SHIELD}
@@ -32,6 +34,9 @@ func _ready() -> void:
 	init_weapons()
 	weapon = weapons[WEAPONS.SMALL]
 	
+	init_points_dict()
+	
+	score = world.find_child("Score")
 	lifeBar = world.find_child("LifeBar")
 	shieldBar = world.find_child("ShieldBar")
 	afterburnerBar = world.find_child("AfterburnerBar")
@@ -59,7 +64,11 @@ func init_weapons():
 	for w in weapons.values():
 		w.register_internal_nodes(self)
 		w.connect("bulletNumerChange", _on_weapon_bullet_number_change)
-	
+
+
+func init_points_dict():
+	points_dict["BallEnemy"] = 50
+
 
 func _physics_process(_delta):
 	if Input.is_action_pressed("ui_shoot"):
@@ -102,9 +111,10 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
 	
-func _on_enemy_killed(enemy_position : Vector2):
+func _on_enemy_killed(name: String, enemy_position : Vector2):
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
+	score.add_score(points_dict[name])
 	
 	addPerk(enemy_position)
 
