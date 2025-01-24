@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://on4ehyyfc2nh"]
+
+[ext_resource type="Texture2D" uid="uid://cmfhyfeowxqcc" path="res://resources/perks/fire_circle.png" id="1_ec7nk"]
+[ext_resource type="Script" path="res://scripts/wave_perk.gd" id="1_en3vj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_56xsv"]
+radius = 38.3275
+
+[node name="WavePerk" type="Area2D" groups=["WavePerk"]]
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_en3vj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_56xsv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_ec7nk")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

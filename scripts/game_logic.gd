@@ -3,7 +3,9 @@ extends Node
 @export_range (1, 400) var MaxEnemyCount : int = 100
 @export_range (0, 100) var ChanceForLifePerk : int = 5
 @export_range (0, 100) var ChanceForShieldPerk : int = 5
-@export_range (0, 100) var ChanceForBigGunPerk : int = 5
+@export_range (0, 100) var ChanceForBigGunPerk : int = 10
+@export_range (0, 100) var ChanceForWavePerk : int = 10
+@export_range (0, 100) var ChanceForHomingPerk : int = 10
 
 var enemy_count = 0
 var world = null
@@ -20,12 +22,14 @@ var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
 enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING, SMALL_HOMING_WIHT_DELAY}
-enum PERKS {LIFE, SHIELD, BIG_GUN}
+enum PERKS {LIFE, SHIELD, BIG_GUN, WAVE, HOMING}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
 var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
 var big_gun_perk_scene = preload("res://scenes/big_gun_perk.tscn")
+var wave_perk_scene = preload("res://scenes/wave_perk.tscn")
+var homing_perk_scene = preload("res://scenes/homing_perk.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
@@ -178,31 +182,33 @@ func _on_player_update_shield(value):
 func addPerk(pos : Vector2):
 	var type = randi_range(0, PERKS.size() - 1)
 	var chance = randi_range(0, 100)
+	var perk = null
 	
 	if type == PERKS.LIFE:
 		if chance > ChanceForLifePerk:
 			return false
-		var perk = life_perk_scene.instantiate()
-		perk.position = pos
-		call_deferred("add_child", perk)
-		return true
-		
-	if type == PERKS.SHIELD:
+		perk = life_perk_scene.instantiate()
+	elif type == PERKS.SHIELD:
 		if chance > ChanceForLifePerk:
 			return false
-		var perk = shield_perk_scene.instantiate()
-		perk.position = pos
-		call_deferred("add_child", perk)
-		return true
-		
-	if type == PERKS.BIG_GUN:
+		perk = shield_perk_scene.instantiate()
+	elif type == PERKS.BIG_GUN:
 		if chance > ChanceForBigGunPerk:
 			return false
-		var perk = big_gun_perk_scene.instantiate()
-		perk.position = pos
-		call_deferred("add_child", perk)
-		return true
-
+		perk = big_gun_perk_scene.instantiate()
+	elif type == PERKS.WAVE:
+		if chance > ChanceForWavePerk:
+			return false
+		perk = wave_perk_scene.instantiate()
+	elif type == PERKS.HOMING:
+		if chance > ChanceForHomingPerk:
+			return false
+		perk = homing_perk_scene.instantiate()
+	
+	perk.position = pos
+	call_deferred("add_child", perk)
+	return true
+		
 func find_nearest_enemy():
 	var result = null
 	var tmp = 1000000 # TODO: define max distance
