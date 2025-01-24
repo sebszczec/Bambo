@@ -177,8 +177,10 @@ class Weapon:
 	var canShoot = true
 	var timer = Timer.new()
 	var shooting_delay = 0
-	var bulletScene = null
-	var bulletNumber = 0
+	var bullet_scene = null
+	var bullet_number = 0
+	var speed = 20
+	var life_time = 0.5
 	var type : WEAPONS
 	signal bulletNumerChange
 	
@@ -189,7 +191,7 @@ class Weapon:
 	
 	func setup():
 		shooting_delay = 0.1
-		bulletScene = preload("res://scenes/bullet.tscn")
+		bullet_scene = preload("res://scenes/bullet.tscn")
 		
 	func set_owner(owner):
 		object_owner = owner
@@ -203,9 +205,11 @@ class Weapon:
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
 			canShoot = false
-			var bullet = bulletScene.instantiate()
+			var bullet = bullet_scene.instantiate()
 			bullet.position = start_position
 			bullet.velocity = direction
+			bullet.Speed = speed
+			bullet.LifeTime = life_time
 			bullet.connect("freeing", _on_bullet_freeing)
 			owner.add_child(bullet)
 			timer.start()
@@ -217,14 +221,20 @@ class Weapon:
 
 		
 	func updateBulletNumber(diff):
-		bulletNumber += diff
-		bulletNumerChange.emit(bulletNumber)
+		bullet_number += diff
+		bulletNumerChange.emit(bullet_number)
 
 
 class SmallBullet extends Weapon:
 	pass
 	
 class SmallHomingBullet extends SmallBullet:
+	func setup():
+		super.setup()
+		shooting_delay = 0.2
+		speed = 5
+		life_time = 1
+		
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		var enemy = object_owner.find_nearest_enemy()
 		if enemy != null:
@@ -235,29 +245,28 @@ class SmallHomingBullet extends SmallBullet:
 class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
-		bulletScene = preload("res://scenes/BigBullet.tscn")
+		bullet_scene = preload("res://scenes/BigBullet.tscn")
 
 class SmallBulletWave extends SmallBullet:
 	var size = 30
-	var speed = 5
 	var min_damage = 25
 	var max_damage = 50
-	var life_time = 1
 	
 	func setup():
 		super.setup()
 		shooting_delay = 1
+		speed = 5
 		
 	func shoot(owner: Node, start_position: Vector2, _direction: Vector2):
 		if canShoot:
 			canShoot = false
 			var radial_increment = (2.0 * PI) / float(size)
 			for i in range (0, size):
-				var bullet = bulletScene.instantiate()
+				var bullet = bullet_scene.instantiate()
 				bullet.Speed = speed
 				bullet.MinDamage = min_damage
 				bullet.MaxDamage = max_damage
-				bullet.LifeTime = life_time
+				bullet.LifeTime = 1
 				
 				var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)
 				bullet.position = start_position + radial_v
