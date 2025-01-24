@@ -18,7 +18,7 @@ var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING}
+enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING, SMALL_HOMING_WIHT_DELAY}
 enum PERKS {LIFE, SHIELD}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
@@ -67,7 +67,9 @@ func init_weapons():
 	weapons[WEAPONS.SMALL_HOMING] = SmallHomingBullet.new()
 	weapons[WEAPONS.SMALL_HOMING].type = WEAPONS.SMALL_HOMING
 	weapons[WEAPONS.SMALL_HOMING].set_owner(self)
-	
+	weapons[WEAPONS.SMALL_HOMING_WIHT_DELAY] = SmallHomingBulletWithDelay.new()
+	weapons[WEAPONS.SMALL_HOMING_WIHT_DELAY].type = WEAPONS.SMALL_HOMING_WIHT_DELAY
+	weapons[WEAPONS.SMALL_HOMING_WIHT_DELAY].set_owner(self)
 	
 	for w in weapons.values():
 		w.register_internal_nodes(self)
@@ -87,6 +89,39 @@ func _physics_process(_delta):
 			weapon = weapons[0]
 		else:
 			weapon = weapons[weapon.type + 1]
+	
+	if Input.is_action_just_pressed("ui_weapon_1"):
+		change_weapon(0)
+	
+	if Input.is_action_just_pressed("ui_weapon_2"):
+		change_weapon(1)
+	
+	if Input.is_action_just_pressed("ui_weapon_3"):
+		change_weapon(2)
+	
+	if Input.is_action_just_pressed("ui_weapon_4"):
+		change_weapon(3)
+		
+	if Input.is_action_just_pressed("ui_weapon_5"):
+		change_weapon(4)
+		
+	if Input.is_action_just_pressed("ui_weapon_6"):
+		change_weapon(5)
+		
+	if Input.is_action_just_pressed("ui_weapon_7"):
+		change_weapon(6)
+		
+	if Input.is_action_just_pressed("ui_weapon_8"):
+		change_weapon(7)
+		
+	if Input.is_action_just_pressed("ui_weapon_9"):
+		change_weapon(8)
+
+func change_weapon(id: int):
+	if id >= WEAPONS.size():
+		return
+	
+	weapon = weapons[id]
 
 
 func _on_weapon_bullet_number_change(value):
@@ -241,6 +276,40 @@ class SmallHomingBullet extends SmallBullet:
 			super.shoot(owner, start_position, enemy.position - start_position)
 		else:
 			super.shoot(owner, start_position, direction)
+
+class SmallHomingBulletWithDelay extends SmallBullet:
+	func setup():
+		super.setup()
+		shooting_delay = 0.2
+		speed = 10
+		life_time = 1
+		
+	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
+		if canShoot:
+			canShoot = false
+			var bullet = bullet_scene.instantiate()
+			bullet.position = start_position
+			bullet.velocity = direction
+			bullet.Speed = speed
+			bullet.LifeTime = life_time
+			bullet.connect("freeing", _on_bullet_freeing)
+			
+			var homing_timer = Timer.new()
+			homing_timer.one_shot = true
+			homing_timer.wait_time = 0.1
+			homing_timer.connect("timeout", _homing_timer_on_timeout.bind(bullet))
+			bullet.add_child(homing_timer)
+			
+			owner.add_child(bullet)
+			timer.start()
+			homing_timer.start()
+				
+			updateBulletNumber(1)
+	
+	func _homing_timer_on_timeout(bullet):
+		var enemy = object_owner.find_nearest_enemy()
+		if enemy != null:
+			bullet.velocity = enemy.position - bullet.position
 
 class BigBullet extends Weapon:
 	func setup():
