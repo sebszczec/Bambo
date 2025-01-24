@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1h3hcpe0ai3b"]
+
+[ext_resource type="Script" path="res://scripts/big_gun_perk.gd" id="1_4fg37"]
+[ext_resource type="Texture2D" uid="uid://bxountmgxxc06" path="res://resources/perks/big_gun.png" id="1_xd23g"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t6xqr"]
+radius = 44.1022
+
+[node name="BigGunPerk" type="Area2D" groups=["BigGunPerk"]]
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_4fg37")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_t6xqr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-5, 7)
+texture = ExtResource("1_xd23g")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

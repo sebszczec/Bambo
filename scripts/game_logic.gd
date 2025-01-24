@@ -3,6 +3,7 @@ extends Node
 @export_range (1, 400) var MaxEnemyCount : int = 100
 @export_range (0, 100) var ChanceForLifePerk : int = 5
 @export_range (0, 100) var ChanceForShieldPerk : int = 5
+@export_range (0, 100) var ChanceForBigGunPerk : int = 5
 
 var enemy_count = 0
 var world = null
@@ -19,11 +20,12 @@ var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
 enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING, SMALL_HOMING_WIHT_DELAY}
-enum PERKS {LIFE, SHIELD}
+enum PERKS {LIFE, SHIELD, BIG_GUN}
 
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
 var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
+var big_gun_perk_scene = preload("res://scenes/big_gun_perk.tscn")
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
@@ -174,10 +176,10 @@ func _on_player_update_shield(value):
 	shieldBar.value = value
 
 func addPerk(pos : Vector2):
-	var type = randi_range(0, 1)
+	var type = randi_range(0, PERKS.size() - 1)
+	var chance = randi_range(0, 100)
 	
 	if type == PERKS.LIFE:
-		var chance = randi_range(0, 100)
 		if chance > ChanceForLifePerk:
 			return false
 		var perk = life_perk_scene.instantiate()
@@ -186,14 +188,20 @@ func addPerk(pos : Vector2):
 		return true
 		
 	if type == PERKS.SHIELD:
-		var chance = randi_range(0, 100)
 		if chance > ChanceForLifePerk:
 			return false
 		var perk = shield_perk_scene.instantiate()
 		perk.position = pos
 		call_deferred("add_child", perk)
 		return true
-
+		
+	if type == PERKS.BIG_GUN:
+		if chance > ChanceForBigGunPerk:
+			return false
+		var perk = big_gun_perk_scene.instantiate()
+		perk.position = pos
+		call_deferred("add_child", perk)
+		return true
 
 func find_nearest_enemy():
 	var result = null
