@@ -1,11 +1,11 @@
 extends Node
 
 @export_range (1, 400) var MaxEnemyCount : int = 100
-@export_range (0, 100) var ChanceForLifePerk : int = 5
-@export_range (0, 100) var ChanceForShieldPerk : int = 5
-@export_range (0, 100) var ChanceForBigGunPerk : int = 10
-@export_range (0, 100) var ChanceForWavePerk : int = 10
-@export_range (0, 100) var ChanceForHomingPerk : int = 10
+@export_range (0, 100) var ChanceForLifePerk : int = 100
+@export_range (0, 100) var ChanceForShieldPerk : int = 100
+@export_range (0, 100) var ChanceForBigGunPerk : int = 100
+@export_range (0, 100) var ChanceForWavePerk : int = 100
+@export_range (0, 100) var ChanceForHomingPerk : int = 100
 
 var enemy_count = 0
 var world = null

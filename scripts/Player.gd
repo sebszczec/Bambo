@@ -45,6 +45,7 @@ var enemyDamagetimers = {}
 signal update_life(value: int)
 signal update_afterburner(value: int)
 signal update_shield(value: int)
+signal killed
 
 func _ready() -> void:
 	lifeBar.setColor(Color.RED)
@@ -160,7 +161,8 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 		var id = enemy.get_instance_id()
 		
 		if handleDamage(enemy.Damage) == false:
-			pass # handle dead of player
+			handleKilled()
+			return
 		
 		if enemy.IsDamageOverTime == true:
 			var timer = Timer.new()
@@ -175,7 +177,7 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 
 func _on_take_damage_timeout(enemy):
 	if handleDamage(enemy.Damage) == false:
-		pass # handle dead of player
+		handleKilled()
 
 
 func handleDamage(damage):
@@ -195,11 +197,14 @@ func handleDamage(damage):
 	
 	updateLife(-real_damage)
 	
-	if MaxLife == 0:
+	if life <= 0:
 		return false
 	
 	return true
 
+
+func handleKilled():
+	killed.emit()
 
 func createFloatingText(value: String, color: Color, scale_factor: float = 1):
 	var damageText = floatingTextScene.instantiate()

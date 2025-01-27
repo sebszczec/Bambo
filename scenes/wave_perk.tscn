@@ -7,6 +7,7 @@
 radius = 38.3275
 
 [node name="WavePerk" type="Area2D" groups=["WavePerk"]]
+rotation = -0.261799
 scale = Vector2(0.3, 0.3)
 script = ExtResource("1_en3vj")
 

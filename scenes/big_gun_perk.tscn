@@ -7,6 +7,7 @@
 radius = 44.1022
 
 [node name="BigGunPerk" type="Area2D" groups=["BigGunPerk"]]
+rotation = -0.261799
 scale = Vector2(0.3, 0.3)
 script = ExtResource("1_4fg37")
 
