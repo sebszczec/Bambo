@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=16 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://d2l2mqkf7t8ci" path="res://resources/kenney_ui/blue_bar.png" id="5_mptyy"]
 [ext_resource type="PackedScene" uid="uid://snwsk5j436tk" path="res://scenes/score.tscn" id="6_btsp4"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
+[ext_resource type="Texture2D" uid="uid://bxountmgxxc06" path="res://resources/perks/big_gun.png" id="7_kc33q"]
+[ext_resource type="Script" path="res://scripts/active_perk.gd" id="7_t4dg2"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
@@ -30,10 +32,10 @@ offset_bottom = 40.0
 [node name="CanvasLayer" type="CanvasLayer" parent="GUI"]
 
 [node name="Panel" type="Panel" parent="GUI/CanvasLayer"]
-offset_left = 3.0
-offset_top = 971.0
-offset_right = 405.0
-offset_bottom = 1076.0
+offset_left = 8.0
+offset_top = 968.0
+offset_right = 410.0
+offset_bottom = 1073.0
 
 [node name="LifeLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
 layout_mode = 0
@@ -90,6 +92,34 @@ texture_progress = ExtResource("5_mptyy")
 
 [node name="Score" parent="GUI/CanvasLayer" instance=ExtResource("6_btsp4")]
 position = Vector2(960, -8)
+
+[node name="ActivePerkPanel" type="Panel" parent="GUI/CanvasLayer"]
+offset_left = 960.0
+offset_top = 936.0
+offset_right = 1064.0
+offset_bottom = 1072.0
+
+[node name="ActivePerk" type="Node2D" parent="GUI/CanvasLayer/ActivePerkPanel"]
+script = ExtResource("7_t4dg2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI/CanvasLayer/ActivePerkPanel/ActivePerk"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 136.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TimeLeftLabel" type="Label" parent="GUI/CanvasLayer/ActivePerkPanel/ActivePerk/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "20.00"
+
+[node name="Sprite2D" type="Sprite2D" parent="GUI/CanvasLayer/ActivePerkPanel/ActivePerk/VBoxContainer"]
+position = Vector2(48, 64)
+texture = ExtResource("7_kc33q")
 
 [node name="InformationBox" type="Control" parent="."]
 layout_mode = 3
