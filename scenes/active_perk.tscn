@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckojs6xfmg620"]
+
+[ext_resource type="Script" path="res://scripts/active_perk.gd" id="1_6u1nu"]
+[ext_resource type="Texture2D" uid="uid://bxountmgxxc06" path="res://resources/perks/big_gun.png" id="2_wkken"]
+
+[node name="ActivePerk" type="Node2D"]
+script = ExtResource("1_6u1nu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 136.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TimeLeftLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "20.00"
+
+[node name="Sprite2D" type="Sprite2D" parent="VBoxContainer"]
+position = Vector2(48, 64)
+texture = ExtResource("2_wkken")
