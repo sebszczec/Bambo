@@ -8,8 +8,10 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var hitBoxCollisionshape = $HitBox/HitBoxCollisionShape
 @onready var lifeBar = $LifeBar
 
+
 @export var ResizeSpeed = 0.05
 @export_category("Movemement")
+@export var RotationSpeed : float = TAU
 @export var Speed = 3000
 @export var Acceleration = 0.1
 @export var Damage = 10
@@ -22,6 +24,8 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 signal killed
 
 var resizeFactor = 1
+var _theta : float = 0
+var _halfPI : float = PI / 2
 var showLifeBar = true
 var showDamage = true
 
@@ -70,6 +74,9 @@ func _physics_process(delta):
 	
 	var direction = global_position.direction_to(next_position)
 	var vel = direction * Speed * delta
+
+	_theta = wrapf(atan2(direction.y, direction.x) - sprite.rotation - _halfPI, -PI, PI)
+	sprite.rotation += clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	
 	agent.velocity = vel
 		
