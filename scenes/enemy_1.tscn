@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://ca6sxsibqlyef"]
 
-[ext_resource type="Script" path="res://scripts/ball_enemy.gd" id="1_lo5sg"]
-[ext_resource type="Texture2D" uid="uid://d1df8ojeg4vaq" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_11l6w"]
-[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_o04pc"]
+[ext_resource type="Script" path="res://scripts/enemy_1.gd" id="1_ww31q"]
+[ext_resource type="Texture2D" uid="uid://d1df8ojeg4vaq" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_ywix3"]
+[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_0fnij"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
 radius = 9.05539
@@ -12,7 +12,7 @@ radius = 9.05539
 [node name="BallEnemy" type="CharacterBody2D"]
 collision_layer = 8
 collision_mask = 2
-script = ExtResource("1_lo5sg")
+script = ExtResource("1_ww31q")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_2h81d")
@@ -20,14 +20,14 @@ shape = SubResource("CircleShape2D_2h81d")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-5.96046e-08, 2.98023e-08)
 scale = Vector2(0.253562, 0.244345)
-texture = ExtResource("2_11l6w")
+texture = ExtResource("2_ywix3")
 
 [node name="ResizeTimer" type="Timer" parent="."]
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 avoidance_enabled = true
 
-[node name="LifeBar" parent="." instance=ExtResource("3_o04pc")]
+[node name="LifeBar" parent="." instance=ExtResource("3_0fnij")]
 offset_top = -25.0
 offset_bottom = -19.0
 

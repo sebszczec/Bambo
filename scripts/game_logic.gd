@@ -22,7 +22,7 @@ var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
+var ball_enemy_scene = preload("res://scenes/enemy_1.tscn")
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
 var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
 var big_gun_perk_scene = preload("res://scenes/big_gun_perk.tscn")
