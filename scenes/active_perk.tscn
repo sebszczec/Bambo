@@ -19,7 +19,6 @@ grow_vertical = 2
 [node name="TimeLeftLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "20.00"
 
 [node name="Sprite2D" type="Sprite2D" parent="VBoxContainer"]
 position = Vector2(48, 64)

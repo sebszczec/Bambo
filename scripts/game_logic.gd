@@ -31,6 +31,7 @@ var homing_perk_scene = preload("res://scenes/homing_perk.tscn")
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	world = get_parent()
@@ -56,6 +57,7 @@ func _ready() -> void:
 	
 	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
+	
 
 func init_weapons():
 	weapons[Enums.WEAPONS.SMALL] = SmallBullet.new()
