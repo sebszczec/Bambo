@@ -26,7 +26,7 @@ var life = MaxLife
 var shield = MaxShield
 
 @export_category("Camera")
-@export var ZoomFactor = 0.2
+@export var ZoomFactor = 2
 
 var sateliteAngle = 0
 var playerAngle = 0

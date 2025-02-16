@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ca6sxsibqlyef"]
+[gd_scene load_steps=12 format=3 uid="uid://ca6sxsibqlyef"]
 
 [ext_resource type="Script" path="res://scripts/enemy_1.gd" id="1_ww31q"]
 [ext_resource type="Texture2D" uid="uid://d1df8ojeg4vaq" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_ywix3"]
@@ -8,21 +8,29 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
 radius = 9.05539
 
-[sub_resource type="Curve" id="Curve_ifug4"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.553333, 0.582418), 0.0, 0.0, 0, 0, Vector2(1, 0.010989), 0.0, 0.0, 0, 0]
-point_count = 3
+[sub_resource type="Gradient" id="Gradient_nkwa4"]
+offsets = PackedFloat32Array(0, 0.622951, 1)
+colors = PackedColorArray(1, 1, 0, 1, 1, 0, 0, 0.713726, 1, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gpudh"]
+gradient = SubResource("Gradient_nkwa4")
+
+[sub_resource type="Curve" id="Curve_c680a"]
+_data = [Vector2(0, 0.153846), 0.0, 0.0, 0, 0, Vector2(0.306667, 1), 0.0, 0.0, 0, 0, Vector2(0.62, 0.582418), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
 
 [sub_resource type="CurveTexture" id="CurveTexture_rslk7"]
-curve = SubResource("Curve_ifug4")
+curve = SubResource("Curve_c680a")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kcdva"]
 particle_flag_disable_z = true
 angle_min = -90.0
 angle_max = 90.0
+gravity = Vector3(0, 0, 0)
 scale_min = 0.01
 scale_max = 0.1
 scale_curve = SubResource("CurveTexture_rslk7")
-color = Color(1, 0, 0, 1)
+color_ramp = SubResource("GradientTexture1D_gpudh")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o5b0c"]
 
@@ -42,10 +50,11 @@ scale = Vector2(0.253562, 0.244345)
 texture = ExtResource("2_ywix3")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Ship"]
-position = Vector2(0, -12)
+position = Vector2(0, -11)
 amount = 10
 process_material = SubResource("ParticleProcessMaterial_kcdva")
 texture = ExtResource("4_s66dr")
+fixed_fps = 60
 
 [node name="ResizeTimer" type="Timer" parent="."]
 
