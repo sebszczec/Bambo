@@ -21,9 +21,6 @@ var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING, SMALL_HOMING_WIHT_DELAY}
-enum PERKS {LIFE, SHIELD, BIG_GUN, WAVE, HOMING}
-
 var ball_enemy_scene = preload("res://scenes/ball_enemy.tscn")
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
 var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
@@ -39,7 +36,7 @@ func _ready() -> void:
 	world = get_parent()
 	
 	init_weapons()
-	weapon = weapons[WEAPONS.SMALL]
+	weapon = weapons[Enums.WEAPONS.SMALL]
 	
 	init_points_dict()
 	
@@ -61,21 +58,21 @@ func _ready() -> void:
 	enemy_spawn_timer.start()
 
 func init_weapons():
-	weapons[WEAPONS.SMALL] = SmallBullet.new()
-	weapons[WEAPONS.SMALL].type = WEAPONS.SMALL
-	weapons[WEAPONS.SMALL].set_owner(self)
-	weapons[WEAPONS.BIG] = BigBullet.new()
-	weapons[WEAPONS.BIG].type = WEAPONS.BIG
-	weapons[WEAPONS.BIG].set_owner(self)
-	weapons[WEAPONS.SMALL_WAVE] = SmallBulletWave.new()
-	weapons[WEAPONS.SMALL_WAVE].type = WEAPONS.SMALL_WAVE
-	weapons[WEAPONS.SMALL_WAVE].set_owner(self)
-	weapons[WEAPONS.SMALL_HOMING] = SmallHomingBullet.new()
-	weapons[WEAPONS.SMALL_HOMING].type = WEAPONS.SMALL_HOMING
-	weapons[WEAPONS.SMALL_HOMING].set_owner(self)
-	weapons[WEAPONS.SMALL_HOMING_WIHT_DELAY] = SmallHomingBulletWithDelay.new()
-	weapons[WEAPONS.SMALL_HOMING_WIHT_DELAY].type = WEAPONS.SMALL_HOMING_WIHT_DELAY
-	weapons[WEAPONS.SMALL_HOMING_WIHT_DELAY].set_owner(self)
+	weapons[Enums.WEAPONS.SMALL] = SmallBullet.new()
+	weapons[Enums.WEAPONS.SMALL].type = Enums.WEAPONS.SMALL
+	weapons[Enums.WEAPONS.SMALL].set_owner(self)
+	weapons[Enums.WEAPONS.BIG] = BigBullet.new()
+	weapons[Enums.WEAPONS.BIG].type = Enums.WEAPONS.BIG
+	weapons[Enums.WEAPONS.BIG].set_owner(self)
+	weapons[Enums.WEAPONS.SMALL_WAVE] = SmallBulletWave.new()
+	weapons[Enums.WEAPONS.SMALL_WAVE].type = Enums.WEAPONS.SMALL_WAVE
+	weapons[Enums.WEAPONS.SMALL_WAVE].set_owner(self)
+	weapons[Enums.WEAPONS.SMALL_HOMING] = SmallHomingBullet.new()
+	weapons[Enums.WEAPONS.SMALL_HOMING].type = Enums.WEAPONS.SMALL_HOMING
+	weapons[Enums.WEAPONS.SMALL_HOMING].set_owner(self)
+	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = SmallHomingBulletWithDelay.new()
+	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY].type = Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY
+	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY].set_owner(self)
 	
 	for w in weapons.values():
 		w.register_internal_nodes(self)
@@ -91,7 +88,7 @@ func _physics_process(_delta):
 		weapon.shoot(self, player.getSatelitePosition(), player.getShootingVector())
 	
 	if Input.is_action_just_pressed("ui_weapon_change"):
-		if weapon.type == WEAPONS.size() - 1:
+		if weapon.type == Enums.WEAPONS.size() - 1:
 			weapon = weapons[0]
 		else:
 			weapon = weapons[weapon.type + 1]
@@ -124,7 +121,7 @@ func _physics_process(_delta):
 		change_weapon(8)
 
 func change_weapon(id: int):
-	if id >= WEAPONS.size():
+	if id >= Enums.WEAPONS.size():
 		return
 	
 	weapon = weapons[id]
@@ -180,27 +177,27 @@ func _on_player_update_shield(value):
 	shieldBar.value = value
 
 func addPerk(pos : Vector2):
-	var type = randi_range(0, PERKS.size() - 1)
+	var type = randi_range(0, Enums.PERKS.size() - 1)
 	var chance = randi_range(0, 100)
 	var perk = null
 	
-	if type == PERKS.LIFE:
+	if type == Enums.PERKS.LIFE:
 		if chance > ChanceForLifePerk:
 			return false
 		perk = life_perk_scene.instantiate()
-	elif type == PERKS.SHIELD:
+	elif type == Enums.PERKS.SHIELD:
 		if chance > ChanceForLifePerk:
 			return false
 		perk = shield_perk_scene.instantiate()
-	elif type == PERKS.BIG_GUN:
+	elif type == Enums.PERKS.BIG_GUN:
 		if chance > ChanceForBigGunPerk:
 			return false
 		perk = big_gun_perk_scene.instantiate()
-	elif type == PERKS.WAVE:
+	elif type == Enums.PERKS.WAVE:
 		if chance > ChanceForWavePerk:
 			return false
 		perk = wave_perk_scene.instantiate()
-	elif type == PERKS.HOMING:
+	elif type == Enums.PERKS.HOMING:
 		if chance > ChanceForHomingPerk:
 			return false
 		perk = homing_perk_scene.instantiate()
@@ -230,7 +227,7 @@ class Weapon:
 	var bullet_number = 0
 	var speed = 20
 	var life_time = 0.5
-	var type : WEAPONS
+	var type : Enums.WEAPONS
 	signal bulletNumerChange
 	
 	func _init() -> void:
