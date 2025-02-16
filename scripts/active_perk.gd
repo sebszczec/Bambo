@@ -42,6 +42,7 @@ func _timeout():
 		return
 	
 	changeState(defaultState)
+	timeLeftLabel.text = ""
 	timeout.emit(currentState)
 
 func changeState(weapon : Enums.WEAPONS):
