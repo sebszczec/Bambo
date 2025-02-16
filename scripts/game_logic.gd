@@ -328,7 +328,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
-		bullet_scene = preload("res://scenes/BigBullet.tscn")
+		bullet_scene = preload("res://scenes/big_bullet.tscn")
 
 class SmallBulletWave extends SmallBullet:
 	var size = 30

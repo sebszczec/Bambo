@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-ConfigHandler="*res://singletons/ConfigHandler.gd"
+ConfigHandler="*res://singletons/config_handler.gd"
 
 [display]
 
