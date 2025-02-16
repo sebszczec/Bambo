@@ -7,8 +7,9 @@ extends Node2D
 
 const defaultState = Enums.WEAPONS.SMALL
 var currentState : Enums.WEAPONS = defaultState
-
 var textures : Dictionary = {}
+
+signal timeout
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -40,10 +41,12 @@ func _timeout():
 	if currentState == defaultState:
 		return
 	
-	currentState = defaultState
+	changeState(defaultState)
+	timeout.emit(currentState)
 
 func changeState(weapon : Enums.WEAPONS):
-	sprite.texture = textures[weapon]
+	currentState = weapon
+	sprite.texture = textures[currentState]
 	
 	if weapon == Enums.WEAPONS.SMALL:
 		TimeLeft = 0

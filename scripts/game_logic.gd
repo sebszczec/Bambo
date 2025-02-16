@@ -15,6 +15,7 @@ var informationBox = null
 var lifeBar = null
 var shieldBar = null
 var afterburnerBar = null
+var activePerk = null
 var canShoot = true
 var weapon = null
 var weapons : Dictionary = {}
@@ -44,17 +45,20 @@ func _ready() -> void:
 	lifeBar = world.find_child("LifeBar")
 	shieldBar = world.find_child("ShieldBar")
 	afterburnerBar = world.find_child("AfterburnerBar")
+	informationBox = world.find_child("InformationBox")
+	activePerk = world.find_child("ActivePerk")
 	
 	player = world.find_child("Player")
 	player.connect("update_life", _on_player_damage_taken)
 	player.connect("update_afterburner", _on_player_update_afterburner)
 	player.connect("update_shield", _on_player_update_shield)
 	
+	activePerk.connect("timeout", _on_active_perk_timeout)
+	
 	lifeBar.value = player.MaxLife
 	shieldBar.value = player.MaxShield
 	afterburnerBar.value = player.MaxAfterburner
 	
-	informationBox = world.find_child("InformationBox")
 	enemy_spawn_timer.start()
 	
 
@@ -127,13 +131,15 @@ func change_weapon(id: int):
 	
 	weapon = weapons[id]
 
-func _on_weapon_perk_taken(type: Enums.WEAPONS):
-	print(type)
+func _on_active_perk_timeout(type: Enums.WEAPONS):
+	weapon = weapons[type]
 
+func _on_weapon_perk_taken(type: Enums.WEAPONS):
+	weapon = weapons[type]
+	activePerk.changeState(type)
 
 func _on_weapon_bullet_number_change(value):
 	informationBox.setBulletCount(value)
-
 
 func _on_shooting_timer_timeout() -> void:
 	canShoot = true
