@@ -2,11 +2,12 @@ extends CharacterBody2D
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 
-@onready var sprite = $Sprite2D
+@onready var sprite = $Ship/Sprite2D
 @onready var resizeTimer = $ResizeTimer
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionshape = $HitBox/HitBoxCollisionShape
 @onready var lifeBar = $LifeBar
+@onready var ship = $Ship
 
 
 @export var ResizeSpeed = 0.05
@@ -75,8 +76,8 @@ func _physics_process(delta):
 	var direction = global_position.direction_to(next_position)
 	var vel = direction * Speed * delta
 
-	_theta = wrapf(atan2(direction.y, direction.x) - sprite.rotation - _halfPI, -PI, PI)
-	sprite.rotation += clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
+	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
+	ship.rotation += clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	
 	agent.velocity = vel
 		
