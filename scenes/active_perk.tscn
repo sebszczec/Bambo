@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ckojs6xfmg620"]
 
 [ext_resource type="Script" path="res://scripts/active_perk.gd" id="1_6u1nu"]
-[ext_resource type="Texture2D" uid="uid://bxountmgxxc06" path="res://resources/perks/big_gun.png" id="2_wkken"]
+[ext_resource type="Texture2D" uid="uid://cmfhyfeowxqcc" path="res://resources/perks/fire_circle.png" id="2_rxl8v"]
 
 [node name="ActivePerk" type="Node2D"]
 script = ExtResource("1_6u1nu")
@@ -21,5 +21,5 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="Sprite2D" type="Sprite2D" parent="VBoxContainer"]
-position = Vector2(48, 64)
-texture = ExtResource("2_wkken")
+position = Vector2(53, 64)
+texture = ExtResource("2_rxl8v")
