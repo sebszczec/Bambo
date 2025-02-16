@@ -32,7 +32,6 @@ var homing_perk_scene = preload("res://scenes/homing_perk.tscn")
 @onready var shootingTimer = $ShootingTimer
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	world = get_parent()
 	
@@ -128,6 +127,9 @@ func change_weapon(id: int):
 	
 	weapon = weapons[id]
 
+func _on_weapon_perk_taken(type: Enums.WEAPONS):
+	print(type)
+
 
 func _on_weapon_bullet_number_change(value):
 	informationBox.setBulletCount(value)
@@ -195,14 +197,17 @@ func addPerk(pos : Vector2):
 		if chance > ChanceForBigGunPerk:
 			return false
 		perk = big_gun_perk_scene.instantiate()
+		perk.connect("taken", _on_weapon_perk_taken)
 	elif type == Enums.PERKS.WAVE:
 		if chance > ChanceForWavePerk:
 			return false
 		perk = wave_perk_scene.instantiate()
+		perk.connect("taken", _on_weapon_perk_taken)
 	elif type == Enums.PERKS.HOMING:
 		if chance > ChanceForHomingPerk:
 			return false
 		perk = homing_perk_scene.instantiate()
+		perk.connect("taken", _on_weapon_perk_taken)
 	
 	perk.position = pos
 	call_deferred("add_child", perk)

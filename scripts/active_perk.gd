@@ -5,7 +5,8 @@ extends Node2D
 @onready var timeLeftLabel = $VBoxContainer/TimeLeftLabel
 @onready var sprite = $VBoxContainer/Sprite2D
 
-var state = Enums.WEAPONS.SMALL
+const defaultState = Enums.WEAPONS.SMALL
+var currentState : Enums.WEAPONS = defaultState
 
 var textures : Dictionary = {}
 
@@ -17,7 +18,7 @@ func _ready() -> void:
 	textures[Enums.WEAPONS.SMALL_HOMING] = load("res://resources/perks/rocket.png")
 	textures[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = load("res://resources/perks/rocket.png")
 	
-	changeState(state)
+	changeState(defaultState)
 
 
 func _physics_process(delta: float) -> void:
@@ -26,6 +27,7 @@ func _physics_process(delta: float) -> void:
 
 func _updateTimeLeft(delta):
 	if TimeLeft == 0:
+		_timeout()
 		return
 
 	TimeLeft -= delta
@@ -33,6 +35,12 @@ func _updateTimeLeft(delta):
 		TimeLeft = 0
 		
 	timeLeftLabel.text = "%0.2f" % TimeLeft
+
+func _timeout():
+	if currentState == defaultState:
+		return
+	
+	currentState = defaultState
 
 func changeState(weapon : Enums.WEAPONS):
 	sprite.texture = textures[weapon]
