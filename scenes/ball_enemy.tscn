@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=3 uid="uid://ca6sxsibqlyef"]
 
 [ext_resource type="Script" path="res://scripts/ball_enemy.gd" id="1_lo5sg"]
-[ext_resource type="Texture2D" uid="uid://tju24jdhjg17" path="res://resources/kenney_particle_pack/circle_02.png" id="2_r5nxe"]
+[ext_resource type="Texture2D" uid="uid://d1df8ojeg4vaq" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_11l6w"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_o04pc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
-radius = 7.0
+radius = 9.05539
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o5b0c"]
 
@@ -18,9 +18,9 @@ script = ExtResource("1_lo5sg")
 shape = SubResource("CircleShape2D_2h81d")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0, 0, 1)
-scale = Vector2(0.05, 0.05)
-texture = ExtResource("2_r5nxe")
+position = Vector2(-5.96046e-08, 2.98023e-08)
+scale = Vector2(0.253562, 0.244345)
+texture = ExtResource("2_11l6w")
 
 [node name="ResizeTimer" type="Timer" parent="."]
 
