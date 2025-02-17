@@ -80,7 +80,7 @@ func handleZoom():
 		return
 		
 	if Input.is_action_just_released("ui_zoom"):
-		camera.zoom = Vector2(1, 1)
+		camera.zoom = Vector2(1.25, 1.25)
 
 
 func calculateAfterburner(delta):
