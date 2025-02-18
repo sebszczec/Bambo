@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=18 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -13,11 +13,16 @@
 [ext_resource type="PackedScene" uid="uid://ckojs6xfmg620" path="res://scenes/active_perk.tscn" id="7_4045b"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
+[ext_resource type="Script" path="res://scripts/enemy_2.gd" id="14_aadsq"]
+[ext_resource type="Texture2D" uid="uid://c1siove4868iy" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="14_t3ty0"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(2940, 1658, -1599.99, 1658, -1598, -1616, 2939, -1616.99)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(2950, 1668, -1610, 1668, -1608, -1626, 2949, -1627)])
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qisqq"]
+radius = 21.0
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_twfab")
@@ -153,6 +158,17 @@ navigation_polygon = SubResource("NavigationPolygon_y1cda")
 
 [node name="GameOverMenu" parent="CanvasLayer" instance=ExtResource("12_glc5x")]
 visible = false
+
+[node name="Enemy_2" type="CharacterBody2D" parent="."]
+position = Vector2(488, 168)
+script = ExtResource("14_aadsq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy_2"]
+shape = SubResource("CircleShape2D_qisqq")
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy_2"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("14_t3ty0")
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]

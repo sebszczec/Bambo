@@ -34,7 +34,7 @@ color_ramp = SubResource("GradientTexture1D_gpudh")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o5b0c"]
 
-[node name="BallEnemy" type="CharacterBody2D"]
+[node name="Enemy_1" type="CharacterBody2D"]
 collision_layer = 8
 collision_mask = 2
 script = ExtResource("1_ww31q")
