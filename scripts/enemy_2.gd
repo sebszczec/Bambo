@@ -34,7 +34,8 @@ func _physics_process(delta: float) -> void:
 	if dist_to_player.length() < 200:
 		_direction = global_position.direction_to(_player.position)
 		var theta = wrapf(atan2(_direction.y, _direction.x) - rotation - _halfPI, -PI, PI)
-		rotation += clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
+		var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
+		rotation = move_toward(rotation, rotation + diff, 0.1)
 		
 		if _prepareingStrikeTimer.is_stopped():
 			_prepareingStrikeTimer.start()

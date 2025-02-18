@@ -77,7 +77,8 @@ func _physics_process(delta):
 	var vel = direction * Speed * delta
 
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
-	ship.rotation += clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
+	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
+	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 	
 	agent.velocity = vel
 		
