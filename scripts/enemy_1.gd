@@ -27,7 +27,6 @@ signal killed
 var resizeFactor = 1
 var _theta : float = 0
 var _halfPI : float = PI / 2
-var showLifeBar = true
 var showDamage = true
 
 var player = null
@@ -37,10 +36,9 @@ func _ready():
 	call_deferred("skip_frame")
 	
 	var visualSettings = ConfigHandler.load_visuals()
-	showLifeBar = visualSettings["show_enemies_lifebar"]
+	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	showDamage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color(0, 255, 0))
-	lifeBar.visible = showLifeBar
 	
 	resizeTimer.start()
 

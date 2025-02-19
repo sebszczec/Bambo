@@ -7,22 +7,34 @@ extends CharacterBody2D
 @export var RotationSpeed : float = TAU
 @export var StrikeDelay : float = 1.0
 @export var StrikeDuration : float = 1.0
+@export var Life = 100
 
-@onready var radar = $RadarBeam
+var floatingTextScene = preload("res://scenes/floating_text.tscn")
+
+@onready var ship = $Ship
+@onready var radar = $Ship/RadarBeam
 @onready var burst1 = $Ship/EngineBurst1
 @onready var burst2 = $Ship/EngineBurst2
+@onready var lifeBar = $LifeBar
 
 var _halfPI : float = PI / 2
 var _accelerate = false
 var _player = null
 var _playerDetected = false
+var _showDamage = false
 
 var _direction = Vector2(0, 0);
 var _prepareingStrikeTimer = Timer.new()
 var _strikeDurationTimer = Timer.new()
 
+signal killed
+
 func _ready() -> void:
 	_player = get_node("/root/World/Player")
+	
+	var visualSettings = ConfigHandler.load_visuals()
+	_showDamage = visualSettings["show_damage_given"]
+	lifeBar.setColor(Color(0, 255, 0))
 	
 	radar.connect("player_detected", _on_radar_player_detected)
 	radar.connect("player_lost", _on_radar_player_lost)
@@ -41,10 +53,10 @@ func _physics_process(delta: float) -> void:
 	var dist_to_player = _player.position - global_position;
 	if _playerDetected:
 		_direction = global_position.direction_to(_player.position)
-		var theta = wrapf(atan2(_direction.y, _direction.x) - rotation - _halfPI, -PI, PI)
+		var theta = wrapf(atan2(_direction.y, _direction.x) - ship.rotation - _halfPI, -PI, PI)
 		var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
 		
-		rotation = move_toward(rotation, rotation + diff, 0.1)
+		ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 		
 		if _prepareingStrikeTimer.is_stopped():
 			_prepareingStrikeTimer.start()
@@ -75,3 +87,32 @@ func _on_radar_player_lost():
 	_playerDetected = false
 	burst1.emitting = false
 	burst2.emitting = false
+
+
+func _on_hit_box_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Bullet"):
+		var bullet = area.get_parent()
+		
+		if handleDamage(bullet.Damage) == false:
+			dispose()
+			pass # handle enemy killed
+
+func dispose():
+	if !is_queued_for_deletion():
+		killed.emit(get_instance_id())
+		queue_free()
+
+
+func handleDamage(damage):
+	if _showDamage:
+		var damageText = floatingTextScene.instantiate()
+		damageText.set_color(Color.WHITE)
+		damageText.Amount = str(damage)
+		add_child(damageText)
+		
+	Life = Life - damage
+	lifeBar.setValue(Life)
+	
+	if Life <= 0:
+		return false
+	

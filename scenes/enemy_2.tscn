@@ -1,13 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://dne5tja7jgkha"]
+[gd_scene load_steps=9 format=3 uid="uid://dne5tja7jgkha"]
 
 [ext_resource type="Script" path="res://scripts/enemy_2.gd" id="1_yqv60"]
 [ext_resource type="Texture2D" uid="uid://c1siove4868iy" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="2_lp7ix"]
 [ext_resource type="Script" path="res://scripts/radar_beam.gd" id="3_ou0hu"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_uchjc"]
 [ext_resource type="Texture2D" uid="uid://8wbehsh8roiu" path="res://resources/kenney_space-shooter-redux/PNG/Effects/fire13.png" id="4_5bn5v"]
+[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_7r8l8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qisqq"]
 radius = 21.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_14i3w"]
+radius = 21.0238
 
 [node name="Enemy_2" type="CharacterBody2D"]
 position = Vector2(417, 90)
@@ -15,6 +19,10 @@ script = ExtResource("1_yqv60")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qisqq")
+
+[node name="LifeBar" parent="." instance=ExtResource("4_7r8l8")]
+offset_top = -29.0
+offset_bottom = -23.0
 
 [node name="Ship" type="Node2D" parent="."]
 
@@ -32,21 +40,27 @@ position = Vector2(17, -12)
 emitting = false
 amount = 20
 
-[node name="RadarBeam" type="Node2D" parent="."]
+[node name="RadarBeam" type="Node2D" parent="Ship"]
 script = ExtResource("3_ou0hu")
 
-[node name="Sprite2D" type="Sprite2D" parent="RadarBeam"]
+[node name="Sprite2D" type="Sprite2D" parent="Ship/RadarBeam"]
 position = Vector2(0, 75)
 rotation = -3.14159
 scale = Vector2(4.68922, 4.44162)
 texture = ExtResource("4_5bn5v")
 
-[node name="Beam" type="Area2D" parent="RadarBeam"]
+[node name="Beam" type="Area2D" parent="Ship/RadarBeam"]
 position = Vector2(-119, 56)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RadarBeam/Beam"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/RadarBeam/Beam"]
 position = Vector2(119, -56)
 polygon = PackedVector2Array(0, 0, -39, 129, 0, 141, 39, 130)
 
-[connection signal="area_entered" from="RadarBeam/Beam" to="RadarBeam" method="_on_area_2d_area_entered"]
-[connection signal="area_exited" from="RadarBeam/Beam" to="RadarBeam" method="_on_area_2d_area_exited"]
+[node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CircleShape2D_14i3w")
+
+[connection signal="area_entered" from="Ship/RadarBeam/Beam" to="Ship/RadarBeam" method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Ship/RadarBeam/Beam" to="Ship/RadarBeam" method="_on_area_2d_area_exited"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
