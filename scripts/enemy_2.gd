@@ -9,6 +9,8 @@ extends CharacterBody2D
 @export var StrikeDuration : float = 1.0
 
 @onready var radar = $RadarBeam
+@onready var burst1 = $Ship/EngineBurst1
+@onready var burst2 = $Ship/EngineBurst2
 
 var _halfPI : float = PI / 2
 var _accelerate = false
@@ -66,6 +68,10 @@ func _on_strike_duration_timer_timeout():
 
 func _on_radar_player_detected():
 	_playerDetected = true
+	burst1.emitting = true
+	burst2.emitting = true
 	
 func _on_radar_player_lost():
 	_playerDetected = false
+	burst1.emitting = false
+	burst2.emitting = false

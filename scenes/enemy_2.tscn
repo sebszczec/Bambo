@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://dne5tja7jgkha"]
+
+[ext_resource type="Script" path="res://scripts/enemy_2.gd" id="1_yqv60"]
+[ext_resource type="Texture2D" uid="uid://c1siove4868iy" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="2_lp7ix"]
+[ext_resource type="Script" path="res://scripts/radar_beam.gd" id="3_ou0hu"]
+[ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_uchjc"]
+[ext_resource type="Texture2D" uid="uid://8wbehsh8roiu" path="res://resources/kenney_space-shooter-redux/PNG/Effects/fire13.png" id="4_5bn5v"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qisqq"]
+radius = 21.0
+
+[node name="Enemy_2" type="CharacterBody2D"]
+position = Vector2(417, 90)
+script = ExtResource("1_yqv60")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qisqq")
+
+[node name="Ship" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Ship"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_lp7ix")
+
+[node name="EngineBurst1" parent="Ship" instance=ExtResource("3_uchjc")]
+position = Vector2(-17, -12)
+emitting = false
+amount = 20
+
+[node name="EngineBurst2" parent="Ship" instance=ExtResource("3_uchjc")]
+position = Vector2(17, -12)
+emitting = false
+amount = 20
+
+[node name="RadarBeam" type="Node2D" parent="."]
+script = ExtResource("3_ou0hu")
+
+[node name="Sprite2D" type="Sprite2D" parent="RadarBeam"]
+position = Vector2(0, 75)
+rotation = -3.14159
+scale = Vector2(4.68922, 4.44162)
+texture = ExtResource("4_5bn5v")
+
+[node name="Beam" type="Area2D" parent="RadarBeam"]
+position = Vector2(-119, 56)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RadarBeam/Beam"]
+position = Vector2(119, -56)
+polygon = PackedVector2Array(0, 0, -39, 129, 0, 141, 39, 130)
+
+[connection signal="area_entered" from="RadarBeam/Beam" to="RadarBeam" method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="RadarBeam/Beam" to="RadarBeam" method="_on_area_2d_area_exited"]
