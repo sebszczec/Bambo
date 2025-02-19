@@ -40,7 +40,7 @@ var showLifeBar = true
 var showDamage = true
 var useGamePad = true
 
-var enemyDamagetimers = {}
+var enemyDamageTimers = {}
 
 signal update_life(value: int)
 signal update_afterburner(value: int)
@@ -172,7 +172,7 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 			add_child(timer)
 			timer.start()
 			
-			enemyDamagetimers[id] = timer
+			enemyDamageTimers[id] = timer
 
 
 func _on_take_damage_timeout(enemy):
@@ -256,9 +256,9 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		var enemy = area.get_parent()
 		var id = enemy.get_instance_id()
 		
-		if enemyDamagetimers.has(id):
-			enemyDamagetimers[id].stop()
-			enemyDamagetimers.erase(id)
+		if enemyDamageTimers.has(id):
+			enemyDamageTimers[id].stop()
+			enemyDamageTimers.erase(id)
 		return
 	
 	if area.is_in_group("LifePerk"):
