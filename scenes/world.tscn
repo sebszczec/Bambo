@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
 [ext_resource type="Script" path="res://scripts/enemy_2.gd" id="14_aadsq"]
 [ext_resource type="Texture2D" uid="uid://c1siove4868iy" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="14_t3ty0"]
-[ext_resource type="Script" path="res://scripts/radar_line.gd" id="16_0ej2g"]
+[ext_resource type="Script" path="res://scripts/radar_beam.gd" id="16_0ej2g"]
 [ext_resource type="Texture2D" uid="uid://8wbehsh8roiu" path="res://resources/kenney_space-shooter-redux/PNG/Effects/fire13.png" id="16_8mpjv"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
@@ -172,14 +172,23 @@ shape = SubResource("CircleShape2D_qisqq")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("14_t3ty0")
 
-[node name="RadarLine" type="Node2D" parent="Enemy_2"]
+[node name="RadarBeam" type="Node2D" parent="Enemy_2"]
 script = ExtResource("16_0ej2g")
 
-[node name="Sprite2D" type="Sprite2D" parent="Enemy_2/RadarLine"]
+[node name="Sprite2D" type="Sprite2D" parent="Enemy_2/RadarBeam"]
 position = Vector2(0, 75)
 rotation = -3.14159
 scale = Vector2(4.68922, 4.44162)
 texture = ExtResource("16_8mpjv")
 
+[node name="Beam" type="Area2D" parent="Enemy_2/RadarBeam"]
+position = Vector2(-119, 56)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Enemy_2/RadarBeam/Beam"]
+position = Vector2(119, -56)
+polygon = PackedVector2Array(0, 0, -39, 129, 0, 141, 39, 130)
+
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
+[connection signal="area_entered" from="Enemy_2/RadarBeam/Beam" to="Enemy_2/RadarBeam" method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Enemy_2/RadarBeam/Beam" to="Enemy_2/RadarBeam" method="_on_area_2d_area_exited"]

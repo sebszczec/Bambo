@@ -8,9 +8,12 @@ extends CharacterBody2D
 @export var StrikeDelay : float = 1.0
 @export var StrikeDuration : float = 1.0
 
+@onready var radar = $RadarBeam
+
 var _halfPI : float = PI / 2
 var _accelerate = false
 var _player = null
+var _playerDetected = false
 
 var _direction = Vector2(0, 0);
 var _prepareingStrikeTimer = Timer.new()
@@ -18,6 +21,9 @@ var _strikeDurationTimer = Timer.new()
 
 func _ready() -> void:
 	_player = get_node("/root/World/Player")
+	
+	radar.connect("player_detected", _on_radar_player_detected)
+	radar.connect("player_lost", _on_radar_player_lost)
 	
 	_prepareingStrikeTimer.one_shot = true;
 	_prepareingStrikeTimer.wait_time = StrikeDelay
@@ -31,10 +37,11 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var dist_to_player = _player.position - global_position;
-	if dist_to_player.length() < 200:
+	if _playerDetected:
 		_direction = global_position.direction_to(_player.position)
 		var theta = wrapf(atan2(_direction.y, _direction.x) - rotation - _halfPI, -PI, PI)
 		var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
+		
 		rotation = move_toward(rotation, rotation + diff, 0.1)
 		
 		if _prepareingStrikeTimer.is_stopped():
@@ -56,3 +63,9 @@ func _on_preparing_strike_timer_timeout():
 	
 func _on_strike_duration_timer_timeout():
 	_accelerate = false
+
+func _on_radar_player_detected():
+	_playerDetected = true
+	
+func _on_radar_player_lost():
+	_playerDetected = false
