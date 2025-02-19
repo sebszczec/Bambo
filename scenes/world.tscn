@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=20 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://m7vfxqkupg73" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
 [ext_resource type="Script" path="res://scripts/enemy_2.gd" id="14_aadsq"]
 [ext_resource type="Texture2D" uid="uid://c1siove4868iy" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="14_t3ty0"]
+[ext_resource type="Script" path="res://scripts/radar_line.gd" id="16_0ej2g"]
 [ext_resource type="Texture2D" uid="uid://8wbehsh8roiu" path="res://resources/kenney_space-shooter-redux/PNG/Effects/fire13.png" id="16_8mpjv"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
@@ -172,6 +173,7 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("14_t3ty0")
 
 [node name="RadarLine" type="Node2D" parent="Enemy_2"]
+script = ExtResource("16_0ej2g")
 
 [node name="Sprite2D" type="Sprite2D" parent="Enemy_2/RadarLine"]
 position = Vector2(0, 75)
