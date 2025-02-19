@@ -1,6 +1,6 @@
 extends Node
 
-@export_range (1, 400) var MaxEnemyCount : int = 1
+@export_range (1, 400) var MaxEnemyCount : int = 10
 @export_range (0, 100) var ChanceForLifePerk : int = 100
 @export_range (0, 100) var ChanceForShieldPerk : int = 100
 @export_range (0, 100) var ChanceForBigGunPerk : int = 100
@@ -22,7 +22,7 @@ var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-var ball_enemy_scene = preload("res://scenes/enemy_1.tscn")
+var enemy_scenes = [preload("res://scenes/enemy_1.tscn"), preload("res://scenes/enemy_2.tscn")]
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
 var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
 var big_gun_perk_scene = preload("res://scenes/big_gun_perk.tscn")
@@ -85,7 +85,8 @@ func init_weapons():
 
 
 func init_points_dict():
-	points_dict["BallEnemy"] = 10
+	points_dict["Enemy 1"] = 10
+	points_dict["Enemy 2"] = 20
 
 
 func _physics_process(_delta):
@@ -147,8 +148,8 @@ func _on_shooting_timer_timeout() -> void:
 func _on_enemy_spawn_timer_timeout() -> void:
 	if enemy_count == MaxEnemyCount:
 		return
-	
-	var enemy = ball_enemy_scene.instantiate()
+
+	var enemy = enemy_scenes[randi_range(0, 1)].instantiate()
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	

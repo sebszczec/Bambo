@@ -7,8 +7,8 @@ extends CharacterBody2D
 @export var RotationSpeed : float = TAU
 @export var StrikeDelay : float = 1.0
 @export var StrikeDuration : float = 1.0
-@export var Life = 100
-@export var Damage = 10
+@export var Life = 200
+@export var Damage = 20
 @export var IsDamageOverTime = true
 @export var DamageTickTime = 0.5
 
@@ -73,6 +73,9 @@ func _physics_process(delta: float) -> void:
 		velocity = velocity.move_toward(Vector2(0, 0), Friction)
 #
 	move_and_collide(velocity * delta)
+
+func get_enemy_name():
+	return "Enemy 2"
 
 func _on_preparing_strike_timer_timeout():
 	_accelerate = true

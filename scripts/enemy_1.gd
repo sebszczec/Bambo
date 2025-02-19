@@ -15,7 +15,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var RotationSpeed : float = TAU
 @export var Speed = 3000
 @export var Acceleration = 0.1
-@export var Damage = 10
+@export var Damage = 20
 @export var IsDamageOverTime = true
 @export var DamageTickTime = 0.5
 @export var Life = 100
@@ -48,7 +48,7 @@ func _ready():
 
 #
 func get_enemy_name():
-	return "BallEnemy"
+	return "Enemy 1"
 
 
 func skip_frame():
