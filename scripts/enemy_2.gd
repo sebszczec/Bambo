@@ -8,7 +8,10 @@ extends CharacterBody2D
 @export var StrikeDelay : float = 1.0
 @export var StrikeDuration : float = 1.0
 
+@onready var radarLine = $RadarLine
+
 var _halfPI : float = PI / 2
+var _radarAngle = deg_to_rad(30)
 var _accelerate = false
 var _player = null
 
@@ -29,6 +32,7 @@ func _ready() -> void:
 	_strikeDurationTimer.connect("timeout", _on_strike_duration_timer_timeout)
 	add_child(_strikeDurationTimer)
 
+var time : float = 0
 func _physics_process(delta: float) -> void:
 	var dist_to_player = _player.position - global_position;
 	if dist_to_player.length() < 200:
@@ -43,12 +47,16 @@ func _physics_process(delta: float) -> void:
 		if !_prepareingStrikeTimer.is_stopped():
 			_prepareingStrikeTimer.stop()
 	
+	time += delta
+	var theta = wrapf(_radarAngle * sin(time) - radarLine.rotation, -PI, PI)
+	var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
+	radarLine.rotation = move_toward(radarLine.rotation, radarLine.rotation + diff, 0.1)
+	
 	if _accelerate:
 		velocity = velocity.move_toward(_direction * MaxSpeed, Acceleration)
 	else:
 		velocity = velocity.move_toward(Vector2(0, 0), Friction)
 #
-	#move_and_slide()
 	move_and_collide(velocity * delta)
 
 func _on_preparing_strike_timer_timeout():
