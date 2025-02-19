@@ -8,6 +8,9 @@ extends CharacterBody2D
 @export var StrikeDelay : float = 1.0
 @export var StrikeDuration : float = 1.0
 @export var Life = 100
+@export var Damage = 10
+@export var IsDamageOverTime = true
+@export var DamageTickTime = 0.5
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 

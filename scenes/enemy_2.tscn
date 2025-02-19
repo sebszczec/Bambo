@@ -11,7 +11,7 @@
 radius = 21.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_14i3w"]
-radius = 21.0238
+radius = 22.0
 
 [node name="Enemy_2" type="CharacterBody2D"]
 position = Vector2(417, 90)
