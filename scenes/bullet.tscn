@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d3v42w0yw7ja6"]
 
 [ext_resource type="Script" path="res://scripts/bullet.gd" id="1_sk3je"]
-[ext_resource type="Texture2D" uid="uid://b527126t4byjy" path="res://resources/kenney_particle_pack/star_06.png" id="2_qlikn"]
+[ext_resource type="Texture2D" uid="uid://jw236yuschnh" path="res://resources/kenney_particle_pack/star_06.png" id="2_qlikn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6l7qy"]
 radius = 3.0
