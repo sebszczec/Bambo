@@ -13,8 +13,10 @@ var _v_offset : float = float(_v_pixels) / float (_v_frames)
 var _scale = 0.05
 var _velocity : Array[Vector2] = []
 var _rotation : Array[float] = []
-var _friction = 0.1
+var _transparency : Array[float] = []
+var _friction = 0.05
 var _rad_fricton = 0.05
+var _alpha_friciton = 0.005
 var _speed = 300
 
 var _explode = false
@@ -31,6 +33,7 @@ func _ready() -> void:
 		_velocity.append(v)
 		var r = randf_range(-PI, PI)
 		_rotation.append(r)
+		_transparency.append(1)
 	
 	var frame = 0
 	for i in range(_h_frames):
@@ -40,6 +43,8 @@ func _ready() -> void:
 			frame += 1
 
 	scale = Vector2(_scale, _scale)
+	modulate = Color.BLUE
+	
 
 func _process(delta: float) -> void:
 	if _explode:
@@ -49,6 +54,9 @@ func _process(delta: float) -> void:
 			
 			_rotation[i] = move_toward(_rotation[i], 0, _rad_fricton)
 			_obj[i].rotate(_rotation[i])
+			
+			_transparency[i] = move_toward(_transparency[i], 0, _alpha_friciton)
+			_obj[i].modulate.a = _transparency[i]
 	else:
 		return
 		
