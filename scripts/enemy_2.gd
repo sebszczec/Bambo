@@ -5,11 +5,14 @@ extends CharacterBody2D
 @export var Acceleration = 10
 @export var Friction = 5
 @export var RotationSpeed : float = TAU
-@export var StrikeDelay : float = 1.0
+@export var StrikeDelay : float = 0.25
 @export var StrikeDuration : float = 1.0
 @export var Life = 200
-@export var Damage = 20
+# public
+@export var Damage = 50
+# public
 @export var IsDamageOverTime = true
+# public
 @export var DamageTickTime = 0.5
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
@@ -53,7 +56,6 @@ func _ready() -> void:
 	add_child(_strikeDurationTimer)
 
 func _physics_process(delta: float) -> void:
-	var dist_to_player = _player.position - global_position;
 	if _playerDetected:
 		_direction = global_position.direction_to(_player.position)
 		var theta = wrapf(atan2(_direction.y, _direction.x) - ship.rotation - _halfPI, -PI, PI)
@@ -69,13 +71,19 @@ func _physics_process(delta: float) -> void:
 	
 	if _accelerate:
 		velocity = velocity.move_toward(_direction * MaxSpeed, Acceleration)
+		print(velocity)
 	else:
 		velocity = velocity.move_toward(Vector2(0, 0), Friction)
 #
 	move_and_collide(velocity * delta)
 
+# public
 func get_enemy_name():
 	return "Enemy 2"
+
+# public
+func setup_rotation(angle):
+	ship.rotate(angle)
 
 func _on_preparing_strike_timer_timeout():
 	_accelerate = true

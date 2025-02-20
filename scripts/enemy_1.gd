@@ -15,8 +15,11 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @export var RotationSpeed : float = TAU
 @export var Speed = 3000
 @export var Acceleration = 0.1
+# public
 @export var Damage = 20
+# public
 @export var IsDamageOverTime = true
+# public
 @export var DamageTickTime = 0.5
 @export var Life = 100
 
@@ -46,10 +49,13 @@ func _ready():
 	
 	make_path(Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y)))
 
-#
+# public
 func get_enemy_name():
 	return "Enemy 1"
 
+# public
+func setup_rotation(angle):
+	ship.rotate(angle)
 
 func skip_frame():
 	await get_tree().physics_frame

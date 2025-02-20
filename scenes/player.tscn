@@ -1,14 +1,14 @@
 [gd_scene load_steps=8 format=3 uid="uid://cl0ta7xxx5arv"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_yf2p4"]
-[ext_resource type="Texture2D" uid="uid://be2351h11qup6" path="res://resources/kenney_particle_pack/window_04.png" id="2_fn6ev"]
-[ext_resource type="Texture2D" uid="uid://bh23cnn2smugk" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
+[ext_resource type="Texture2D" uid="uid://cdp57rn6i0tx2" path="res://resources/kenney_particle_pack/window_04.png" id="2_fn6ev"]
+[ext_resource type="Texture2D" uid="uid://dqex7t1ubevkm" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_ajyqe"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0mn65"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ohx2n"]
-radius = 11.3137
+radius = 8.48529
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_or0rj"]
 radius = 11.0454

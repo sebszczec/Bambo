@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://oj124bkc0r8r"]
 
 [ext_resource type="Script" path="res://scripts/shield_perk.gd" id="1_oerrl"]
-[ext_resource type="Texture2D" uid="uid://csmejxpftpxdl" path="res://resources/perks/shield.png" id="1_vp7md"]
+[ext_resource type="Texture2D" uid="uid://di1boh2y1a1l6" path="res://resources/perks/shield.png" id="1_vp7md"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_s4pvk"]
 radius = 34.0

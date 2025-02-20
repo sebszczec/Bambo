@@ -165,6 +165,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy.position.y = player.position.y + randf_range(100, 200) * up_or_down
 	
 	world.add_child(enemy)
+	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
 	
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
