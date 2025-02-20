@@ -84,6 +84,7 @@ func _physics_process(delta):
 func explode():
 	explosion.position = mainBody.position
 	explosion.rotation = mainBody.rotation
+	explosion.modulate = Color.BLUE
 	mainBody.visible = false
 	satelite.visible = false
 	explosion.visible = true

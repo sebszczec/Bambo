@@ -50,7 +50,7 @@ func _ready() -> void:
 			frame += 1
 
 	scale = Vector2(ScaleFactor, ScaleFactor)
-	modulate = Color.BLUE
+	#modulate = Color.BLUE
 	
 
 func _process(delta: float) -> void:
