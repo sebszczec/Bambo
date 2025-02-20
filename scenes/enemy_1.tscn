@@ -12,7 +12,7 @@ radius = 9.05539
 
 [node name="Enemy_1" type="CharacterBody2D"]
 collision_layer = 8
-collision_mask = 2
+collision_mask = 3
 script = ExtResource("1_ww31q")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
