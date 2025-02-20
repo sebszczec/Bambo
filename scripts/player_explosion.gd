@@ -12,7 +12,9 @@ var _h_offset : float = float(_h_pixels) / float (_h_frames)
 var _v_offset : float = float(_v_pixels) / float (_v_frames)
 var _scale = 0.05
 var _velocity : Array[Vector2] = []
+var _rotation : Array[float] = []
 var _friction = 0.1
+var _rad_fricton = 0.05
 var _speed = 300
 
 var _explode = false
@@ -20,7 +22,6 @@ var _explode = false
 func _ready() -> void:
 	for i in range(_all_frames): 
 		var tmp : Sprite2D = fragmentScene.instantiate()
-		#tmp.scale = Vector2(_scale, _scale)
 		tmp.set_frame(i)
 		_obj.append(tmp)
 		add_child(tmp)
@@ -28,6 +29,8 @@ func _ready() -> void:
 		v = v.normalized()
 		v = v * _speed
 		_velocity.append(v)
+		var r = randf_range(-PI, PI)
+		_rotation.append(r)
 	
 	var frame = 0
 	for i in range(_h_frames):
@@ -43,6 +46,9 @@ func _process(delta: float) -> void:
 		for i in range(_all_frames):
 			_velocity[i] = _velocity[i].move_toward(Vector2(0, 0), _friction)
 			_obj[i].position += _velocity[i] * delta
+			
+			_rotation[i] = move_toward(_rotation[i], 0, _rad_fricton)
+			_obj[i].rotate(_rotation[i])
 	else:
 		return
 		
