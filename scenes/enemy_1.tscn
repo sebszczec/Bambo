@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://ca6sxsibqlyef"]
+[gd_scene load_steps=8 format=3 uid="uid://ca6sxsibqlyef"]
 
 [ext_resource type="Script" path="res://scripts/enemy_1.gd" id="1_ww31q"]
 [ext_resource type="Texture2D" uid="uid://vhyl21cokpfu" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_ywix3"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_0fnij"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_tycq0"]
+[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_qxt44"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
 radius = 9.05539
@@ -40,6 +41,11 @@ offset_bottom = -19.0
 
 [node name="HitBoxCollisionShape" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource("CircleShape2D_o5b0c")
+
+[node name="Explosion" parent="." instance=ExtResource("5_qxt44")]
+visible = false
+PathToSprite = "res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png"
+ScaleFactor = Vector2(0.254, 0.244)
 
 [connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
 [connection signal="navigation_finished" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_navigation_finished"]

@@ -10,6 +10,8 @@ radius = 6.0
 radius = 5.7496
 
 [node name="BigBullet" type="StaticBody2D" node_paths=PackedStringArray("HitBox") groups=["Bullet"]]
+collision_layer = 4
+collision_mask = 10
 script = ExtResource("1_bn5nm")
 Speed = 10
 MinDamage = 15

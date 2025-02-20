@@ -149,7 +149,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	if enemy_count == MaxEnemyCount:
 		return
 
-	var enemy = enemy_scenes[randi_range(0, 1)].instantiate()
+	var enemy = enemy_scenes[randi_range(0, 0)].instantiate()
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	

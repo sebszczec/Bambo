@@ -71,7 +71,6 @@ func _physics_process(delta: float) -> void:
 	
 	if _accelerate:
 		velocity = velocity.move_toward(_direction * MaxSpeed, Acceleration)
-		print(velocity)
 	else:
 		velocity = velocity.move_toward(Vector2(0, 0), Friction)
 #
@@ -109,7 +108,6 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		
 		if handleDamage(bullet.Damage) == false:
 			dispose()
-			pass # handle enemy killed
 
 func dispose():
 	if !is_queued_for_deletion():

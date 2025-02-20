@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cdp57rn6i0tx2" path="res://resources/kenney_particle_pack/window_04.png" id="2_fn6ev"]
 [ext_resource type="Texture2D" uid="uid://dqex7t1ubevkm" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_ajyqe"]
-[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/player_explosion.tscn" id="5_3r7d3"]
+[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_3r7d3"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0mn65"]
 

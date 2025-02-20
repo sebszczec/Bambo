@@ -41,7 +41,7 @@ var aim_angle = 0
 var showLifeBar = true
 var showDamage = true
 var useGamePad = true
-var deadTimer = Timer.new()
+var deathTimer = Timer.new()
 
 var enemyDamageTimers = {}
 
@@ -65,10 +65,10 @@ func _ready() -> void:
 	var controlSettings = ConfigHandler.load_controls()
 	useGamePad = controlSettings["use_gamepad"]
 	
-	deadTimer.one_shot = true
-	deadTimer.wait_time = 2
-	deadTimer.connect("timeout", _on_dead_timer_timeout)
-	add_child(deadTimer)
+	deathTimer.one_shot = true
+	deathTimer.wait_time = 2
+	deathTimer.connect("timeout", _on_death_timer_timeout)
+	add_child(deathTimer)
 
 
 func _physics_process(delta):
@@ -169,7 +169,7 @@ func calculatePlayerRotation(delta):
 func getShootingVector():
 	return satelite.position
 
-func _on_dead_timer_timeout():
+func _on_death_timer_timeout():
 	killed.emit()
 
 func _on_life_box_area_entered(area: Area2D) -> void:
@@ -224,7 +224,7 @@ func handleKilled():
 	isDead = true
 	$LifeBox/CollisionShape2D.disabled = true
 	explode()
-	deadTimer.start()
+	deathTimer.start()
 
 func createFloatingText(value: String, color: Color, scale_factor: float = 1):
 	var damageText = floatingTextScene.instantiate()

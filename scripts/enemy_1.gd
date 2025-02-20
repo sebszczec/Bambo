@@ -8,6 +8,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var hitBoxCollisionshape = $HitBox/HitBoxCollisionShape
 @onready var lifeBar = $LifeBar
 @onready var ship = $Ship
+@onready var explosion = $Explosion
 
 
 @export var ResizeSpeed = 0.05
@@ -31,8 +32,10 @@ var resizeFactor = 1
 var _theta : float = 0
 var _halfPI : float = PI / 2
 var showDamage = true
+var isDead = false
 
 var player = null
+var deathTimer = Timer.new()
 
 func _ready():	
 	set_physics_process(false)
@@ -46,6 +49,11 @@ func _ready():
 	resizeTimer.start()
 
 	player = get_node("/root/World/Player")
+	
+	deathTimer.one_shot = true
+	deathTimer.wait_time = 2
+	deathTimer.connect("timeout", _on_death_timer_timeout)
+	add_child(deathTimer)
 	
 	make_path(Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y)))
 
@@ -107,13 +115,27 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
 		
-		if handleDamage(bullet.Damage) == false:
-			dispose()
-			pass # handle enemy killed
+		if handleDamage(bullet.Damage) == false and !isDead:
+			isDead = true
+			explode()
+
+func explode():
+	ship.visible = false
+	collisionShape.set_deferred("disabled", true)
+	hitBoxCollisionshape.set_deferred("disabled", true)
+	lifeBar.visible = false
+	explosion.visible = true
+	explosion.rotation = ship.rotation
+	explosion.scale = sprite.scale
+	explosion.Explode()
+	deathTimer.start()
+	killed.emit(get_instance_id())
+
+func _on_death_timer_timeout():
+	dispose()
 
 func dispose():
 	if !is_queued_for_deletion():
-		killed.emit(get_instance_id())
 		queue_free()
 
 
