@@ -7,6 +7,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var camera = $Camera2D
 @onready var lifeBar = $LifeBar
 @onready var shieldBar = $ShieldBar
+@onready var explosion = $PlayerExplosion
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -24,6 +25,7 @@ var afterBurnerStep = 10
 var burn = false
 var life = MaxLife
 var shield = MaxShield
+var isDead = false
 
 @export_category("Camera")
 @export var ZoomFactor = 2
@@ -39,6 +41,7 @@ var aim_angle = 0
 var showLifeBar = true
 var showDamage = true
 var useGamePad = true
+var deadTimer = Timer.new()
 
 var enemyDamageTimers = {}
 
@@ -61,6 +64,11 @@ func _ready() -> void:
 	
 	var controlSettings = ConfigHandler.load_controls()
 	useGamePad = controlSettings["use_gamepad"]
+	
+	deadTimer.one_shot = true
+	deadTimer.wait_time = 2
+	deadTimer.connect("timeout", _on_dead_timer_timeout)
+	add_child(deadTimer)
 
 
 func _physics_process(delta):
@@ -73,6 +81,13 @@ func _physics_process(delta):
 	
 	move_and_slide()
 
+func explode():
+	explosion.position = mainBody.position
+	explosion.rotation = mainBody.rotation
+	mainBody.visible = false
+	satelite.visible = false
+	explosion.visible = true
+	explosion.Explode()
 
 func handleZoom():
 	if Input.is_action_just_pressed("ui_zoom"):
@@ -109,13 +124,12 @@ func calculateAcceleration():
 		playerRotationDirection = 1
 		burn = false
 		
-
-
+		
 func calculateVelocity():
 	direction.x = Input.get_axis("ui_left", "ui_right")
 	direction.y = Input.get_axis("ui_up", "ui_down")
 	
-	if direction.length() == 0:
+	if direction.length() == 0 or isDead:
 		velocity = velocity.move_toward(Vector2(0, 0), PlayerFriction)
 	else:
 		velocity = velocity.move_toward(direction.normalized() * calculatedMaxVelocity, calculatedAcceleration)
@@ -154,6 +168,8 @@ func calculatePlayerRotation(delta):
 func getShootingVector():
 	return satelite.position
 
+func _on_dead_timer_timeout():
+	killed.emit()
 
 func _on_life_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
@@ -204,7 +220,10 @@ func handleDamage(damage):
 
 
 func handleKilled():
-	killed.emit()
+	isDead = true
+	$LifeBox/CollisionShape2D.disabled = true
+	explode()
+	deadTimer.start()
 
 func createFloatingText(value: String, color: Color, scale_factor: float = 1):
 	var damageText = floatingTextScene.instantiate()

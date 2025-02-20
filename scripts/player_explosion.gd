@@ -2,28 +2,33 @@ extends Node2D
 
 var fragmentScene = preload("res://scenes/player_fragment.tscn")
 
+@export var PathToSprite : String = "res://resources/kenney_particle_pack/window_04.png"
+@export var ScaleFactor : float = 0.05
+
 var _obj : Array[Sprite2D] = []
 var _h_frames = 5
 var _v_frames = 5
-var _all_frames = 25
-var _h_pixels = 512
-var _v_pixels = 512
-var _h_offset : float = float(_h_pixels) / float (_h_frames)
-var _v_offset : float = float(_v_pixels) / float (_v_frames)
-var _scale = 0.05
+var _all_frames = _h_frames * _v_frames
+var _h_offset : float = 0
+var _v_offset : float = 0
+var _h_pixels : float = 0
+var _v_pixels : float = 0
+var _h_pixels_half : float = 0
+var _v_pixels_half : float = 0
 var _velocity : Array[Vector2] = []
 var _rotation : Array[float] = []
 var _transparency : Array[float] = []
 var _friction = 0.05
-var _rad_fricton = 0.05
+var _rad_fricton = 0.00
 var _alpha_friciton = 0.005
-var _speed = 300
+var _speed = 500
 
 var _explode = false
 
 func _ready() -> void:
 	for i in range(_all_frames): 
 		var tmp : Sprite2D = fragmentScene.instantiate()
+		tmp.texture = load(PathToSprite)
 		tmp.set_frame(i)
 		_obj.append(tmp)
 		add_child(tmp)
@@ -35,14 +40,16 @@ func _ready() -> void:
 		_rotation.append(r)
 		_transparency.append(1)
 	
+	_calculate_offset()
+	
 	var frame = 0
 	for i in range(_h_frames):
 		for j in range(_v_frames):
 			var tmp = _obj[frame]
-			tmp.position = Vector2(j * _h_offset, i * _v_offset)
+			tmp.position = Vector2((j + 0.5) * _h_offset - _h_pixels_half, (i + 0.5) * _v_offset - _v_pixels_half)
 			frame += 1
 
-	scale = Vector2(_scale, _scale)
+	scale = Vector2(ScaleFactor, ScaleFactor)
 	modulate = Color.BLUE
 	
 
@@ -60,6 +67,14 @@ func _process(delta: float) -> void:
 	else:
 		return
 		
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_zoom"):
-		_explode = true
+
+func _calculate_offset():
+	_h_offset = float(_obj[0].texture.get_height()) / _h_frames
+	_v_offset = float(_obj[0].texture.get_width()) / _v_frames
+	_h_pixels = _obj[0].texture.get_height()
+	_v_pixels = _obj[0].texture.get_width()
+	_h_pixels_half = _h_pixels / 2
+	_v_pixels_half = _v_pixels / 2
+	
+func Explode():
+	_explode = true
