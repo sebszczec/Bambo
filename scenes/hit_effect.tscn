@@ -33,3 +33,4 @@ process_material = SubResource("ParticleProcessMaterial_210np")
 texture = ExtResource("1_yc4wv")
 one_shot = true
 explosiveness = 1.0
+fixed_fps = 60
