@@ -7,4 +7,3 @@
 script = ExtResource("1_ggvvn")
 
 [node name="ExplosionEffect" parent="." instance=ExtResource("2_s1ka5")]
-one_shot = true

@@ -176,3 +176,7 @@ ui_weapon_9={
 2d_physics/layer_2="Wall"
 2d_physics/layer_3="Bullet"
 2d_physics/layer_4="Enemy"
+
+[rendering]
+
+viewport/hdr_2d=true

@@ -45,7 +45,8 @@ func _ready() -> void:
 	
 	var visualSettings = ConfigHandler.load_visuals()
 	_showDamage = visualSettings["show_damage_given"]
-	lifeBar.setColor(Color(0, 255, 0))
+	lifeBar.visible = visualSettings["show_enemies_lifebar"]
+	lifeBar.setColor(Color.GREEN)
 	
 	radar.connect("player_detected", _on_radar_player_detected)
 	radar.connect("player_lost", _on_radar_player_lost)
@@ -84,7 +85,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity = velocity.move_toward(Vector2(0, 0), Friction)
 #
-	move_and_collide(velocity * delta)
+	if !_isDead:
+		move_and_collide(velocity * delta)
 
 # public
 func get_enemy_name():

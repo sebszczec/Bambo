@@ -44,7 +44,7 @@ func _ready():
 	var visualSettings = ConfigHandler.load_visuals()
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	showDamage = visualSettings["show_damage_given"]
-	lifeBar.setColor(Color(0, 255, 0))
+	lifeBar.setColor(Color.GREEN)
 	
 	resizeTimer.start()
 
