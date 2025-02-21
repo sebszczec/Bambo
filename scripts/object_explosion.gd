@@ -4,6 +4,8 @@ var fragmentScene = preload("res://scenes/object_fragment.tscn")
 
 @export var PathToSprite : String = "res://resources/kenney_particle_pack/window_04.png"
 
+@onready var effect = $ExplosionEffect
+
 var _obj : Array[Sprite2D] = []
 var _h_frames = 5
 var _v_frames = 5
@@ -74,5 +76,6 @@ func _calculate_offset():
 	
 func Explode():
 	_explode = true
+	effect.emitting = true
 	
 	

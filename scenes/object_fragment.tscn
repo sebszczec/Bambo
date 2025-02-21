@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cdp57rn6i0tx2" path="res://resources/kenney_particle_pack/window_04.png" id="1_gvptl"]
 
-[node name="PlayerFragment" type="Sprite2D"]
+[node name="ExplosionFragment" type="Sprite2D"]
 texture = ExtResource("1_gvptl")
 hframes = 5
 vframes = 5
