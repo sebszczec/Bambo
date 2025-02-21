@@ -3,11 +3,18 @@ extends Control
 @onready var resumeButton = $GridContainer/ResumeButton
 
 var isPaused = false
+var isPlayerKilled = false
+
+var player = null
 
 func _ready() -> void:
-	pass
+	player = owner.find_child("Player")
+	player.connect("killed", _on_player_killed)
 
 func setPause(value):
+	if isPlayerKilled:
+		return
+		
 	isPaused = value
 	get_tree().paused = isPaused
 	visible = isPaused
@@ -27,3 +34,6 @@ func _on_resume_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+func _on_player_killed():
+	isPlayerKilled = true
