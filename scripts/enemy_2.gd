@@ -18,10 +18,13 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 
 @onready var ship = $Ship
+@onready var collisionShape = $CollisionShape2D
+@onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
 @onready var radar = $Ship/RadarBeam
 @onready var burst1 = $Ship/EngineBurst1
 @onready var burst2 = $Ship/EngineBurst2
 @onready var lifeBar = $LifeBar
+@onready var explosion = $Explosion
 
 var _halfPI : float = PI / 2
 var _accelerate = false
@@ -32,6 +35,8 @@ var _showDamage = false
 var _direction = Vector2(0, 0);
 var _prepareingStrikeTimer = Timer.new()
 var _strikeDurationTimer = Timer.new()
+var _deathTimer = Timer.new()
+var _isDead = false
 
 signal killed
 
@@ -54,6 +59,11 @@ func _ready() -> void:
 	_strikeDurationTimer.wait_time = StrikeDuration
 	_strikeDurationTimer.connect("timeout", _on_strike_duration_timer_timeout)
 	add_child(_strikeDurationTimer)
+	
+	_deathTimer.one_shot = true
+	_deathTimer.wait_time = 2
+	_deathTimer.connect("timeout", _on_death_timer_timeout)
+	add_child(_deathTimer)
 
 func _physics_process(delta: float) -> void:
 	if _playerDetected:
@@ -106,12 +116,15 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
 		
-		if handleDamage(bullet.Damage) == false:
-			dispose()
+		if handleDamage(bullet.Damage) == false and !_isDead:
+			_isDead = true
+			explode()
+
+func _on_death_timer_timeout():
+	dispose()
 
 func dispose():
 	if !is_queued_for_deletion():
-		killed.emit(get_instance_id())
 		queue_free()
 
 
@@ -128,3 +141,13 @@ func handleDamage(damage):
 	if Life <= 0:
 		return false
 	
+func explode():
+	ship.visible = false
+	collisionShape.set_deferred("disabled", true)
+	hitBoxCollisionShape.set_deferred("disabled", true)
+	lifeBar.visible = false
+	explosion.visible = true
+	explosion.rotation = ship.rotation
+	explosion.Explode()
+	_deathTimer.start()
+	killed.emit(get_instance_id())

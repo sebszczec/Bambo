@@ -44,8 +44,8 @@ shape = SubResource("CircleShape2D_o5b0c")
 
 [node name="Explosion" parent="." instance=ExtResource("5_qxt44")]
 visible = false
+scale = Vector2(0.254, 0.244)
 PathToSprite = "res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png"
-ScaleFactor = Vector2(0.254, 0.244)
 
 [connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
 [connection signal="navigation_finished" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_navigation_finished"]

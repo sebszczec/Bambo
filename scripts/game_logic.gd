@@ -1,6 +1,6 @@
 extends Node
 
-@export_range (1, 400) var MaxEnemyCount : int = 1
+@export_range (1, 400) var MaxEnemyCount : int = 20
 @export_range (0, 100) var ChanceForLifePerk : int = 100
 @export_range (0, 100) var ChanceForShieldPerk : int = 100
 @export_range (0, 100) var ChanceForBigGunPerk : int = 100
@@ -149,7 +149,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	if enemy_count == MaxEnemyCount:
 		return
 
-	var enemy = enemy_scenes[randi_range(0, 0)].instantiate()
+	var enemy = enemy_scenes[randi_range(0, 1)].instantiate()
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	

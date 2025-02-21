@@ -87,6 +87,8 @@ func explode():
 	explosion.modulate = Color.BLUE
 	mainBody.visible = false
 	satelite.visible = false
+	lifeBar.visible = false
+	shieldBar.visible = false
 	explosion.visible = true
 	explosion.Explode()
 

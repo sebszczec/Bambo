@@ -54,6 +54,7 @@ shape = SubResource("CircleShape2D_or0rj")
 
 [node name="PlayerExplosion" parent="." instance=ExtResource("5_3r7d3")]
 visible = false
+scale = Vector2(0.05, 0.05)
 
 [connection signal="area_entered" from="LifeBox" to="." method="_on_life_box_area_entered"]
 [connection signal="area_exited" from="LifeBox" to="." method="_on_life_box_area_exited"]
