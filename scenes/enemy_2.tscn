@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dne5tja7jgkha"]
+[gd_scene load_steps=11 format=3 uid="uid://dne5tja7jgkha"]
 
 [ext_resource type="Script" path="res://scripts/enemy_2.gd" id="1_yqv60"]
 [ext_resource type="Texture2D" uid="uid://dfo232sqkl0fi" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="2_lp7ix"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://m2hhugqqih6w" path="res://resources/kenney_space-shooter-redux/PNG/Effects/fire13.png" id="4_5bn5v"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_7r8l8"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="7_q1je6"]
+[ext_resource type="AudioStream" uid="uid://ckgr8xa2cut0p" path="res://resources/explode_sounds/350974__cabled_mess__boom_c_03.wav" id="8_uvjtx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qisqq"]
 radius = 19.0
@@ -17,7 +18,7 @@ radius = 22.0
 [node name="Enemy_2" type="CharacterBody2D"]
 position = Vector2(417, 90)
 collision_layer = 8
-collision_mask = 3
+collision_mask = 11
 script = ExtResource("1_yqv60")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -68,6 +69,9 @@ shape = SubResource("CircleShape2D_14i3w")
 visible = false
 scale = Vector2(0.5, 0.5)
 PathToSprite = "res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_uvjtx")
 
 [connection signal="area_entered" from="Ship/RadarBeam/Beam" to="Ship/RadarBeam" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Ship/RadarBeam/Beam" to="Ship/RadarBeam" method="_on_area_2d_area_exited"]

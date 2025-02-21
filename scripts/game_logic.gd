@@ -92,39 +92,7 @@ func init_points_dict():
 func _physics_process(_delta):
 	if Input.is_action_pressed("ui_shoot"):
 		weapon.shoot(self, player.getSatelitePosition(), player.getShootingVector())
-	
-	if Input.is_action_just_pressed("ui_weapon_change"):
-		if weapon.type == Enums.WEAPONS.size() - 1:
-			weapon = weapons[0]
-		else:
-			weapon = weapons[weapon.type + 1]
-	
-	if Input.is_action_just_pressed("ui_weapon_1"):
-		change_weapon(0)
-	
-	if Input.is_action_just_pressed("ui_weapon_2"):
-		change_weapon(1)
-	
-	if Input.is_action_just_pressed("ui_weapon_3"):
-		change_weapon(2)
-	
-	if Input.is_action_just_pressed("ui_weapon_4"):
-		change_weapon(3)
-		
-	if Input.is_action_just_pressed("ui_weapon_5"):
-		change_weapon(4)
-		
-	if Input.is_action_just_pressed("ui_weapon_6"):
-		change_weapon(5)
-		
-	if Input.is_action_just_pressed("ui_weapon_7"):
-		change_weapon(6)
-		
-	if Input.is_action_just_pressed("ui_weapon_8"):
-		change_weapon(7)
-		
-	if Input.is_action_just_pressed("ui_weapon_9"):
-		change_weapon(8)
+
 
 func change_weapon(id: int):
 	if id >= Enums.WEAPONS.size():
@@ -243,6 +211,9 @@ class Weapon:
 	var speed = 20
 	var life_time = 0.5
 	var type : Enums.WEAPONS
+	
+	var audio = AudioStreamPlayer2D.new()
+	
 	signal bulletNumerChange
 	
 	func _init() -> void:
@@ -253,6 +224,7 @@ class Weapon:
 	func setup():
 		shooting_delay = 0.1
 		bullet_scene = preload("res://scenes/bullet.tscn")
+		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
 		
 	func set_owner(owner):
 		object_owner = owner
@@ -262,9 +234,11 @@ class Weapon:
 	
 	func register_internal_nodes(owner: Node):
 		owner.add_child(timer)
+		owner.add_child(audio)
 	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
+			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
 			bullet.position = start_position
@@ -312,6 +286,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 		
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
+			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
 			bullet.position = start_position
@@ -341,6 +316,7 @@ class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
 		bullet_scene = preload("res://scenes/big_bullet.tscn")
+		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
 
 class SmallBulletWave extends SmallBullet:
 	var size = 30
@@ -354,6 +330,7 @@ class SmallBulletWave extends SmallBullet:
 		
 	func shoot(owner: Node, start_position: Vector2, _direction: Vector2):
 		if canShoot:
+			audio.play()
 			canShoot = false
 			var radial_increment = (2.0 * PI) / float(size)
 			for i in range (0, size):

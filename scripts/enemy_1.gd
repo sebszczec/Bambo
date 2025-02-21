@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
+var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var sprite = $Ship/Sprite2D
 @onready var resizeTimer = $ResizeTimer
@@ -9,6 +10,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var lifeBar = $LifeBar
 @onready var ship = $Ship
 @onready var explosion = $Explosion
+@onready var audio = $AudioStreamPlayer2D
 
 
 @export var ResizeSpeed = 0.05
@@ -114,12 +116,16 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
+		var hit_effect = hitEffectScene.instantiate()
+		add_child(hit_effect)
+		hit_effect.emitting = true
 		
 		if handleDamage(bullet.Damage) == false and !isDead:
 			isDead = true
 			explode()
 
 func explode():
+	audio.play()
 	ship.visible = false
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionshape.set_deferred("disabled", true)

@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cl0ta7xxx5arv"]
+[gd_scene load_steps=10 format=3 uid="uid://cl0ta7xxx5arv"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_yf2p4"]
 [ext_resource type="Texture2D" uid="uid://cdp57rn6i0tx2" path="res://resources/kenney_particle_pack/window_04.png" id="2_fn6ev"]
 [ext_resource type="Texture2D" uid="uid://dqex7t1ubevkm" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_ajyqe"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_3r7d3"]
+[ext_resource type="AudioStream" uid="uid://b0ml4jfyuo5y7" path="res://resources/explode_sounds/350970__cabled_mess__boom_c_09.wav" id="6_qsb60"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0mn65"]
 
@@ -55,6 +56,9 @@ shape = SubResource("CircleShape2D_or0rj")
 [node name="PlayerExplosion" parent="." instance=ExtResource("5_3r7d3")]
 visible = false
 scale = Vector2(0.05, 0.05)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_qsb60")
 
 [connection signal="area_entered" from="LifeBox" to="." method="_on_life_box_area_entered"]
 [connection signal="area_exited" from="LifeBox" to="." method="_on_life_box_area_exited"]

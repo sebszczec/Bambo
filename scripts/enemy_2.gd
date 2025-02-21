@@ -16,6 +16,7 @@ extends CharacterBody2D
 @export var DamageTickTime = 0.5
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
+var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var ship = $Ship
 @onready var collisionShape = $CollisionShape2D
@@ -25,6 +26,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var burst2 = $Ship/EngineBurst2
 @onready var lifeBar = $LifeBar
 @onready var explosion = $Explosion
+@onready var audio = $AudioStreamPlayer2D
 
 var _halfPI : float = PI / 2
 var _accelerate = false
@@ -117,6 +119,9 @@ func _on_radar_player_lost():
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
+		var hit_effect = hitEffectScene.instantiate()
+		add_child(hit_effect)
+		hit_effect.emitting = true
 		
 		if handleDamage(bullet.Damage) == false and !_isDead:
 			_isDead = true
@@ -144,6 +149,7 @@ func handleDamage(damage):
 		return false
 	
 func explode():
+	audio.play()
 	ship.visible = false
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)

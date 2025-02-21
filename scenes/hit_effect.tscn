@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://qwmpfbljbqrb"]
+
+[ext_resource type="Texture2D" uid="uid://bdp3odk6jiu84" path="res://resources/kenney_particle_pack/scorch_02.png" id="1_yc4wv"]
+
+[sub_resource type="Gradient" id="Gradient_cdmln"]
+offsets = PackedFloat32Array(0.516393, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qxqjm"]
+gradient = SubResource("Gradient_cdmln")
+
+[sub_resource type="Curve" id="Curve_vbuf1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8r8ke"]
+curve = SubResource("Curve_vbuf1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_210np"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.01
+scale_max = 0.03
+scale_curve = SubResource("CurveTexture_8r8ke")
+color_ramp = SubResource("GradientTexture1D_qxqjm")
+
+[node name="HitEffect" type="GPUParticles2D"]
+self_modulate = Color(1.75, 0, 0, 1)
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_210np")
+texture = ExtResource("1_yc4wv")
+one_shot = true
+explosiveness = 1.0

@@ -1,4 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://dqlk3d4qxjis0"]
+[gd_scene load_steps=7 format=3 uid="uid://dqlk3d4qxjis0"]
+
+[ext_resource type="Texture2D" uid="uid://b7ecthhebv3j3" path="res://resources/kenney_particle_pack/scorch_01.png" id="1_7gbgg"]
 
 [sub_resource type="Gradient" id="Gradient_lotst"]
 offsets = PackedFloat32Array(0.52459, 1)
@@ -20,7 +22,8 @@ particle_flag_disable_z = true
 spread = 180.0
 initial_velocity_max = 500.0
 gravity = Vector3(0, 0, 0)
-scale_max = 20.0
+scale_min = 0.01
+scale_max = 0.25
 scale_curve = SubResource("CurveTexture_jp1mb")
 color_ramp = SubResource("GradientTexture1D_adqna")
 
@@ -29,5 +32,6 @@ self_modulate = Color(1.75, 0, 0, 1)
 emitting = false
 amount = 50
 process_material = SubResource("ParticleProcessMaterial_ur7w1")
+texture = ExtResource("1_7gbgg")
 one_shot = true
 explosiveness = 1.0

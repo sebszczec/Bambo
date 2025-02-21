@@ -8,6 +8,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 @onready var lifeBar = $LifeBar
 @onready var shieldBar = $ShieldBar
 @onready var explosion = $PlayerExplosion
+@onready var audio = $AudioStreamPlayer2D
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -82,6 +83,7 @@ func _physics_process(delta):
 	move_and_slide()
 
 func explode():
+	audio.play()
 	explosion.position = mainBody.position
 	explosion.rotation = mainBody.rotation
 	explosion.modulate = Color.BLUE
