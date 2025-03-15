@@ -78,7 +78,7 @@ class Weapon:
 				
 			updateBulletNumber(1)
 	
-	func _on_bullet_freeing(owner):
+	func _on_bullet_freeing(_owner):
 		updateBulletNumber(-1)
 
 		
@@ -180,12 +180,17 @@ class Fireworks extends BigBullet:
 	var size = 30
 	var min_damage = 25
 	var max_damage = 50
+	var explosion_speed = 2
+	var explosion_bullet_scene = preload("res://scenes/bullet.tscn")
+	var explosion_audio = AudioStreamPlayer2D.new()
+	
 		
 	func setup():
 		super.setup()
 		shooting_delay = 0.5
 		speed = 2
 		life_time = 2
+		explosion_audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
 	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
@@ -207,8 +212,8 @@ class Fireworks extends BigBullet:
 		audio.play()
 		var radial_increment = (2.0 * PI) / float(size)
 		for i in range (0, size):
-			var bullet = bullet_scene.instantiate()
-			bullet.Speed = speed
+			var bullet = explosion_bullet_scene.instantiate()
+			bullet.Speed = explosion_speed
 			bullet.MinDamage = min_damage
 			bullet.MaxDamage = max_damage
 			bullet.LifeTime = 1
