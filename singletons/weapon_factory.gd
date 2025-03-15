@@ -37,7 +37,6 @@ class Weapon:
 	var bullet_number = 0
 	var speed = 20
 	var life_time = 0.5
-	var type : Enums.WEAPONS
 	
 	var audio = AudioStreamPlayer2D.new()
 	var explosion_audio = AudioStreamPlayer2D.new()
