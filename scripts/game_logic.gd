@@ -37,7 +37,7 @@ func _ready() -> void:
 	world = get_parent()
 	
 	init_weapons()
-	weapon = weapons[Enums.WEAPONS.FIREWORKS]
+	weapon = weapons[Enums.WEAPONS.SMALL]
 	
 	init_points_dict()
 	
