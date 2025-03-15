@@ -192,6 +192,7 @@ class Fireworks extends BigBullet:
 		shooting_delay = 0.5
 		speed = 2
 		life_time = 2
+		explosion_audio.stream = load("res://resources/explode_sounds/350977__cabled_mess__boom_c_06.wav")
 		
 	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
@@ -225,7 +226,5 @@ class Fireworks extends BigBullet:
 			bullet.velocity = radial_v
 			bullet.connect("freeing", _on_bullet_freeing)
 			object_owner.call_deferred("add_child", bullet)
-			#object_owner.add_child(bullet)
-		
-		timer.start()	
+
 		updateBulletNumber(size)
