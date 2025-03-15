@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=20 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://brm0c5xtv3khy" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -13,6 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://ckojs6xfmg620" path="res://scenes/active_perk.tscn" id="7_4045b"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
+[ext_resource type="Script" path="res://scripts/enemy_3.gd" id="14_828j1"]
+[ext_resource type="Texture2D" uid="uid://pvtvupr8ff4v" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyGreen1.png" id="14_u385a"]
+[ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="15_63nif"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(2940, 1658, -1599.99, 1658, -1598, -1616, 2939, -1616.99)
@@ -28,6 +31,9 @@ glow_levels/4 = 1.0
 glow_levels/6 = 1.0
 glow_levels/7 = 1.0
 glow_blend_mode = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f1e7m"]
+radius = 19.0
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_twfab")
@@ -166,6 +172,22 @@ visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4fyp0")
+
+[node name="Enemy_3" type="CharacterBody2D" parent="."]
+script = ExtResource("14_828j1")
+
+[node name="Ship" type="Node2D" parent="Enemy_3"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy_3/Ship"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("14_u385a")
+
+[node name="EngineBurst" parent="Enemy_3/Ship" instance=ExtResource("15_63nif")]
+position = Vector2(0, -14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy_3"]
+position = Vector2(0, -2)
+shape = SubResource("CircleShape2D_f1e7m")
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
