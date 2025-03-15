@@ -1,0 +1,48 @@
+[gd_scene load_steps=9 format=3 uid="uid://8rvffvwg641t"]
+
+[ext_resource type="Script" path="res://scripts/enemy_3.gd" id="1_uk4cu"]
+[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_caiu3"]
+[ext_resource type="Texture2D" uid="uid://pvtvupr8ff4v" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyGreen1.png" id="2_ktyjv"]
+[ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_ryjv8"]
+[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_dq3hu"]
+[ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_bcis6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f1e7m"]
+radius = 17.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yy2ht"]
+radius = 21.0
+
+[node name="Enemy_3" type="CharacterBody2D"]
+script = ExtResource("1_uk4cu")
+
+[node name="LifeBar" parent="." instance=ExtResource("2_caiu3")]
+offset_top = -28.0
+offset_bottom = -22.0
+
+[node name="Ship" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Ship"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_ktyjv")
+
+[node name="EngineBurst" parent="Ship" instance=ExtResource("3_ryjv8")]
+position = Vector2(0, -14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_f1e7m")
+
+[node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CircleShape2D_yy2ht")
+
+[node name="Explosion" parent="." instance=ExtResource("5_dq3hu")]
+visible = false
+scale = Vector2(0.5, 0.5)
+PathToSprite = "res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyGreen1.png"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_bcis6")
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
