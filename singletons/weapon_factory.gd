@@ -53,7 +53,6 @@ class Weapon:
 		shooting_delay = 0.1
 		bullet_scene = preload("res://scenes/bullet.tscn")
 		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
-		explosion_audio.stream = load("res://resources/explode_sounds/350977__cabled_mess__boom_c_06.wav")
 		
 	func set_owner(owner):
 		object_owner = owner
