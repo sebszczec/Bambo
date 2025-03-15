@@ -1,6 +1,6 @@
 extends Node
 
-enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING, SMALL_HOMING_WIHT_DELAY}
+enum WEAPONS {SMALL, BIG, SMALL_WAVE, SMALL_HOMING, SMALL_HOMING_WIHT_DELAY, FIREWORKS}
 enum PERKS {LIFE, SHIELD, BIG_GUN, WAVE, HOMING}
 
 # Called when the node enters the scene tree for the first time.

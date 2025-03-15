@@ -37,7 +37,7 @@ func _ready() -> void:
 	world = get_parent()
 	
 	init_weapons()
-	weapon = weapons[Enums.WEAPONS.SMALL]
+	weapon = weapons[Enums.WEAPONS.FIREWORKS]
 	
 	init_points_dict()
 	
@@ -78,6 +78,9 @@ func init_weapons():
 	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY)
 	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY].type = Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY
 	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY].set_owner(self)
+	weapons[Enums.WEAPONS.FIREWORKS] = WeaponFactory.get_weapon(Enums.WEAPONS.FIREWORKS)
+	weapons[Enums.WEAPONS.FIREWORKS].type = Enums.WEAPONS.FIREWORKS
+	weapons[Enums.WEAPONS.FIREWORKS].set_owner(self)
 	
 	for w in weapons.values():
 		w.register_internal_nodes(self)

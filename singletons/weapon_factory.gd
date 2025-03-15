@@ -20,8 +20,12 @@ func get_weapon(weapon: Enums.WEAPONS) -> Weapon:
 		return SmallBulletWave.new()
 	elif weapon == Enums.WEAPONS.SMALL_HOMING:
 		return SmallHomingBullet.new()
-	else:
+	elif weapon == Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY:
 		return SmallHomingBulletWithDelay.new()
+	elif weapon == Enums.WEAPONS.FIREWORKS:
+		return Fireworks.new()
+	else:
+		return SmallBullet.new()
 	
 	
 class Weapon:
@@ -74,7 +78,7 @@ class Weapon:
 				
 			updateBulletNumber(1)
 	
-	func _on_bullet_freeing():
+	func _on_bullet_freeing(owner):
 		updateBulletNumber(-1)
 
 		
@@ -171,3 +175,49 @@ class SmallBulletWave extends SmallBullet:
 			
 			timer.start()	
 			updateBulletNumber(size)
+
+class Fireworks extends BigBullet:
+	var size = 30
+	var min_damage = 25
+	var max_damage = 50
+		
+	func setup():
+		super.setup()
+		shooting_delay = 0.5
+		speed = 2
+		life_time = 2
+	
+	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
+		if canShoot:
+			audio.play()
+			canShoot = false
+			var bullet = bullet_scene.instantiate()
+			bullet.position = start_position
+			bullet.velocity = direction
+			bullet.Speed = speed
+			bullet.LifeTime = life_time
+			bullet.connect("freeing", _on_bullet_freeing)
+			bullet.connect("freeing", _explode)
+			owner.add_child(bullet)
+			timer.start()
+				
+			updateBulletNumber(1)
+	
+	func _explode(bullet_owner):
+		audio.play()
+		var radial_increment = (2.0 * PI) / float(size)
+		for i in range (0, size):
+			var bullet = bullet_scene.instantiate()
+			bullet.Speed = speed
+			bullet.MinDamage = min_damage
+			bullet.MaxDamage = max_damage
+			bullet.LifeTime = 1
+			
+			var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)
+			bullet.position = bullet_owner.position + radial_v
+			bullet.velocity = radial_v
+			bullet.connect("freeing", _on_bullet_freeing)
+			object_owner.add_child(bullet)
+		
+		timer.start()	
+		updateBulletNumber(size)

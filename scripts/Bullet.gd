@@ -35,7 +35,7 @@ func dispose():
 	if is_queued_for_deletion():
 		return
 	
-	freeing.emit()
+	freeing.emit(self)
 	queue_free()
 
 func _on_life_timer_timeout():
