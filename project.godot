@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 ConfigHandler="*res://singletons/config_handler.gd"
 Enums="*res://singletons/enums.gd"
+WeaponFactory="*res://singletons/weapon_factory.gd"
 
 [display]
 
