@@ -40,6 +40,7 @@ class Weapon:
 	var type : Enums.WEAPONS
 	
 	var audio = AudioStreamPlayer2D.new()
+	var explosion_audio = AudioStreamPlayer2D.new()
 	
 	signal bulletNumerChange
 	
@@ -52,6 +53,7 @@ class Weapon:
 		shooting_delay = 0.1
 		bullet_scene = preload("res://scenes/bullet.tscn")
 		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		explosion_audio.stream = load("res://resources/explode_sounds/350977__cabled_mess__boom_c_06.wav")
 		
 	func set_owner(owner):
 		object_owner = owner
@@ -62,6 +64,7 @@ class Weapon:
 	func register_internal_nodes(owner: Node):
 		owner.add_child(timer)
 		owner.add_child(audio)
+		owner.add_child(explosion_audio)
 	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
@@ -182,7 +185,6 @@ class Fireworks extends BigBullet:
 	var max_damage = 50
 	var explosion_speed = 2
 	var explosion_bullet_scene = preload("res://scenes/bullet.tscn")
-	var explosion_audio = AudioStreamPlayer2D.new()
 	
 		
 	func setup():
@@ -190,7 +192,7 @@ class Fireworks extends BigBullet:
 		shooting_delay = 0.5
 		speed = 2
 		life_time = 2
-		explosion_audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		
 	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
@@ -209,7 +211,7 @@ class Fireworks extends BigBullet:
 			updateBulletNumber(1)
 	
 	func _explode(bullet_owner):
-		audio.play()
+		explosion_audio.play()
 		var radial_increment = (2.0 * PI) / float(size)
 		for i in range (0, size):
 			var bullet = explosion_bullet_scene.instantiate()
@@ -222,7 +224,8 @@ class Fireworks extends BigBullet:
 			bullet.position = bullet_owner.position + radial_v
 			bullet.velocity = radial_v
 			bullet.connect("freeing", _on_bullet_freeing)
-			object_owner.add_child(bullet)
+			object_owner.call_deferred("add_child", bullet)
+			#object_owner.add_child(bullet)
 		
 		timer.start()	
 		updateBulletNumber(size)
