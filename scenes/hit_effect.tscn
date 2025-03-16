@@ -29,8 +29,8 @@ color_ramp = SubResource("GradientTexture1D_qxqjm")
 [node name="HitEffect" type="GPUParticles2D"]
 self_modulate = Color(1.75, 0, 0, 1)
 emitting = false
-process_material = SubResource("ParticleProcessMaterial_210np")
 texture = ExtResource("1_yc4wv")
 one_shot = true
 explosiveness = 1.0
 fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_210np")

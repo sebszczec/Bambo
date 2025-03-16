@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://d0wnali7yow5s"]
 
-[ext_resource type="Script" path="res://scripts/big_bullet.gd" id="1_bn5nm"]
+[ext_resource type="Script" uid="uid://whxmsudfa388" path="res://scripts/big_bullet.gd" id="1_bn5nm"]
 [ext_resource type="Texture2D" uid="uid://28wyrv5lshkf" path="res://resources/kenney_particle_pack/star_09.png" id="2_yl7g1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ibul5"]

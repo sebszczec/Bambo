@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dpm6hiryffgjp"]
 
-[ext_resource type="Script" path="res://scripts/life_bar.gd" id="1_5bs7a"]
+[ext_resource type="Script" uid="uid://bat3b641wn0dw" path="res://scripts/life_bar.gd" id="1_5bs7a"]
 
 [node name="LifeBar" type="ProgressBar"]
 offset_left = -26.0

@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://ca6sxsibqlyef"]
 
-[ext_resource type="Script" path="res://scripts/enemy_1.gd" id="1_ww31q"]
+[ext_resource type="Script" uid="uid://debwj5r60hgpb" path="res://scripts/enemy_1.gd" id="1_ww31q"]
 [ext_resource type="Texture2D" uid="uid://vhyl21cokpfu" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_ywix3"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_0fnij"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_tycq0"]

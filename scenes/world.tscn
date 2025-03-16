@@ -2,9 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://brm0c5xtv3khy" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
-[ext_resource type="Script" path="res://scripts/game_logic.gd" id="1_ib5o5"]
-[ext_resource type="Script" path="res://scripts/world.gd" id="1_twfab"]
-[ext_resource type="Script" path="res://scripts/information_box.gd" id="2_0s2sw"]
+[ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
+[ext_resource type="Script" uid="uid://daootrcewuxwv" path="res://scripts/world.gd" id="1_twfab"]
+[ext_resource type="Script" uid="uid://q5e7fpsuwgsc" path="res://scripts/information_box.gd" id="2_0s2sw"]
 [ext_resource type="Texture2D" uid="uid://clwuwqp2k0qxf" path="res://resources/kenney_ui/shadow_bar.png" id="2_r3oad"]
 [ext_resource type="Texture2D" uid="uid://gl8t1mrmpjay" path="res://resources/kenney_ui/red_bar.png" id="3_p7qxo"]
 [ext_resource type="Texture2D" uid="uid://dhcf6xxv7uwaw" path="res://resources/kenney_ui/green_bar.png" id="4_ntn4d"]
@@ -169,6 +169,10 @@ visible = false
 environment = SubResource("Environment_4fyp0")
 
 [node name="Enemy_3" parent="." instance=ExtResource("14_aj3ps")]
+
+[node name="Enemy_31" parent="." instance=ExtResource("14_aj3ps")]
+position = Vector2(143, 0)
+rotation = -2.30244
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]

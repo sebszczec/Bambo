@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://on4ehyyfc2nh"]
 
 [ext_resource type="Texture2D" uid="uid://fe6mbs6yb61v" path="res://resources/perks/fire_circle.png" id="1_ec7nk"]
-[ext_resource type="Script" path="res://scripts/wave_perk.gd" id="1_en3vj"]
+[ext_resource type="Script" uid="uid://djimn50dd7ieg" path="res://scripts/wave_perk.gd" id="1_en3vj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_56xsv"]
 radius = 38.3275

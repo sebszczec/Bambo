@@ -29,6 +29,6 @@ color_ramp = SubResource("GradientTexture1D_gpudh")
 [node name="EngineBurst" type="GPUParticles2D"]
 position = Vector2(0, -11)
 amount = 10
-process_material = SubResource("ParticleProcessMaterial_kcdva")
 texture = ExtResource("1_xkj01")
 fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_kcdva")

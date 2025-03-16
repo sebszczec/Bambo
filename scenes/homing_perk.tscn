@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bvscqrbru2w30"]
 
-[ext_resource type="Script" path="res://scripts/homing_perk.gd" id="1_knw4y"]
+[ext_resource type="Script" uid="uid://bn13bhdyrjod8" path="res://scripts/homing_perk.gd" id="1_knw4y"]
 [ext_resource type="Texture2D" uid="uid://cr57k58a84wn4" path="res://resources/perks/rocket.png" id="1_o2nqu"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3xjwd"]

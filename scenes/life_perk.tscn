@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://d0kj7c5qnn8l2"]
 
 [ext_resource type="Texture2D" uid="uid://2cwtafrta5sy" path="res://resources/perks/heart.png" id="1_nfcdy"]
-[ext_resource type="Script" path="res://scripts/life_perk.gd" id="1_t6wn3"]
+[ext_resource type="Script" uid="uid://cmymhss62hgb5" path="res://scripts/life_perk.gd" id="1_t6wn3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hiqwj"]
 radius = 24.0
