@@ -181,7 +181,7 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 		var enemy = area.get_parent()
 		var id = enemy.get_instance_id()
 		
-		if handleDamage(enemy.Damage) == false:
+		if !isDead and handleDamage(enemy.Damage) == false:
 			handleKilled()
 			return
 		
@@ -194,6 +194,17 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 			timer.start()
 			
 			enemyDamageTimers[id] = timer
+		return
+		
+	if area.is_in_group("Bullet"):
+		var bullet = area.get_parent()
+		#var hit_effect = hitEffectScene.instantiate()
+		#add_child(hit_effect)
+		#hit_effect.emitting = true
+		
+		if !isDead and handleDamage(bullet.Damage) == false:
+			handleKilled()
+			return
 
 
 func _on_take_damage_timeout(enemy):

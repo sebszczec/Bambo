@@ -43,5 +43,5 @@ func _on_life_timer_timeout():
 
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Enemy"):
+	if area.is_in_group("Enemy") or area.is_in_group("Player"):
 		dispose()

@@ -58,7 +58,6 @@ func _physics_process(delta: float) -> void:
 		move_and_collide(velocity * delta)
 
 
-
 func get_enemy_name():
 	return "Enemy 3"
 
@@ -69,7 +68,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		add_child(hit_effect)
 		hit_effect.emitting = true
 		
-		if handleDamage(bullet.Damage) == false and !_isDead:
+		if !_isDead and handleDamage(bullet.Damage) == false:
 			_isDead = true
 			explode()
 
