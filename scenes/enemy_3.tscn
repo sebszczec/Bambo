@@ -15,6 +15,7 @@ radius = 17.0
 radius = 21.0
 
 [node name="Enemy_3" type="CharacterBody2D"]
+collision_layer = 8
 script = ExtResource("1_uk4cu")
 
 [node name="LifeBar" parent="." instance=ExtResource("2_caiu3")]
@@ -31,6 +32,7 @@ texture = ExtResource("2_ktyjv")
 position = Vector2(0, -14)
 
 [node name="RayCast2D" type="RayCast2D" parent="Ship"]
+exclude_parent = false
 target_position = Vector2(0, 200)
 
 [node name="Aim" type="Sprite2D" parent="Ship"]
