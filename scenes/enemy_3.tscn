@@ -30,6 +30,9 @@ texture = ExtResource("2_ktyjv")
 [node name="EngineBurst" parent="Ship" instance=ExtResource("3_ryjv8")]
 position = Vector2(0, -14)
 
+[node name="RayCast2D" type="RayCast2D" parent="Ship"]
+target_position = Vector2(0, 200)
+
 [node name="Aim" type="Sprite2D" parent="Ship"]
 position = Vector2(0, 26)
 scale = Vector2(0.01, 0.01)

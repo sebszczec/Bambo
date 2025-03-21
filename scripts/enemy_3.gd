@@ -1,11 +1,12 @@
 extends CharacterBody2D
 
 @export var Life = 200
-@export var Damage = 0
+@export var Damage = 30
 @export var IsDamageOverTime = false
 @export var DamageTickTime = 0.0
-@export var ShootingDelay = 1.0
-@export var MaxSpeed = 30
+@export var ShootingDelay = 0.5
+@export var MoveSpeed = 100
+@export var AttackSpeed = 200
 @export var Acceleration = 10
 @export var Friction = 5
 @export var RotationSpeed : float = TAU
@@ -20,9 +21,12 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var explosion = $Explosion
 @onready var audio = $AudioStreamPlayer2D
 @onready var aim = $Ship/Aim
+@onready var raycast = $Ship/RayCast2D
 
 var _theta = 0.0
 var _halfPI : float = PI / 2
+var _shoot = false
+var _speed = Vector2(0, 0)
 
 var _showDamage = false
 var _deathTimer = Timer.new()
@@ -43,7 +47,7 @@ func _ready() -> void:
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	lifeBar.setColor(Color.GREEN)
 	
-	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.FIREWORKS)
+	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(_world)
 	
@@ -60,18 +64,30 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if raycast.is_colliding():
+		_shoot = true
+		_speed = AttackSpeed
+	else:
+		_shoot = false
+		_speed = MoveSpeed
+	
 	var direction = global_position.direction_to(_player.get_global_position())
-	velocity = velocity.move_toward(direction * MaxSpeed * delta, Acceleration)
+	velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
 	
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 
 	move_and_collide(velocity)
+	
 
-
+# public
 func get_enemy_name():
 	return "Enemy 3"
+	
+# public
+func setup_rotation(angle):
+	ship.rotate(angle)
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
@@ -98,7 +114,8 @@ func handleDamage(damage):
 		return false
 
 func _on_shooting_timer_timeout():
-	_weapon.shoot(_world, aim.get_global_position(), aim.get_global_position() - get_global_position())
+	if _shoot:
+		_weapon.shoot(_world, aim.get_global_position(), aim.get_global_position() - get_global_position())
 
 func _on_death_timer_timeout():
 	dispose()

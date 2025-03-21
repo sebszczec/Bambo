@@ -22,7 +22,7 @@ var weapons : Dictionary = {}
 var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-var enemy_scenes = [preload("res://scenes/enemy_1.tscn"), preload("res://scenes/enemy_2.tscn")]
+var enemy_scenes = [preload("res://scenes/enemy_1.tscn"), preload("res://scenes/enemy_2.tscn"), preload("res://scenes/enemy_3.tscn")]
 var life_perk_scene = preload("res://scenes/life_perk.tscn")
 var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
 var big_gun_perk_scene = preload("res://scenes/big_gun_perk.tscn")
@@ -84,6 +84,7 @@ func init_weapons():
 func init_points_dict():
 	points_dict["Enemy 1"] = 10
 	points_dict["Enemy 2"] = 20
+	points_dict["Enemy 3"] = 20
 
 
 func _physics_process(_delta):
@@ -114,7 +115,7 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	if enemy_count == MaxEnemyCount:
 		return
 
-	var enemy = enemy_scenes[randi_range(0, 1)].instantiate()
+	var enemy = enemy_scenes[randi_range(0, enemy_scenes.size() - 1)].instantiate()
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	
