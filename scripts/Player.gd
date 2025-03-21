@@ -198,6 +198,9 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 		
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
+		if bullet.get_collision_mask() & Enums.MASKS.PLAYER != Enums.MASKS.PLAYER:
+			return
+		#TODO
 		#var hit_effect = hitEffectScene.instantiate()
 		#add_child(hit_effect)
 		#hit_effect.emitting = true

@@ -43,5 +43,12 @@ func _on_life_timer_timeout():
 
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Enemy") or area.is_in_group("Player"):
-		dispose()
+	if area.is_in_group("Enemy"):
+		if get_collision_mask() & Enums.MASKS.ENEMY == Enums.MASKS.ENEMY:
+			dispose()
+		return
+		
+	if area.is_in_group("Player"):
+		if get_collision_mask() & Enums.MASKS.PLAYER == Enums.MASKS.PLAYER:
+			dispose()
+		return
