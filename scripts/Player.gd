@@ -237,7 +237,7 @@ func handleDamage(damage):
 
 func handleKilled():
 	isDead = true
-	$LifeBox/CollisionShape2D.disabled = true
+	$LifeBox/CollisionShape2D.set_deferred("disabled", true)
 	explode()
 	deathTimer.start()
 

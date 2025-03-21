@@ -5,9 +5,10 @@ extends CharacterBody2D
 @export var IsDamageOverTime = false
 @export var DamageTickTime = 0.0
 @export var ShootingDelay = 1.0
-@export var MaxSpeed = 10
+@export var MaxSpeed = 30
 @export var Acceleration = 10
 @export var Friction = 5
+@export var RotationSpeed : float = TAU
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
@@ -18,19 +19,24 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
 @onready var explosion = $Explosion
 @onready var audio = $AudioStreamPlayer2D
-@onready var aim = $Aim
+@onready var aim = $Ship/Aim
+
+var _theta = 0.0
+var _halfPI : float = PI / 2
 
 var _showDamage = false
 var _deathTimer = Timer.new()
 var _shootingTimer = Timer.new()
 var _isDead = false
 var _weapon = null
+var _player = null
 var _world = null
 
 signal killed
 
 func _ready() -> void:
 	_world = get_tree().root
+	_player = get_node("/root/World/Player")
 	
 	var visualSettings = ConfigHandler.load_visuals()
 	_showDamage = visualSettings["show_damage_given"]
@@ -52,10 +58,16 @@ func _ready() -> void:
 	add_child(_shootingTimer)
 	_shootingTimer.start()
 
+
 func _physics_process(delta: float) -> void:
-	velocity = velocity.move_toward(Vector2(1, 0) * MaxSpeed, Acceleration)
-	if !_isDead:
-		move_and_collide(velocity * delta)
+	var direction = global_position.direction_to(_player.get_global_position())
+	velocity = velocity.move_toward(direction * MaxSpeed * delta, Acceleration)
+	
+	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
+	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
+	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
+
+	move_and_collide(velocity)
 
 
 func get_enemy_name():

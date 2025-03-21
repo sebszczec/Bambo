@@ -170,9 +170,5 @@ environment = SubResource("Environment_4fyp0")
 
 [node name="Enemy_3" parent="." instance=ExtResource("14_aj3ps")]
 
-[node name="Enemy_31" parent="." instance=ExtResource("14_aj3ps")]
-position = Vector2(143, 0)
-rotation = -2.30244
-
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
