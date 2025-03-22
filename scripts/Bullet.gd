@@ -26,10 +26,7 @@ func _ready():
 
 func _physics_process(_delta):
 	velocity = velocity.normalized() * Speed
-	var collision = move_and_collide(velocity)
-	
-	if collision != null:
-		velocity = velocity.bounce(collision.get_normal())
+	var _collision = move_and_collide(velocity)
 
 func dispose():
 	if is_queued_for_deletion():
@@ -57,3 +54,4 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		if is_damaging_player():
 			dispose()
 		return
+		

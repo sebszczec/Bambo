@@ -124,6 +124,7 @@ func _on_death_timer_timeout():
 	dispose()
 
 func dispose():
+	_shootingTimer.stop()
 	if !is_queued_for_deletion():
 		queue_free()
 
