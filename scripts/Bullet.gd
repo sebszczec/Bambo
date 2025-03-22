@@ -41,14 +41,19 @@ func dispose():
 func _on_life_timer_timeout():
 	dispose()
 
+func is_damaging_player() -> bool:
+	return collision_mask & Enums.MASKS.PLAYER == Enums.MASKS.PLAYER
+	
+func is_damaging_enemy() -> bool:
+	return collision_mask & Enums.MASKS.ENEMY == Enums.MASKS.ENEMY
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		if get_collision_mask() & Enums.MASKS.ENEMY == Enums.MASKS.ENEMY:
+		if is_damaging_enemy():
 			dispose()
 		return
 		
 	if area.is_in_group("Player"):
-		if get_collision_mask() & Enums.MASKS.PLAYER == Enums.MASKS.PLAYER:
+		if is_damaging_player():
 			dispose()
 		return

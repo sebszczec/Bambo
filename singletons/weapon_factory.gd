@@ -11,21 +11,27 @@ func _process(_delta: float) -> void:
 	pass
 	
 
-func get_weapon(weapon: Enums.WEAPONS) -> Weapon:
+func get_weapon(weapon: Enums.WEAPONS, damaging_player: bool, damaging_enemy: bool) -> Weapon:
+	var result : Weapon = null
 	if weapon == Enums.WEAPONS.SMALL:
-		return SmallBullet.new()
+		result = SmallBullet.new()
 	elif weapon == Enums.WEAPONS.BIG:
-		return BigBullet.new()
+		result = BigBullet.new()
 	elif weapon == Enums.WEAPONS.SMALL_WAVE:
-		return SmallBulletWave.new()
+		result = SmallBulletWave.new()
 	elif weapon == Enums.WEAPONS.SMALL_HOMING:
-		return SmallHomingBullet.new()
+		result = SmallHomingBullet.new()
 	elif weapon == Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY:
-		return SmallHomingBulletWithDelay.new()
+		result = SmallHomingBulletWithDelay.new()
 	elif weapon == Enums.WEAPONS.FIREWORKS:
-		return Fireworks.new()
+		result = Fireworks.new()
 	else:
-		return SmallBullet.new()
+		result = SmallBullet.new()
+		
+	result.setDamagingPlayer(damaging_player)
+	result.setDamagingEnemy(damaging_enemy)
+		
+	return result
 	
 	
 class Weapon:
@@ -37,6 +43,7 @@ class Weapon:
 	var bullet_number = 0
 	var speed = 20
 	var life_time = 0.5
+	var collision_mask = Enums.MASKS.PLAYER | Enums.MASKS.ENEMY
 	
 	var audio = AudioStreamPlayer2D.new()
 	var explosion_audio = AudioStreamPlayer2D.new()
@@ -55,6 +62,18 @@ class Weapon:
 		
 	func set_owner(owner):
 		object_owner = owner
+		
+	func setDamagingPlayer(value : bool):
+		if value:
+			collision_mask = collision_mask | Enums.MASKS.PLAYER
+		else:
+			collision_mask = collision_mask & ~Enums.MASKS.PLAYER
+		
+	func setDamagingEnemy(value: bool):
+		if value:
+			collision_mask = collision_mask | Enums.MASKS.ENEMY
+		else:
+			collision_mask = collision_mask & ~Enums.MASKS.ENEMY
 	
 	func _on_timer_timeout():
 		canShoot = true
@@ -69,6 +88,7 @@ class Weapon:
 			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
+			bullet.set_collision_mask(collision_mask)
 			bullet.position = start_position
 			bullet.velocity = direction
 			bullet.Speed = speed
@@ -117,6 +137,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
+			bullet.set_collision_mask(collision_mask)
 			bullet.position = start_position
 			bullet.velocity = direction
 			bullet.Speed = speed
@@ -163,6 +184,7 @@ class SmallBulletWave extends SmallBullet:
 			var radial_increment = (2.0 * PI) / float(size)
 			for i in range (0, size):
 				var bullet = bullet_scene.instantiate()
+				bullet.set_collision_mask(collision_mask)
 				bullet.Speed = speed
 				bullet.MinDamage = min_damage
 				bullet.MaxDamage = max_damage
@@ -198,6 +220,7 @@ class Fireworks extends BigBullet:
 			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
+			bullet.set_collision_mask(collision_mask)
 			bullet.position = start_position
 			bullet.velocity = direction
 			bullet.Speed = speed
@@ -214,6 +237,7 @@ class Fireworks extends BigBullet:
 		var radial_increment = (2.0 * PI) / float(size)
 		for i in range (0, size):
 			var bullet = explosion_bullet_scene.instantiate()
+			bullet.set_collision_mask(collision_mask)
 			bullet.Speed = explosion_speed
 			bullet.MinDamage = min_damage
 			bullet.MaxDamage = max_damage

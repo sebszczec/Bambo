@@ -119,6 +119,9 @@ func _on_radar_player_lost():
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
+		if !bullet.is_damaging_enemy():
+			return
+			
 		var hit_effect = hitEffectScene.instantiate()
 		add_child(hit_effect)
 		hit_effect.emitting = true

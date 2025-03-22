@@ -47,7 +47,7 @@ func _ready() -> void:
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	lifeBar.setColor(Color.GREEN)
 	
-	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL)
+	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, true, false)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(_world)
 	
@@ -72,7 +72,7 @@ func _physics_process(delta: float) -> void:
 		_speed = MoveSpeed
 	
 	var direction = global_position.direction_to(_player.get_global_position())
-	velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
+	#velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
 	
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
@@ -92,6 +92,9 @@ func setup_rotation(angle):
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
+		if !bullet.is_damaging_enemy():
+			return
+		
 		var hit_effect = hitEffectScene.instantiate()
 		add_child(hit_effect)
 		hit_effect.emitting = true
