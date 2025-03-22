@@ -49,7 +49,7 @@ func _ready() -> void:
 	
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, true, false)
 	_weapon.set_owner(_world)
-	_weapon.register_internal_nodes(_world)
+	_weapon.register_internal_nodes(self)
 	
 	_deathTimer.one_shot = true
 	_deathTimer.wait_time = 2
@@ -72,7 +72,7 @@ func _physics_process(delta: float) -> void:
 		_speed = MoveSpeed
 	
 	var direction = global_position.direction_to(_player.get_global_position())
-	#velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
+	velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
 	
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))

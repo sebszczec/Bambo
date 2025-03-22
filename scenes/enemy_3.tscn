@@ -36,6 +36,7 @@ exclude_parent = false
 target_position = Vector2(0, 200)
 
 [node name="Aim" type="Sprite2D" parent="Ship"]
+visible = false
 position = Vector2(0, 26)
 scale = Vector2(0.01, 0.01)
 texture = ExtResource("7_5fo5i")

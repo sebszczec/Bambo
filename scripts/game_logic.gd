@@ -35,6 +35,7 @@ var homing_perk_scene = preload("res://scenes/homing_perk.tscn")
 
 func _ready() -> void:
 	world = get_parent()
+	player = world.find_child("Player")
 	
 	init_weapons()
 	weapon = weapons[Enums.WEAPONS.SMALL]
@@ -48,7 +49,6 @@ func _ready() -> void:
 	informationBox = world.find_child("InformationBox")
 	activePerk = world.find_child("ActivePerk")
 	
-	player = world.find_child("Player")
 	player.connect("update_life", _on_player_damage_taken)
 	player.connect("update_afterburner", _on_player_update_afterburner)
 	player.connect("update_shield", _on_player_update_shield)
@@ -77,7 +77,7 @@ func init_weapons():
 	weapons[Enums.WEAPONS.FIREWORKS].set_owner(self)
 	
 	for w in weapons.values():
-		w.register_internal_nodes(self)
+		w.register_internal_nodes(player)
 		w.connect("bulletNumerChange", _on_weapon_bullet_number_change)
 
 
