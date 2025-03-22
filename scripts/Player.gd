@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
+var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var satelite = $Satelite
 @onready var mainBody = $MainBody
@@ -200,10 +201,10 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 		var bullet = area.get_parent()
 		if !bullet.is_damaging_player():
 			return
-		#TODO
-		#var hit_effect = hitEffectScene.instantiate()
-		#add_child(hit_effect)
-		#hit_effect.emitting = true
+
+		var hit_effect = hitEffectScene.instantiate()
+		add_child(hit_effect)
+		hit_effect.emitting = true
 		
 		if !isDead and handleDamage(bullet.Damage) == false:
 			handleKilled()

@@ -16,6 +16,7 @@ radius = 21.0
 
 [node name="Enemy_3" type="CharacterBody2D"]
 collision_layer = 8
+collision_mask = 11
 script = ExtResource("1_uk4cu")
 
 [node name="LifeBar" parent="." instance=ExtResource("2_caiu3")]

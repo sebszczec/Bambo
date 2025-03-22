@@ -1,6 +1,6 @@
 extends Node
 
-@export_range (1, 400) var MaxEnemyCount : int = 20
+@export_range (1, 400) var MaxEnemyCount : int = 2
 @export_range (0, 100) var ChanceForLifePerk : int = 100
 @export_range (0, 100) var ChanceForShieldPerk : int = 100
 @export_range (0, 100) var ChanceForBigGunPerk : int = 100
