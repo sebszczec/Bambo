@@ -7,10 +7,10 @@ func _ready() -> void:
 	add_theme_stylebox_override("fill", style)
 
 
-func setMaxValue(val):
+func setMaxValue(val : int):
 	self.max_value = val
 	
-func setValue(val):
+func setValue(val : int):
 	self.value = val
 
 func setColor(color: Color):

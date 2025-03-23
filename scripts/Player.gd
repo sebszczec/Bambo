@@ -242,10 +242,10 @@ func handleDamage(damage):
 			real_damage = 0
 		var tmp = updateShield(-damage)
 		if showDamage:
-			createShieldFloatingText(str(-tmp))
+			createShieldFloatingText(str(-tmp as int))
 		
 	if showDamage && real_damage > 0:
-		createLifeFloatingText(str(real_damage))
+		createLifeFloatingText(str(real_damage as int))
 	
 	updateLife(-real_damage)
 	
