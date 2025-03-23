@@ -25,8 +25,14 @@ func prepareTimer():
 	$Label.text = numbers[step]
 	timer.one_shot = true
 	timer.wait_time = delays[step]
-	step = step + 1
 	
+	if visibility[step] == true:
+		if step == 7:
+			$Sfx2.play()
+		else:
+			$Sfx1.play()
+	
+	step = step + 1
 	timer.start()
 
 
