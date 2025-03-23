@@ -24,6 +24,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @export var MaxShield = 100
 var currentAfterburner = MaxAfterburner
 var afterBurnerStep = 10
+var shieldRecoveryStep = 5
 var burn = false
 var life = MaxLife
 var shield = MaxShield
@@ -80,6 +81,7 @@ func _physics_process(delta):
 	calculateAcceleration()
 	calculateVelocity()
 	calculateAfterburner(delta)
+	recoverShield(delta)
 	
 	move_and_slide()
 
@@ -111,6 +113,9 @@ func calculateAfterburner(delta):
 	if !burn && currentAfterburner < MaxAfterburner:
 		updateAfterBurner(afterBurnerStep * delta)
 
+func recoverShield(delta):
+	if shield < MaxShield:
+		updateShield(shieldRecoveryStep * delta)
 
 func calculateAcceleration():
 	if currentAfterburner > 0:
