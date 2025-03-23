@@ -1,6 +1,5 @@
-[gd_scene load_steps=17 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=23 format=3 uid="uid://3r5m53y3clh3"]
 
-[ext_resource type="Texture2D" uid="uid://brm0c5xtv3khy" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
 [ext_resource type="Script" uid="uid://daootrcewuxwv" path="res://scripts/world.gd" id="1_twfab"]
@@ -12,8 +11,15 @@
 [ext_resource type="PackedScene" uid="uid://snwsk5j436tk" path="res://scenes/score.tscn" id="6_btsp4"]
 [ext_resource type="PackedScene" uid="uid://ckojs6xfmg620" path="res://scenes/active_perk.tscn" id="7_4045b"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
+[ext_resource type="Texture2D" uid="uid://cwvljcbccx4bo" path="res://resources/background/space_bg.jpg" id="10_o8fc1"]
+[ext_resource type="Texture2D" uid="uid://cttmsh76aflb3" path="res://resources/kenney_planets/Planets/planet00.png" id="11_xo05s"]
+[ext_resource type="Texture2D" uid="uid://cea5o47hm7hhf" path="res://resources/kenney_planets/Planets/planet02.png" id="12_dss4m"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
+[ext_resource type="Texture2D" uid="uid://d4b548tu05a4v" path="res://resources/kenney_planets/Planets/planet09.png" id="13_7t5mc"]
 [ext_resource type="AudioStream" uid="uid://dnug1msrm6e4m" path="res://resources/music/awake10_megaWall.mp3" id="14_o8fc1"]
+[ext_resource type="Texture2D" uid="uid://b3wb5qpkbs3i5" path="res://resources/kenney_planets/Planets/planet04.png" id="14_pm21f"]
+[ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/kenney_planets/Planets/planet05.png" id="15_2lf6f"]
+[ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/kenney_planets/Planets/planet07.png" id="16_2lf6f"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(2939, 1658, -1598, 1658, -1598, -1616, 2939, -1616)
@@ -145,12 +151,52 @@ script = ExtResource("1_ib5o5")
 wait_time = 0.1
 one_shot = true
 
-[node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -1600.0
-offset_top = -1752.0
-offset_right = 2956.0
-offset_bottom = 1248.0
-texture = ExtResource("1_2wts2")
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground"]
+position = Vector2(959, 540)
+texture = ExtResource("10_o8fc1")
+
+[node name="SmallPlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(1920, 1080)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/SmallPlanets"]
+position = Vector2(224, 207)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("11_xo05s")
+
+[node name="Planet2" type="Sprite2D" parent="ParallaxBackground/SmallPlanets"]
+position = Vector2(992, 464)
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("12_dss4m")
+
+[node name="Planet3" type="Sprite2D" parent="ParallaxBackground/SmallPlanets"]
+position = Vector2(1137, 116)
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("13_7t5mc")
+
+[node name="MediumPlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.3, 0.3)
+motion_mirroring = Vector2(2880, 1620)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/MediumPlanets"]
+position = Vector2(314, 462)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("14_pm21f")
+
+[node name="Planet2" type="Sprite2D" parent="ParallaxBackground/MediumPlanets"]
+position = Vector2(1212, 664)
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("15_2lf6f")
+
+[node name="LargePlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(3840, 2160)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/LargePlanets"]
+position = Vector2(899, 347)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("16_2lf6f")
 
 [node name="Player" parent="." instance=ExtResource("1_6neka")]
 
