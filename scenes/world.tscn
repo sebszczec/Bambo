@@ -16,9 +16,9 @@
 [ext_resource type="AudioStream" uid="uid://dnug1msrm6e4m" path="res://resources/music/awake10_megaWall.mp3" id="14_o8fc1"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
-vertices = PackedVector2Array(2940, 1658, -1599.99, 1658, -1598, -1616, 2939, -1616.99)
+vertices = PackedVector2Array(2939, 1658, -1598, 1658, -1598, -1616, 2939, -1616)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(2950, 1668, -1610, 1668, -1608, -1626, 2949, -1627)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(2949, 1668, -1608, 1668, -1608, -1626, 2949, -1626)])
 
 [sub_resource type="Environment" id="Environment_4fyp0"]
 background_mode = 3
