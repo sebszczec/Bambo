@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf76yjmqmhyiw"]
+[gd_scene load_steps=3 format=3 uid="uid://cf76yjmqmhyiw"]
 
 [ext_resource type="Script" uid="uid://c1v3uq5r26kj4" path="res://scripts/pause_menu.gd" id="1_hg4t4"]
+[ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="2_myx47"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -54,5 +55,13 @@ theme_override_font_sizes/font_size = 20
 text = "Quit
 "
 
+[node name="Sfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_myx47")
+volume_db = 10.0
+
+[connection signal="focus_entered" from="GridContainer/ResumeButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/ResumeButton" to="." method="_on_resume_button_mouse_entered"]
 [connection signal="pressed" from="GridContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="focus_entered" from="GridContainer/QuitButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
 [connection signal="pressed" from="GridContainer/QuitButton" to="." method="_on_quit_button_pressed"]

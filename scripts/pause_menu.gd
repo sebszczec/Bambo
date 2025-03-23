@@ -27,7 +27,6 @@ func _physics_process(_delta: float) -> void:
 		setPause(!isPaused)
 	
 
-
 func _on_resume_button_pressed() -> void:
 	setPause(false)
 
@@ -37,3 +36,14 @@ func _on_quit_button_pressed() -> void:
 
 func _on_player_killed():
 	isPlayerKilled = true
+
+func _on_button_focus_changed() -> void:
+	$Sfx.play()
+
+
+func _on_resume_button_mouse_entered() -> void:
+	resumeButton.grab_focus()
+
+
+func _on_quit_button_mouse_entered() -> void:
+	$GridContainer/QuitButton.grab_focus()
