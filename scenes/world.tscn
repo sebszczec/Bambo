@@ -158,6 +158,7 @@ position = Vector2(959, 540)
 texture = ExtResource("10_o8fc1")
 
 [node name="SmallPlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color(0.196078, 0.196078, 0.196078, 1)
 motion_scale = Vector2(0.1, 0.1)
 motion_mirroring = Vector2(1920, 1080)
 
@@ -177,6 +178,7 @@ scale = Vector2(0.03, 0.03)
 texture = ExtResource("13_7t5mc")
 
 [node name="MediumPlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color(0.392157, 0.392157, 0.392157, 1)
 motion_scale = Vector2(0.3, 0.3)
 motion_mirroring = Vector2(2880, 1620)
 
@@ -191,6 +193,7 @@ scale = Vector2(0.08, 0.08)
 texture = ExtResource("15_2lf6f")
 
 [node name="LargePlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color(0.588235, 0.588235, 0.588235, 1)
 motion_mirroring = Vector2(3840, 2160)
 
 [node name="Planet1" type="Sprite2D" parent="ParallaxBackground/LargePlanets"]
