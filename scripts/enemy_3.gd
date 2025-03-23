@@ -100,6 +100,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		hit_effect.emitting = true
 		
 		if !_isDead and handleDamage(bullet.Damage) == false:
+			_shootingTimer.stop()
 			_isDead = true
 			explode()
 
@@ -124,7 +125,6 @@ func _on_death_timer_timeout():
 	dispose()
 
 func dispose():
-	_shootingTimer.stop()
 	if !is_queued_for_deletion():
 		queue_free()
 

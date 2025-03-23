@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cjhfvs5t1o0xn"]
+[gd_scene load_steps=3 format=3 uid="uid://cjhfvs5t1o0xn"]
 
 [ext_resource type="Script" uid="uid://broyn8g8twevf" path="res://scripts/start_menu.gd" id="1_xryhy"]
+[ext_resource type="AudioStream" uid="uid://d0j0wehwugqub" path="res://resources/music/Orbital Colossus.mp3" id="2_thu50"]
 
 [node name="StartMenu" type="Control"]
 layout_mode = 3
@@ -49,6 +50,10 @@ text = "Settings"
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Quit"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_thu50")
+autoplay = true
 
 [connection signal="pressed" from="GridContainer/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="GridContainer/Settings" to="." method="_on_settings_pressed"]

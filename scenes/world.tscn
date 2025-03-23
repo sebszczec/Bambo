@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=17 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="Texture2D" uid="uid://brm0c5xtv3khy" path="res://resources/planet-earth-background.jpg" id="1_2wts2"]
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://ckojs6xfmg620" path="res://scenes/active_perk.tscn" id="7_4045b"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
+[ext_resource type="AudioStream" uid="uid://dnug1msrm6e4m" path="res://resources/music/awake10_megaWall.mp3" id="14_o8fc1"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(2940, 1658, -1599.99, 1658, -1598, -1616, 2939, -1616.99)
@@ -152,6 +153,11 @@ offset_bottom = 1248.0
 texture = ExtResource("1_2wts2")
 
 [node name="Player" parent="." instance=ExtResource("1_6neka")]
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="Player"]
+position = Vector2(-576, -324)
+stream = ExtResource("14_o8fc1")
+autoplay = true
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 position = Vector2(8, -416)
