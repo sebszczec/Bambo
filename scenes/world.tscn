@@ -193,7 +193,7 @@ scale = Vector2(0.08, 0.08)
 texture = ExtResource("15_2lf6f")
 
 [node name="LargePlanets" type="ParallaxLayer" parent="ParallaxBackground"]
-modulate = Color(0.588235, 0.588235, 0.588235, 1)
+modulate = Color(0.490196, 0.490196, 0.490196, 1)
 motion_mirroring = Vector2(3840, 2160)
 
 [node name="Planet1" type="Sprite2D" parent="ParallaxBackground/LargePlanets"]
@@ -209,7 +209,7 @@ stream = ExtResource("14_o8fc1")
 autoplay = true
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-position = Vector2(8, -416)
+position = Vector2(-10, 315)
 navigation_polygon = SubResource("NavigationPolygon_y1cda")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

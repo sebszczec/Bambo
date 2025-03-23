@@ -1,11 +1,11 @@
 extends Node
 
-@export_range (1, 400) var MaxEnemyCount : int = 2
-@export_range (0, 100) var ChanceForLifePerk : int = 100
-@export_range (0, 100) var ChanceForShieldPerk : int = 100
-@export_range (0, 100) var ChanceForBigGunPerk : int = 100
-@export_range (0, 100) var ChanceForWavePerk : int = 100
-@export_range (0, 100) var ChanceForHomingPerk : int = 100
+@export_range (1, 400) var MaxEnemyCount : int = 10
+@export_range (0, 100) var ChanceForLifePerk : int = 25
+@export_range (0, 100) var ChanceForShieldPerk : int = 25
+@export_range (0, 100) var ChanceForBigGunPerk : int = 50
+@export_range (0, 100) var ChanceForWavePerk : int = 50
+@export_range (0, 100) var ChanceForHomingPerk : int = 50
 
 var enemy_count = 0
 var world = null
@@ -154,7 +154,7 @@ func _on_player_update_afterburner(value):
 func _on_player_update_shield(value):
 	shieldBar.value = value
 
-func addPerk(pos : Vector2):
+func addPerk(pos : Vector2) -> bool:
 	var type = randi_range(0, Enums.PERKS.size() - 1)
 	var chance = randi_range(0, 100)
 	var perk = null
@@ -164,7 +164,7 @@ func addPerk(pos : Vector2):
 			return false
 		perk = life_perk_scene.instantiate()
 	elif type == Enums.PERKS.SHIELD:
-		if chance > ChanceForLifePerk:
+		if chance > ChanceForShieldPerk:
 			return false
 		perk = shield_perk_scene.instantiate()
 	elif type == Enums.PERKS.BIG_GUN:
