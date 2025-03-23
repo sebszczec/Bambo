@@ -82,7 +82,7 @@ func _physics_process(delta):
 	calculateVelocity()
 	calculateAfterburner(delta)
 	recoverShield(delta)
-	
+		
 	move_and_slide()
 
 func explode():
@@ -143,6 +143,17 @@ func calculateVelocity():
 	if direction.length() == 0 or isDead:
 		velocity = velocity.move_toward(Vector2(0, 0), PlayerFriction)
 	else:
+		var pos = get_global_position()
+		if pos.x <= LevelSettings.MinX:
+			direction.x = 1
+		elif pos.x >= LevelSettings.MaxX:
+			direction.x = -1
+			
+		if pos.y <= LevelSettings.MinY:
+			direction.y = 1
+		elif pos.y >= LevelSettings.MaxY:
+			direction.y = -1
+			
 		velocity = velocity.move_toward(direction.normalized() * calculatedMaxVelocity, calculatedAcceleration)
 
 var last_mouse_pos = Vector2(0, 0)
