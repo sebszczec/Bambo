@@ -50,6 +50,8 @@ func _ready() -> void:
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	lifeBar.setColor(Color.GREEN)
 	
+	explosion.init()
+	
 	radar.connect("player_detected", _on_radar_player_detected)
 	radar.connect("player_lost", _on_radar_player_lost)
 	
@@ -159,6 +161,6 @@ func explode():
 	lifeBar.visible = false
 	explosion.visible = true
 	explosion.rotation = ship.rotation
-	explosion.Explode()
+	explosion.explode()
 	_deathTimer.start()
 	killed.emit(get_instance_id())

@@ -47,6 +47,8 @@ func _ready() -> void:
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	lifeBar.setColor(Color.GREEN)
 	
+	explosion.init()
+	
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, true, false)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)
@@ -136,6 +138,6 @@ func explode():
 	lifeBar.visible = false
 	explosion.visible = true
 	explosion.rotation = ship.rotation
-	explosion.Explode()
+	explosion.explode()
 	_deathTimer.start()
 	killed.emit(get_instance_id())

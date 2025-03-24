@@ -3,6 +3,7 @@ extends Node2D
 var fragmentScene = preload("res://scenes/object_fragment.tscn")
 
 @export var PathToSprite : String = "res://resources/kenney_particle_pack/window_04.png"
+@export var SpriteTexture : Texture2D = null
 
 @onready var effect = $ExplosionEffect
 
@@ -27,9 +28,15 @@ var _speed = 500
 var _explode = false
 
 func _ready() -> void:
+	pass
+
+func init():
 	for i in range(_all_frames): 
 		var tmp : Sprite2D = fragmentScene.instantiate()
-		tmp.texture = load(PathToSprite)
+		if SpriteTexture == null:
+			tmp.texture = load(PathToSprite)
+		else:
+			tmp.texture = SpriteTexture
 		tmp.set_frame(i)
 		_obj.append(tmp)
 		add_child(tmp)
@@ -74,7 +81,7 @@ func _calculate_offset():
 	_h_pixels_half = _h_pixels / 2
 	_w_pixels_half = _w_pixels / 2
 	
-func Explode():
+func explode():
 	_explode = true
 	effect.emitting = true
 	

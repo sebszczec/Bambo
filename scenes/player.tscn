@@ -345,7 +345,7 @@ shape = SubResource("CircleShape2D_or0rj")
 
 [node name="PlayerExplosion" parent="." instance=ExtResource("5_3r7d3")]
 visible = false
-scale = Vector2(0.05, 0.05)
+scale = Vector2(0.75, 0.75)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("6_qsb60")

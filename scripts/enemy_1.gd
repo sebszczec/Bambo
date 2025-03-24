@@ -48,6 +48,7 @@ func _ready():
 	showDamage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color.GREEN)
 	
+	explosion.init()
 	resizeTimer.start()
 
 	player = get_node("/root/World/Player")
@@ -136,7 +137,7 @@ func explode():
 	explosion.visible = true
 	explosion.rotation = ship.rotation
 	explosion.scale = sprite.scale
-	explosion.Explode()
+	explosion.explode()
 	deathTimer.start()
 	killed.emit(get_instance_id())
 

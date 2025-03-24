@@ -9,7 +9,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var shieldBar = $ShieldBar
 @onready var explosion = $PlayerExplosion
 @onready var audio = $AudioStreamPlayer2D
-@onready var anim = $AnimatedSprite2D
+@onready var mainBody = $AnimatedSprite2D
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -73,7 +73,7 @@ func _ready() -> void:
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
 	
-	anim.play("spin")
+	mainBody.play("spin")
 
 
 func _physics_process(delta):
@@ -88,14 +88,15 @@ func _physics_process(delta):
 
 func explode():
 	audio.play()
-	explosion.position = anim.position
-	explosion.modulate = Color.BLUE
-	anim.visible = false
+	mainBody.visible = false
+	explosion.position = mainBody.position
+	explosion.SpriteTexture = mainBody.get_sprite_frames().get_frame_texture(mainBody.animation, mainBody.get_frame())
+	explosion.init()
 	satelite.visible = false
 	lifeBar.visible = false
 	shieldBar.visible = false
 	explosion.visible = true
-	explosion.Explode()
+	explosion.explode()
 
 func handleZoom():
 	if Input.is_action_just_pressed("ui_zoom"):
@@ -120,7 +121,7 @@ func recoverShield(delta):
 func calculateAcceleration():
 	if currentAfterburner > 0:
 		if Input.is_action_just_pressed("ui_accelerate"):
-			anim.play("accelerate")
+			mainBody.play("accelerate")
 			calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 			calculatedAcceleration = PlayerAcceleration * TurboFactor
 			playerRotationDirection = -2
@@ -131,7 +132,7 @@ func calculateAcceleration():
 		playerRotationDirection = 1
 		
 	if Input.is_action_just_released("ui_accelerate"):
-		anim.play("spin")
+		mainBody.play("spin")
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
