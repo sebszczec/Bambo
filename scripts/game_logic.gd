@@ -1,11 +1,6 @@
 extends Node
 
 @export_range (1, 400) var MaxEnemyCount : int = 10
-@export_range (0, 100) var ChanceForLifePerk : int = 25
-@export_range (0, 100) var ChanceForShieldPerk : int = 25
-@export_range (0, 100) var ChanceForBigGunPerk : int = 50
-@export_range (0, 100) var ChanceForWavePerk : int = 50
-@export_range (0, 100) var ChanceForHomingPerk : int = 50
 
 var enemy_count = 0
 var world = null
@@ -19,7 +14,6 @@ var activePerk = null
 var canShoot = true
 var weapon = null
 var weapons : Dictionary = {}
-var points_dict : Dictionary = {}
 var active_enemies : Dictionary = {}
 
 var enemy_scenes = [preload("res://scenes/enemy_1.tscn"), preload("res://scenes/enemy_2.tscn"), preload("res://scenes/enemy_3.tscn")]
@@ -39,8 +33,6 @@ func _ready() -> void:
 	
 	init_weapons()
 	weapon = weapons[Enums.WEAPONS.SMALL]
-	
-	init_points_dict()
 	
 	score = world.find_child("Score")
 	lifeBar = world.find_child("LifeBar")
@@ -80,11 +72,6 @@ func init_weapons():
 		w.register_internal_nodes(player)
 		w.connect("bulletNumerChange", _on_weapon_bullet_number_change)
 
-
-func init_points_dict():
-	points_dict["Enemy 1"] = 10
-	points_dict["Enemy 2"] = 20
-	points_dict["Enemy 3"] = 20
 
 
 func _physics_process(_delta):
@@ -127,8 +114,8 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	if randi_range(0, 1) == 1: 
 		up_or_down = 1
 	
-	enemy.position.x = player.position.x + randf_range(100, 200) * left_or_right
-	enemy.position.y = player.position.y + randf_range(100, 200) * up_or_down
+	enemy.position.x = player.position.x + randf_range(125, 200) * left_or_right
+	enemy.position.y = player.position.y + randf_range(125, 200) * up_or_down
 	
 	world.add_child(enemy)
 	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
@@ -140,7 +127,7 @@ func _on_enemy_killed(id : int):
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
 	var enemy = active_enemies[id]
-	score.add_score(points_dict[enemy.get_enemy_name()])
+	score.add_score(LevelSettings.get_points(enemy.get_enemy_name()))
 	active_enemies.erase(id)
 	addPerk(enemy.position)
 
@@ -156,31 +143,12 @@ func _on_player_update_shield(value):
 
 func addPerk(pos : Vector2) -> bool:
 	var type = randi_range(0, Enums.PERKS.size() - 1)
-	var chance = randi_range(0, 100)
-	var perk = null
 	
-	if type == Enums.PERKS.LIFE:
-		if chance > ChanceForLifePerk:
-			return false
-		perk = life_perk_scene.instantiate()
-	elif type == Enums.PERKS.SHIELD:
-		if chance > ChanceForShieldPerk:
-			return false
-		perk = shield_perk_scene.instantiate()
-	elif type == Enums.PERKS.BIG_GUN:
-		if chance > ChanceForBigGunPerk:
-			return false
-		perk = big_gun_perk_scene.instantiate()
-		perk.connect("taken", _on_weapon_perk_taken)
-	elif type == Enums.PERKS.WAVE:
-		if chance > ChanceForWavePerk:
-			return false
-		perk = wave_perk_scene.instantiate()
-		perk.connect("taken", _on_weapon_perk_taken)
-	elif type == Enums.PERKS.HOMING:
-		if chance > ChanceForHomingPerk:
-			return false
-		perk = homing_perk_scene.instantiate()
+	var perk = LevelSettings.drop_perk(type)
+	if perk == null:
+		return false
+		
+	if type >= Enums.PERKS.BIG_GUN:
 		perk.connect("taken", _on_weapon_perk_taken)
 	
 	perk.position = pos
