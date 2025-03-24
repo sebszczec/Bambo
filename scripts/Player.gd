@@ -22,6 +22,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @export var MaxLife = 100
 @export var MaxAfterburner = 100
 @export var MaxShield = 100
+var cameraShakeNoise = FastNoiseLite.new()
 var currentAfterburner = MaxAfterburner
 var afterBurnerStep = 10
 var shieldRecoveryStep = 5
@@ -86,6 +87,11 @@ func _physics_process(delta):
 		
 	move_and_slide()
 
+func cameraShake(intensity : float):
+	var cameraOffset = cameraShakeNoise.get_noise_1d(Time.get_ticks_msec()) * intensity
+	camera.offset.x = cameraOffset
+	camera.offset.y = cameraOffset
+	
 func explode():
 	audio.play()
 	mainBody.visible = false
@@ -238,6 +244,8 @@ func _on_take_damage_timeout(enemy):
 
 func handleDamage(damage):
 	Input.start_joy_vibration(0, 0.5, 0.5, 0.1)
+	var cameraShakeTween = get_tree().create_tween()
+	cameraShakeTween.tween_method(cameraShake, 5.0, 1.0, 0.5)
 	
 	var real_damage = damage
 	if shield > 0:

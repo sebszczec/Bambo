@@ -301,7 +301,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ohx2n"]
-radius = 25.6125
+radius = 14.4222
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_or0rj"]
 radius = 37.0
@@ -329,6 +329,8 @@ texture = ExtResource("3_raa0x")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.25, 1.25)
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0
 
 [node name="LifeBar" parent="." instance=ExtResource("4_ajyqe")]
 offset_top = -20.0

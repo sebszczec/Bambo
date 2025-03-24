@@ -8,7 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_vngkm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
-radius = 9.05539
+radius = 7.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o5b0c"]
 
