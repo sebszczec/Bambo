@@ -1,7 +1,5 @@
 extends Node
 
-@export_range (1, 400) var MaxEnemyCount : int = 10
-
 var enemy_count = 0
 var world = null
 var score = null
@@ -16,16 +14,8 @@ var weapon = null
 var weapons : Dictionary = {}
 var active_enemies : Dictionary = {}
 
-var enemy_scenes = [preload("res://scenes/enemy_1.tscn"), preload("res://scenes/enemy_2.tscn"), preload("res://scenes/enemy_3.tscn")]
-var life_perk_scene = preload("res://scenes/life_perk.tscn")
-var shield_perk_scene = preload("res://scenes/shield_perk.tscn")
-var big_gun_perk_scene = preload("res://scenes/big_gun_perk.tscn")
-var wave_perk_scene = preload("res://scenes/wave_perk.tscn")
-var homing_perk_scene = preload("res://scenes/homing_perk.tscn")
-
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var shootingTimer = $ShootingTimer
-
 
 func _ready() -> void:
 	world = get_parent()
@@ -99,10 +89,10 @@ func _on_shooting_timer_timeout() -> void:
 	canShoot = true
 
 func _on_enemy_spawn_timer_timeout() -> void:
-	if enemy_count == MaxEnemyCount:
+	if enemy_count == LevelSettings.MaxEnemyCount:
 		return
 
-	var enemy = enemy_scenes[randi_range(0, enemy_scenes.size() - 1)].instantiate()
+	var enemy = LevelSettings.get_random_enemy()
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	

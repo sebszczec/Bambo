@@ -5,6 +5,8 @@ extends Node
 @export var MinY = -2042
 @export var MaxY = 1252
 
+var MaxEnemyCount : int = 10
+
 var _points_dict : Dictionary = {
 	"Enemy 1" : 10,
 	"Enemy 2" : 20,
@@ -27,6 +29,12 @@ var _perk_scenes : Dictionary = {
  	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn")
 }
 
+var _enemy_scenes = [
+	preload("res://scenes/enemy_1.tscn"), 
+	preload("res://scenes/enemy_2.tscn"), 
+	preload("res://scenes/enemy_3.tscn")
+]
+
 func _ready() -> void:
 	pass
 
@@ -43,3 +51,6 @@ func drop_perk(perk : Enums.PERKS):
 			return null
 	
 	return _perk_scenes[perk].instantiate()
+
+func get_random_enemy():
+	return _enemy_scenes[randi_range(0, _enemy_scenes.size() - 1)].instantiate()
