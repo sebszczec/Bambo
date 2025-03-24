@@ -58,7 +58,13 @@ func _ready():
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
 	
+	var dissolveTween = get_tree().create_tween()
+	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
+	
 	make_path(Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y)))
+
+func set_shader_dissolve_value(value : float):
+	sprite.material.set_shader_parameter("DissolveValue", value)
 
 # public
 func get_enemy_name():

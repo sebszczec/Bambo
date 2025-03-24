@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://dne5tja7jgkha"]
+[gd_scene load_steps=18 format=3 uid="uid://dne5tja7jgkha"]
 
 [ext_resource type="Script" uid="uid://dyurmupb8677m" path="res://scripts/enemy_2.gd" id="1_yqv60"]
 [ext_resource type="Texture2D" uid="uid://dfo232sqkl0fi" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="2_lp7ix"]
+[ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="3_lxmbh"]
 [ext_resource type="Script" uid="uid://datqr2o4rbpop" path="res://scripts/radar_beam.gd" id="3_ou0hu"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_uchjc"]
 [ext_resource type="Texture2D" uid="uid://m2hhugqqih6w" path="res://resources/kenney_space-shooter-redux/PNG/Effects/fire13.png" id="4_5bn5v"]
@@ -11,6 +12,34 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qisqq"]
 radius = 19.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7du6s"]
+resource_local_to_scene = true
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6dp05"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_7du6s")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_82mwo"]
+resource_local_to_scene = true
+shader = ExtResource("3_lxmbh")
+shader_parameter/Noise = SubResource("NoiseTexture2D_6dp05")
+shader_parameter/DissolveValue = 0.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_lxmbh"]
+resource_local_to_scene = true
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7du6s"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_lxmbh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6dp05"]
+resource_local_to_scene = true
+shader = ExtResource("3_lxmbh")
+shader_parameter/Noise = SubResource("NoiseTexture2D_7du6s")
+shader_parameter/DissolveValue = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_14i3w"]
 radius = 22.0
@@ -31,6 +60,7 @@ offset_bottom = -23.0
 [node name="Ship" type="Node2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
+material = SubResource("ShaderMaterial_82mwo")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_lp7ix")
 
@@ -48,6 +78,7 @@ amount = 20
 script = ExtResource("3_ou0hu")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship/RadarBeam"]
+material = SubResource("ShaderMaterial_6dp05")
 position = Vector2(0, 75)
 rotation = -3.14159
 scale = Vector2(4.68922, 4.44162)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://ca6sxsibqlyef"]
+[gd_scene load_steps=13 format=3 uid="uid://ca6sxsibqlyef"]
 
 [ext_resource type="Script" uid="uid://debwj5r60hgpb" path="res://scripts/enemy_1.gd" id="1_ww31q"]
+[ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="2_6nrqq"]
 [ext_resource type="Texture2D" uid="uid://vhyl21cokpfu" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1.png" id="2_ywix3"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_0fnij"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_tycq0"]
@@ -9,6 +10,20 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
 radius = 7.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6nrqq"]
+resource_local_to_scene = true
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_oweuj"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_6nrqq")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oweuj"]
+resource_local_to_scene = true
+shader = ExtResource("2_6nrqq")
+shader_parameter/Noise = SubResource("NoiseTexture2D_oweuj")
+shader_parameter/DissolveValue = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o5b0c"]
 
@@ -23,6 +38,7 @@ shape = SubResource("CircleShape2D_2h81d")
 [node name="Ship" type="Node2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
+material = SubResource("ShaderMaterial_oweuj")
 position = Vector2(-5.96046e-08, 2.98023e-08)
 scale = Vector2(0.253562, 0.244345)
 texture = ExtResource("2_ywix3")

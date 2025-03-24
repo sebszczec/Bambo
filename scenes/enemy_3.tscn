@@ -1,12 +1,27 @@
-[gd_scene load_steps=10 format=3 uid="uid://8rvffvwg641t"]
+[gd_scene load_steps=14 format=3 uid="uid://8rvffvwg641t"]
 
 [ext_resource type="Script" uid="uid://b2lqpkaktdytd" path="res://scripts/enemy_3.gd" id="1_uk4cu"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_caiu3"]
 [ext_resource type="Texture2D" uid="uid://pvtvupr8ff4v" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyGreen1.png" id="2_ktyjv"]
+[ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="3_cwep3"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_ryjv8"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_dq3hu"]
 [ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_bcis6"]
 [ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/kenney_particle_pack/magic_04.png" id="7_5fo5i"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nfosb"]
+resource_local_to_scene = true
+frequency = 0.03
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_25yel"]
+resource_local_to_scene = true
+noise = SubResource("FastNoiseLite_nfosb")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_coowh"]
+resource_local_to_scene = true
+shader = ExtResource("3_cwep3")
+shader_parameter/Noise = SubResource("NoiseTexture2D_25yel")
+shader_parameter/DissolveValue = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_f1e7m"]
 radius = 17.0
@@ -26,6 +41,7 @@ offset_bottom = -22.0
 [node name="Ship" type="Node2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
+material = SubResource("ShaderMaterial_coowh")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_ktyjv")
 

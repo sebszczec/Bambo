@@ -19,6 +19,7 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var ship = $Ship
+@onready var sprite = $Ship/Sprite2D
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
 @onready var radar = $Ship/RadarBeam
@@ -69,6 +70,15 @@ func _ready() -> void:
 	_deathTimer.wait_time = 2
 	_deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(_deathTimer)
+	
+	var dissolveTween = get_tree().create_tween()
+	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
+	
+	
+func set_shader_dissolve_value(value : float):
+	sprite.material.set_shader_parameter("DissolveValue", value)
+	$Ship/RadarBeam/Sprite2D.material.set_shader_parameter("DissolveValue", value)
+
 
 func _physics_process(delta: float) -> void:
 	if _playerDetected:
