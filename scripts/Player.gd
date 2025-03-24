@@ -4,12 +4,12 @@ var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var satelite = $Satelite
-@onready var mainBody = $MainBody
 @onready var camera = $Camera2D
 @onready var lifeBar = $LifeBar
 @onready var shieldBar = $ShieldBar
 @onready var explosion = $PlayerExplosion
 @onready var audio = $AudioStreamPlayer2D
+@onready var anim = $AnimatedSprite2D
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -17,7 +17,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @export var TurboFactor = 2
 @export var PlayerFriction = 5
 @export var SateliteRotationSpeed = 5
-@export var SateliteRadius = 25
+@export var SateliteRadius = 60
 @export var PlayerRotationSpeed = 5
 @export var MaxLife = 100
 @export var MaxAfterburner = 100
@@ -72,11 +72,12 @@ func _ready() -> void:
 	deathTimer.wait_time = 2
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
+	
+	anim.play("spin")
 
 
 func _physics_process(delta):
 	handleZoom()	
-	calculatePlayerRotation(delta)
 	calculateSatelitePosition(delta)
 	calculateAcceleration()
 	calculateVelocity()
@@ -87,10 +88,9 @@ func _physics_process(delta):
 
 func explode():
 	audio.play()
-	explosion.position = mainBody.position
-	explosion.rotation = mainBody.rotation
+	explosion.position = anim.position
 	explosion.modulate = Color.BLUE
-	mainBody.visible = false
+	anim.visible = false
 	satelite.visible = false
 	lifeBar.visible = false
 	shieldBar.visible = false
@@ -120,6 +120,7 @@ func recoverShield(delta):
 func calculateAcceleration():
 	if currentAfterburner > 0:
 		if Input.is_action_just_pressed("ui_accelerate"):
+			anim.play("accelerate")
 			calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 			calculatedAcceleration = PlayerAcceleration * TurboFactor
 			playerRotationDirection = -2
@@ -130,6 +131,7 @@ func calculateAcceleration():
 		playerRotationDirection = 1
 		
 	if Input.is_action_just_released("ui_accelerate"):
+		anim.play("spin")
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
@@ -180,11 +182,6 @@ func calculateSatelitePosition(delta):
 
 func getSatelitePosition() -> Vector2:
 	return satelite.get_global_position()
-
-
-func calculatePlayerRotation(delta):
-	playerAngle = playerAngle + PlayerRotationSpeed * playerRotationDirection * delta 
-	mainBody.rotation = -playerAngle
 
 
 func getShootingVector():
