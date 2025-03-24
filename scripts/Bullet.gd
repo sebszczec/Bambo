@@ -9,6 +9,7 @@ class_name Bullet
 @export var HitBox : Area2D
 
 @onready var lifeTimer = $LifeTimer
+@onready var bolid = $BulletEffect
 
 var velocity = Vector2(0, 0)
 var Damage = 0
@@ -25,6 +26,7 @@ func _ready():
 
 
 func _physics_process(_delta):
+	bolid.rotation = PI / 2 + atan2(velocity.y, velocity.x)
 	velocity = velocity.normalized() * Speed
 	var _collision = move_and_collide(velocity)
 

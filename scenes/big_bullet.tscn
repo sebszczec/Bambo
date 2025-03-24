@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://whxmsudfa388" path="res://scripts/big_bullet.gd" id="1_bn5nm"]
 [ext_resource type="Texture2D" uid="uid://28wyrv5lshkf" path="res://resources/kenney_particle_pack/star_09.png" id="2_yl7g1"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_ibul5"]
-radius = 6.0
+[ext_resource type="PackedScene" uid="uid://c3x64e7u4k5mg" path="res://scenes/bullet_effect_2.tscn" id="3_lgqme"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kvesy"]
 radius = 5.7496
@@ -18,9 +16,6 @@ MinDamage = 15
 MaxDamage = 30
 HitBox = NodePath("HitBox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_ibul5")
-
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("2_yl7g1")
@@ -33,3 +28,5 @@ wait_time = 0.5
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 scale = Vector2(1.1, 1.1)
 shape = SubResource("CircleShape2D_kvesy")
+
+[node name="BulletEffect" parent="." instance=ExtResource("3_lgqme")]

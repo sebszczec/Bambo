@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3x64e7u4k5mg"]
+
+[ext_resource type="Texture2D" uid="uid://b7ecthhebv3j3" path="res://resources/kenney_particle_pack/scorch_01.png" id="1_03g48"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fygkt"]
+particle_flag_disable_z = true
+angular_velocity_min = -10.0
+angular_velocity_max = 9.99998
+gravity = Vector3(0, 0, 0)
+tangential_accel_min = 0.0999978
+tangential_accel_max = 0.999998
+scale_min = 0.13
+scale_max = 0.15
+color = Color(1.2, 1.2, 1.2, 1)
+hue_variation_min = -2.23517e-08
+hue_variation_max = 1.0
+turbulence_noise_strength = 0.0
+
+[node name="BulletEffect" type="GPUParticles2D"]
+amount = 15
+texture = ExtResource("1_03g48")
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_fygkt")

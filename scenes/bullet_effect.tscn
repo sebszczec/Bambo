@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cywad70g636ip"]
+
+[ext_resource type="Texture2D" uid="uid://bit8fbonkj7ll" path="res://resources/kenney_particle_pack/trace_05.png" id="1_w3ues"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nk3k3"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+scale_min = 0.05
+scale_max = 0.06
+color = Color(2, 2, 2, 1)
+hue_variation_min = -2.23517e-08
+hue_variation_max = 1.0
+
+[node name="BulletEffect" type="GPUParticles2D"]
+position = Vector2(1, -2)
+amount = 10
+texture = ExtResource("1_w3ues")
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_nk3k3")
