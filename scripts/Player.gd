@@ -121,7 +121,10 @@ func recoverShield(delta):
 func calculateAcceleration():
 	if currentAfterburner > 0:
 		if Input.is_action_just_pressed("ui_accelerate"):
+			var frame_id = mainBody.get_frame()
+			frame_id = mainBody.get_sprite_frames().get_frame_count("accelerate") - 1 - frame_id
 			mainBody.play("accelerate")
+			mainBody.set_frame(frame_id)
 			calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
 			calculatedAcceleration = PlayerAcceleration * TurboFactor
 			playerRotationDirection = -2
@@ -132,7 +135,10 @@ func calculateAcceleration():
 		playerRotationDirection = 1
 		
 	if Input.is_action_just_released("ui_accelerate"):
+		var frame_id = mainBody.get_frame()
+		frame_id = mainBody.get_sprite_frames().get_frame_count("spin") - 1 - frame_id
 		mainBody.play("spin")
+		mainBody.set_frame(frame_id)
 		calculatedMaxVelocity = PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
