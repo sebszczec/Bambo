@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cjhfvs5t1o0xn"]
+[gd_scene load_steps=5 format=3 uid="uid://cjhfvs5t1o0xn"]
 
 [ext_resource type="Script" uid="uid://broyn8g8twevf" path="res://scripts/start_menu.gd" id="1_xryhy"]
+[ext_resource type="PackedScene" uid="uid://rjw2vhq4jhs8" path="res://scenes/warp.tscn" id="2_h61rw"]
 [ext_resource type="AudioStream" uid="uid://d0j0wehwugqub" path="res://resources/music/Orbital Colossus.mp3" id="2_thu50"]
 [ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="3_m7x51"]
 
@@ -13,14 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xryhy")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0.0235294, 1)
+[node name="Warp" parent="." instance=ExtResource("2_h61rw")]
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1

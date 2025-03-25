@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform vec2 resolution = vec2(600, 400);
+uniform vec2 resolution = vec2(1920, 1080);
 uniform float density : hint_range(1.0, 500.0, 1.0) = 100.0;
 uniform vec3 color : source_color = vec3(0.5);
 uniform float compression : hint_range(0.1, 1.0, 0.01) = 0.2;
