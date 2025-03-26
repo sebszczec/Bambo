@@ -104,8 +104,8 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	if randi_range(0, 1) == 1: 
 		up_or_down = 1
 	
-	enemy.position.x = player.position.x + randf_range(125, 200) * left_or_right
-	enemy.position.y = player.position.y + randf_range(125, 200) * up_or_down
+	enemy.position.x = player.position.x + randf_range(200, 250) * left_or_right
+	enemy.position.y = player.position.y + randf_range(200, 250) * up_or_down
 	
 	world.add_child(enemy)
 	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
