@@ -10,6 +10,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var explosion = $PlayerExplosion
 @onready var audio = $AudioStreamPlayer2D
 @onready var mainBody = $AnimatedSprite2D
+@onready var barrier = $Barrier
 
 @export_category("Player")
 @export var PlayerMaxVelocity = 200
@@ -45,6 +46,8 @@ var aim_angle = 0
 var showLifeBar = true
 var showDamage = true
 var useGamePad = true
+var canRecoverShield = true
+var shieldRecoveryTimer = Timer.new()
 var deathTimer = Timer.new()
 
 var enemyDamageTimers = {}
@@ -74,6 +77,11 @@ func _ready() -> void:
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
 	
+	shieldRecoveryTimer.one_shot = true
+	shieldRecoveryTimer.wait_time = 2
+	shieldRecoveryTimer.connect("timeout", on_shield_recovery_timer_timeout)
+	add_child(shieldRecoveryTimer)
+	
 	mainBody.play("spin")
 
 
@@ -91,7 +99,11 @@ func cameraShake(intensity : float):
 	var cameraOffset = cameraShakeNoise.get_noise_1d(Time.get_ticks_msec()) * intensity
 	camera.offset.x = cameraOffset
 	camera.offset.y = cameraOffset
-	
+
+func on_shield_recovery_timer_timeout():
+	barrier.changeState(true)
+	canRecoverShield = true
+
 func explode():
 	audio.play()
 	mainBody.visible = false
@@ -121,7 +133,7 @@ func calculateAfterburner(delta):
 		updateAfterBurner(afterBurnerStep * delta)
 
 func recoverShield(delta):
-	if shield < MaxShield:
+	if canRecoverShield and shield < MaxShield:
 		updateShield(shieldRecoveryStep * delta)
 
 func calculateAcceleration():
@@ -256,8 +268,14 @@ func handleDamage(damage):
 		if showDamage:
 			createShieldFloatingText(str(-tmp as int))
 		
-	if showDamage && real_damage > 0:
-		createLifeFloatingText(str(real_damage as int))
+	
+	if real_damage > 0:
+		barrier.changeState(false)
+		shieldRecoveryTimer.stop()
+		canRecoverShield = false
+		shieldRecoveryTimer.start()
+		if showDamage:
+			createLifeFloatingText(str(real_damage as int))
 	
 	updateLife(-real_damage)
 	
@@ -290,6 +308,7 @@ func createShieldFloatingText(value, scale_factor: float = 1):
 
 
 func updateShield(value):
+	
 	shield += value
 	
 	var tmp = value

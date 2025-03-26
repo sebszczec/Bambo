@@ -1,6 +1,7 @@
-[gd_scene load_steps=50 format=3 uid="uid://cl0ta7xxx5arv"]
+[gd_scene load_steps=51 format=3 uid="uid://cl0ta7xxx5arv"]
 
 [ext_resource type="Script" uid="uid://c0xwy2c0hqyel" path="res://scripts/player.gd" id="1_yf2p4"]
+[ext_resource type="PackedScene" uid="uid://dfw2m05fb74h0" path="res://scenes/barrier.tscn" id="2_fjrip"]
 [ext_resource type="Texture2D" uid="uid://dqex7t1ubevkm" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_ajyqe"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_3r7d3"]
@@ -312,6 +313,8 @@ position = Vector2(576, 324)
 collision_mask = 2
 script = ExtResource("1_yf2p4")
 
+[node name="Barrier" parent="." instance=ExtResource("2_fjrip")]
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.75, 0.75)
 sprite_frames = SubResource("SpriteFrames_pf23h")
@@ -333,12 +336,12 @@ position_smoothing_enabled = true
 position_smoothing_speed = 3.0
 
 [node name="LifeBar" parent="." instance=ExtResource("4_ajyqe")]
-offset_top = -20.0
-offset_bottom = -14.0
+offset_top = -35.0
+offset_bottom = -29.0
 
 [node name="ShieldBar" parent="." instance=ExtResource("4_ajyqe")]
-offset_top = -28.0
-offset_bottom = -22.0
+offset_top = -42.0
+offset_bottom = -36.0
 
 [node name="LifeBox" type="Area2D" parent="." groups=["Player"]]
 
