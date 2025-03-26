@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dne5tja7jgkha"]
+[gd_scene load_steps=16 format=3 uid="uid://dne5tja7jgkha"]
 
 [ext_resource type="Script" uid="uid://dyurmupb8677m" path="res://scripts/enemy_2.gd" id="1_yqv60"]
 [ext_resource type="Texture2D" uid="uid://dfo232sqkl0fi" path="res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyBlack2.png" id="2_lp7ix"]
@@ -13,27 +13,15 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_qisqq"]
 radius = 19.0
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_7du6s"]
-resource_local_to_scene = true
-frequency = 0.03
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lxmbh"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6dp05"]
-resource_local_to_scene = true
-noise = SubResource("FastNoiseLite_7du6s")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_82mwo"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7du6s"]
 resource_local_to_scene = true
 shader = ExtResource("3_lxmbh")
-shader_parameter/Noise = SubResource("NoiseTexture2D_6dp05")
+shader_parameter/Noise = SubResource("NoiseTexture2D_lxmbh")
 shader_parameter/DissolveValue = 0.0
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_lxmbh"]
-resource_local_to_scene = true
-frequency = 0.03
-
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7du6s"]
-resource_local_to_scene = true
-noise = SubResource("FastNoiseLite_lxmbh")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6dp05"]
 resource_local_to_scene = true
@@ -60,7 +48,7 @@ offset_bottom = -23.0
 [node name="Ship" type="Node2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
-material = SubResource("ShaderMaterial_82mwo")
+material = SubResource("ShaderMaterial_7du6s")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_lp7ix")
 

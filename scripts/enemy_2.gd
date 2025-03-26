@@ -20,6 +20,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var ship = $Ship
 @onready var sprite = $Ship/Sprite2D
+@onready var beamSprite = $Ship/RadarBeam/Sprite2D
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
 @onready var radar = $Ship/RadarBeam
@@ -77,7 +78,7 @@ func _ready() -> void:
 	
 func set_shader_dissolve_value(value : float):
 	sprite.material.set_shader_parameter("DissolveValue", value)
-	$Ship/RadarBeam/Sprite2D.material.set_shader_parameter("DissolveValue", value)
+	beamSprite.material.set_shader_parameter("DissolveValue", value)
 
 
 func _physics_process(delta: float) -> void:

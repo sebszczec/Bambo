@@ -14,7 +14,6 @@ resource_local_to_scene = true
 frequency = 0.03
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_25yel"]
-resource_local_to_scene = true
 noise = SubResource("FastNoiseLite_nfosb")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_coowh"]
