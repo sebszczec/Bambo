@@ -1,20 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://rjw2vhq4jhs8"]
+[gd_scene load_steps=4 format=3 uid="uid://rjw2vhq4jhs8"]
 
+[ext_resource type="Script" uid="uid://buepnrt3bbwkl" path="res://scripts/warp.gd" id="1_m640b"]
 [ext_resource type="Shader" uid="uid://c1nhch535lvlj" path="res://shaders/warp.gdshader" id="1_uw2au"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m640b"]
+resource_local_to_scene = true
 shader = ExtResource("1_uw2au")
 shader_parameter/resolution = Vector2(1920, 1080)
 shader_parameter/density = 500.0
 shader_parameter/color = Color(0.5, 0.5, 0.5, 1)
 shader_parameter/compression = 0.5
 shader_parameter/trail_size = 50.0
-shader_parameter/speed = 2.0
+shader_parameter/speed = 3.0
 shader_parameter/brightness = 5.0
 shader_parameter/center_size = 0.5
 shader_parameter/center_edge = 0.4
 
 [node name="Warp" type="Node2D"]
+script = ExtResource("1_m640b")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_m640b")
