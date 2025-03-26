@@ -30,6 +30,7 @@ var shieldRecoveryStep = 5
 var burn = false
 var life = MaxLife
 var shield = MaxShield
+var shield_aplha_step = 0.5 / MaxShield
 var isDead = false
 
 @export_category("Camera")
@@ -101,7 +102,7 @@ func cameraShake(intensity : float):
 	camera.offset.y = cameraOffset
 
 func on_shield_recovery_timer_timeout():
-	barrier.changeState(true)
+	#barrier.changeState(true)
 	canRecoverShield = true
 
 func explode():
@@ -270,7 +271,7 @@ func handleDamage(damage):
 		
 	
 	if real_damage > 0:
-		barrier.changeState(false)
+		#barrier.changeState(false)
 		shieldRecoveryTimer.stop()
 		canRecoverShield = false
 		shieldRecoveryTimer.start()
@@ -321,6 +322,8 @@ func updateShield(value):
 		
 	shieldBar.setValue(shield)
 	update_shield.emit(shield)
+	
+	barrier.set_alpha_value(shield_aplha_step * shield)
 	
 	return tmp
 	
