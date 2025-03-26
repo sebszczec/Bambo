@@ -4,7 +4,6 @@
 [ext_resource type="Shader" uid="uid://c1nhch535lvlj" path="res://shaders/warp.gdshader" id="1_uw2au"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m640b"]
-resource_local_to_scene = true
 shader = ExtResource("1_uw2au")
 shader_parameter/resolution = Vector2(1920, 1080)
 shader_parameter/density = 500.0

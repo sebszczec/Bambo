@@ -1,9 +1,94 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjhfvs5t1o0xn"]
+[gd_scene load_steps=8 format=3 uid="uid://cjhfvs5t1o0xn"]
 
 [ext_resource type="Script" uid="uid://broyn8g8twevf" path="res://scripts/start_menu.gd" id="1_xryhy"]
 [ext_resource type="PackedScene" uid="uid://rjw2vhq4jhs8" path="res://scenes/warp.tscn" id="2_h61rw"]
 [ext_resource type="AudioStream" uid="uid://d0j0wehwugqub" path="res://resources/music/Orbital Colossus.mp3" id="2_thu50"]
 [ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="3_m7x51"]
+
+[sub_resource type="Animation" id="Animation_h61rw"]
+resource_name = "warp_speed"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GridContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Warp:Speed")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [3.0, 5.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Warp:Brightness")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [5.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_fcv5n"]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("GridContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Warp:Speed")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [3.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Warp:Brightness")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [5.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4v6gu"]
+_data = {
+&"RESET": SubResource("Animation_fcv5n"),
+&"warp_speed": SubResource("Animation_h61rw")
+}
 
 [node name="StartMenu" type="Control"]
 layout_mode = 3
@@ -54,6 +139,11 @@ autoplay = true
 stream = ExtResource("3_m7x51")
 volume_db = 10.0
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_4v6gu")
+}
+
 [connection signal="focus_entered" from="GridContainer/NewGame" to="." method="_on_button_focus_changed"]
 [connection signal="mouse_entered" from="GridContainer/NewGame" to="." method="_on_new_game_mouse_entered"]
 [connection signal="pressed" from="GridContainer/NewGame" to="." method="_on_new_game_pressed"]
@@ -63,3 +153,4 @@ volume_db = 10.0
 [connection signal="focus_entered" from="GridContainer/Quit" to="." method="_on_button_focus_changed"]
 [connection signal="mouse_entered" from="GridContainer/Quit" to="." method="_on_quit_mouse_entered"]
 [connection signal="pressed" from="GridContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
