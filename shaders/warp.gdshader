@@ -5,10 +5,11 @@ uniform float density : hint_range(1.0, 500.0, 1.0) = 500.0;
 uniform vec3 color : source_color = vec3(0.5);
 uniform float compression : hint_range(0.1, 1.0, 0.01) = 0.5;
 uniform float trail_size : hint_range(5.0, 100.0, 0.1) = 50.0;
-uniform float speed : hint_range(0.01, 10.0, 0.01) = 3.0;
+uniform float speed : hint_range(0.01, 5.0, 0.01) = 3.0;
 uniform float brightness : hint_range(0.1, 10.0, 0.1) = 5;
 uniform float center_size : hint_range(0.0, 1.0, 0.01) = 0.5;
 uniform float center_edge : hint_range(0.0, 1.0, 0.01) = 0.4;
+
 
 void fragment() {
 	float time = TIME * speed;

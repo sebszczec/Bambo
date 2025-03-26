@@ -13,12 +13,14 @@ func _ready() -> void:
 	newGameButton.grab_focus()
 
 
-
 func _on_quit_pressed() -> void:
 	get_tree().quit()
 
 
 func _on_new_game_pressed() -> void:
+	newGameButton.disabled = true
+	settingsButton.disabled = true
+	quitButton.disabled = true
 	anim.play("warp_speed")
 
 
@@ -43,6 +45,4 @@ func _on_quit_mouse_entered() -> void:
 
 
 func _on_animation_player_animation_finished(_anim_name: StringName) -> void:
-	warp.Speed = 3.0
-	warp.Brightness = 5.0
 	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
