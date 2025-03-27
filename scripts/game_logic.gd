@@ -96,22 +96,27 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_enemy_killed)
 	
-	var left_or_right = -1
-	if randi_range(0, 1) == 1:
-		left_or_right = 1
-	
-	var up_or_down = -1
-	if randi_range(0, 1) == 1: 
-		up_or_down = 1
-	
-	enemy.position.x = player.position.x + randf_range(200, 250) * left_or_right
-	enemy.position.y = player.position.y + randf_range(200, 250) * up_or_down
+	enemy.position.x = get_new_enemy_position(player.position.x, LevelSettings.MinX, LevelSettings.MaxX)
+	enemy.position.y = get_new_enemy_position(player.position.y, LevelSettings.MinY, LevelSettings.MaxY)
 	
 	world.add_child(enemy)
 	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
 	
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
+	
+func get_new_enemy_position(player_position : float, min: float, max : float) -> float:
+	var left_or_right = -1
+	if randi_range(0, 1) == 1:
+		left_or_right = 1
+		
+	var result = player_position + randf_range(200, 250) * left_or_right
+	
+	if result < min  or result > max:
+		result = get_new_enemy_position(player_position, min, max)
+	
+	return result
+
 	
 func _on_enemy_killed(id : int):
 	enemy_count = enemy_count - 1
