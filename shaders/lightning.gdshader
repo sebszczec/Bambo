@@ -6,6 +6,7 @@ uniform float ampr_start = 0.5;
 uniform float amp_coeff = 0.5;
 uniform float freq_coeff = 2.0;
 uniform float speed = 0.5;
+uniform float alpha_channel : hint_range(0.0, 1.0, 0.01) = 0.0;
 
 float hash12(vec2 x) {
 	return fract(cos(mod(dot(x, vec2(13.9898, 8.141)), 3.14)) * 43758.5453);
@@ -46,7 +47,7 @@ void fragment() {
 	vec3 color = effect_color * mix(0.0, 0.05, hash12(vec2(TIME))) / dist;
 	COLOR = vec4(color, 1.0);
 	
-	//if (COLOR.r < 1.0 && COLOR.g < 1.0 && COLOR.b < 1.0) {
-    	//COLOR.a = 0.0;
-	//}
+	if (COLOR.r < 1.0 && COLOR.g < 1.0 && COLOR.b < 1.0) {
+    	COLOR.a = alpha_channel;
+	}
 }

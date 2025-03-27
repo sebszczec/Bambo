@@ -10,6 +10,7 @@ shader_parameter/ampr_start = 0.5
 shader_parameter/amp_coeff = 0.5
 shader_parameter/freq_coeff = 2.0
 shader_parameter/speed = 0.5
+shader_parameter/alpha_channel = 0.0
 
 [node name="lightning" type="Node2D"]
 

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://yphv7yylioga"]
+
+[ext_resource type="Shader" uid="uid://1bayi0okfxgo" path="res://shaders/lines.gdshader" id="1_23puj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6a83i"]
+shader = ExtResource("1_23puj")
+shader_parameter/resolution = Vector2(600, 400)
+shader_parameter/line_color = Color(0.2, 0.6, 0.2, 1)
+shader_parameter/line_thickness = 0.05
+shader_parameter/speed = 0.5
+shader_parameter/amp_coeff = 0.1
+shader_parameter/freq_coeff = 0.5
+shader_parameter/iterations = 5.0
+shader_parameter/brightness = 0.5
+
+[node name="Lines" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_6a83i")
+offset_right = 600.0
+offset_bottom = 400.0
