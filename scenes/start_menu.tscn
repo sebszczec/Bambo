@@ -5,8 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://d0j0wehwugqub" path="res://resources/music/Orbital Colossus.mp3" id="2_thu50"]
 [ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="3_m7x51"]
 
-[sub_resource type="Animation" id="Animation_h61rw"]
-resource_name = "warp_speed"
+[sub_resource type="Animation" id="Animation_fcv5n"]
 length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -33,7 +32,8 @@ tracks/1/keys = {
 "values": [5.0, 0.0]
 }
 
-[sub_resource type="Animation" id="Animation_fcv5n"]
+[sub_resource type="Animation" id="Animation_h61rw"]
+resource_name = "warp_speed"
 length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
