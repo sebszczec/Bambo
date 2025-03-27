@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=24 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -20,11 +20,12 @@
 [ext_resource type="Texture2D" uid="uid://b3wb5qpkbs3i5" path="res://resources/kenney_planets/Planets/planet04.png" id="14_pm21f"]
 [ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/kenney_planets/Planets/planet05.png" id="15_2lf6f"]
 [ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/kenney_planets/Planets/planet07.png" id="16_2lf6f"]
+[ext_resource type="PackedScene" uid="uid://cd28o5h6cf3l8" path="res://scenes/lightning.tscn" id="21_7iits"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
-vertices = PackedVector2Array(2939, 1658, -1598, 1658, -1598, -1616, 2939, -1616)
+vertices = PackedVector2Array(3072, 1875, -1596.01, 1875, -1597.99, -1616, 3072, -1616.99)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(2949, 1668, -1608, 1668, -1608, -1626, 2949, -1626)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(3082, 1885, -1606, 1885, -1608, -1626, 3082, -1627)])
 
 [sub_resource type="Environment" id="Environment_4fyp0"]
 background_mode = 3
@@ -221,6 +222,116 @@ visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4fyp0")
+
+[node name="BarrierLeft" type="Node2D" parent="."]
+
+[node name="lightning_v1" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -1334)
+
+[node name="lightning_v2" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -750)
+
+[node name="lightning_v3" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -150)
+
+[node name="lightning_v4" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 450)
+
+[node name="lightning_v5" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1050)
+
+[node name="lightning_v6" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1650)
+
+[node name="BarierUp" type="Node2D" parent="."]
+
+[node name="lightning_h1" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(-1070, -1632)
+rotation = 1.5708
+
+[node name="lightning_h2" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(-470, -1632)
+rotation = 1.5708
+
+[node name="lightning_h3" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(130, -1632)
+rotation = 1.5708
+
+[node name="lightning_h4" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(730, -1632)
+rotation = 1.5708
+
+[node name="lightning_h5" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(1330, -1632)
+rotation = 1.5708
+
+[node name="lightning_h6" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(1930, -1632)
+rotation = 1.5708
+
+[node name="lightning_h7" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(2530, -1632)
+rotation = 1.5708
+
+[node name="lightning_h8" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(3130, -1632)
+rotation = 1.5708
+
+[node name="BarrierRight" type="Node2D" parent="."]
+position = Vector2(4816, -8)
+
+[node name="lightning_v1" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -1334)
+
+[node name="lightning_v2" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -750)
+
+[node name="lightning_v3" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -150)
+
+[node name="lightning_v4" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 450)
+
+[node name="lightning_v5" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1050)
+
+[node name="lightning_v6" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1650)
+
+[node name="BarierDown" type="Node2D" parent="."]
+position = Vector2(8, 3632)
+
+[node name="lightning_h1" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(-1070, -1632)
+rotation = 1.5708
+
+[node name="lightning_h2" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(-470, -1632)
+rotation = 1.5708
+
+[node name="lightning_h3" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(130, -1632)
+rotation = 1.5708
+
+[node name="lightning_h4" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(730, -1632)
+rotation = 1.5708
+
+[node name="lightning_h5" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(1330, -1632)
+rotation = 1.5708
+
+[node name="lightning_h6" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(1930, -1632)
+rotation = 1.5708
+
+[node name="lightning_h7" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(2530, -1632)
+rotation = 1.5708
+
+[node name="lightning_h8" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(3130, -1632)
+rotation = 1.5708
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]

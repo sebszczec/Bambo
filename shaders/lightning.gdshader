@@ -40,6 +40,7 @@ float fbm(vec2 uv, int octaves) {
 	return value;
 }
 
+
 void fragment() { 
 	vec2 uv = 2.0 * UV - 1.0;
 	uv += 2.0 * fbm(uv + TIME * speed, octave_count) - 1.0;

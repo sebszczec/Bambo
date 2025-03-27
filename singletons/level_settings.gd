@@ -1,9 +1,9 @@
 extends Node
 
-@export var MinX = -1600
-@export var MaxX = 2957
-@export var MinY = -2042
-@export var MaxY = 1252
+@export var MinX = -1608
+@export var MaxX = 3070
+@export var MinY = -1304
+@export var MaxY =  2192
 
 var MaxEnemyCount : int = 10
 
@@ -54,3 +54,4 @@ func drop_perk(perk : Enums.PERKS):
 
 func get_random_enemy():
 	return _enemy_scenes[randi_range(0, _enemy_scenes.size() - 1)].instantiate()
+	#return _enemy_scenes[0].instantiate()
