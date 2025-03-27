@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6ipi4jqqfwb3"]
+
+[ext_resource type="Shader" uid="uid://dkvo6sfp8o7x" path="res://shaders/thunder.tres" id="1_ynsho"]
+[ext_resource type="Texture2D" uid="uid://brtievb5kyrgd" path="res://resources/vfx/VFX_thunder.jpg" id="2_kftip"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_birka"]
+shader = ExtResource("1_ynsho")
+shader_parameter/Vanishing_Value = 0.0
+shader_parameter/Speed = Vector2(-1, 0)
+shader_parameter/basic_texture = ExtResource("2_kftip")
+
+[node name="ThunderLine" type="Line2D"]
+material = SubResource("ShaderMaterial_birka")
+scale = Vector2(1, 1.39479)
+points = PackedVector2Array(369, -47.888, 371.788, 314.51, 375, 732)
+width = 150.0
+default_color = Color(0.588235, 0.588235, 1, 1)
+texture_mode = 2
