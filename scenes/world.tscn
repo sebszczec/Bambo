@@ -345,5 +345,9 @@ TimeToDetonate = 4.0
 position = Vector2(456, 88)
 TimeToDetonate = 4.5
 
+[node name="Mine4" parent="." instance=ExtResource("22_oo54l")]
+position = Vector2(360, 528)
+TimeToDetonate = 100.0
+
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
