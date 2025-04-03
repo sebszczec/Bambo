@@ -5,6 +5,8 @@ extends CharacterBody2D
 @onready var blink_timer = $BlinkTimer
 @onready var death_timer = $DeathTimer
 @onready var explosion = $Explosion
+@onready var explosion_sound = $ExplosionSoundPlayer
+@onready var blinking_sound = $BlinkingSoundPlayer
 
 # public
 @export var Damage = 0
@@ -68,6 +70,7 @@ func _on_wait_timer_timeout() -> void:
 	_detonate()
 	
 func _blink() -> void:
+	blinking_sound.play()
 	var tween = get_tree().create_tween()
 	tween.tween_method(set_shader_blink_intensity, 1.0, 0.0, 0.75)
 
@@ -89,6 +92,7 @@ func _explode() -> void:
 	explosion.init()
 	explosion.visible = true
 	explosion.explode()
+	explosion_sound.play()
 
 
 func _on_death_timer_timeout() -> void:
