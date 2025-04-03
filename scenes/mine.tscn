@@ -1,9 +1,16 @@
-[gd_scene load_steps=9 format=3 uid="uid://3sxj6tk54eah"]
+[gd_scene load_steps=12 format=3 uid="uid://3sxj6tk54eah"]
 
 [ext_resource type="Texture2D" uid="uid://yhxbc8ywp2b5" path="res://resources/enemy_spritesheets/mine-sheet.png" id="1_kqr42"]
 [ext_resource type="Script" uid="uid://vgo0ptohmmv3" path="res://scripts/mine.gd" id="1_yym1a"]
+[ext_resource type="Shader" uid="uid://djdajod804d6o" path="res://shaders/blink.gdshader" id="2_m55k0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yym1a"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j4qwv"]
+resource_local_to_scene = true
+shader = ExtResource("2_m55k0")
+shader_parameter/blink_color = Color(1, 1, 1, 1)
+shader_parameter/blink_intensity = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m55k0"]
 atlas = ExtResource("1_kqr42")
@@ -47,14 +54,36 @@ animations = [{
 "speed": 20.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_m55k0"]
+
 [node name="Mine" type="CharacterBody2D"]
+collision_layer = 8
 script = ExtResource("1_yym1a")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_yym1a")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_j4qwv")
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_7f736")
 animation = &"blink"
 frame_progress = 0.607552
+
+[node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CircleShape2D_m55k0")
+
+[node name="WaitTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="BlinkTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="timeout" from="WaitTimer" to="." method="_on_wait_timer_timeout"]
+[connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]

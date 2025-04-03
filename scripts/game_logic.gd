@@ -105,15 +105,15 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy_count = enemy_count + 1
 	informationBox.increaseEnemyCount()
 	
-func get_new_enemy_position(player_position : float, min: float, max : float) -> float:
+func get_new_enemy_position(player_position : float, min_value: float, max_value : float) -> float:
 	var left_or_right = -1
 	if randi_range(0, 1) == 1:
 		left_or_right = 1
 		
 	var result = player_position + randf_range(200, 250) * left_or_right
 	
-	if result < min  or result > max:
-		result = get_new_enemy_position(player_position, min, max)
+	if result < min_value  or result > max_value:
+		result = get_new_enemy_position(player_position, min_value, max_value)
 	
 	return result
 
