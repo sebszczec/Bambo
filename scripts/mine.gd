@@ -15,6 +15,7 @@ extends CharacterBody2D
 # public
 @export var DamageTickTime = 0.0
 @export var BlinksNumber : int = 3
+@export var TimeToDetonate : float = 3.0
 
 var _blinkCount: int = 0
 var _detonating: bool = false
@@ -28,6 +29,9 @@ func _ready() -> void:
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, false)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)
+	
+	wait_timer.wait_time = TimeToDetonate
+	wait_timer.start()
 	
 	sprite.play("blink")
 

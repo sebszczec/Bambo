@@ -335,7 +335,15 @@ position = Vector2(3130, -1632)
 rotation = 1.5708
 
 [node name="Mine" parent="." instance=ExtResource("22_oo54l")]
-position = Vector2(560, 144)
+position = Vector2(632, 168)
+
+[node name="Mine2" parent="." instance=ExtResource("22_oo54l")]
+position = Vector2(280, 144)
+TimeToDetonate = 4.0
+
+[node name="Mine3" parent="." instance=ExtResource("22_oo54l")]
+position = Vector2(456, 88)
+TimeToDetonate = 4.5
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
