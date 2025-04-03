@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://3sxj6tk54eah"]
+[gd_scene load_steps=13 format=3 uid="uid://3sxj6tk54eah"]
 
 [ext_resource type="Texture2D" uid="uid://yhxbc8ywp2b5" path="res://resources/enemy_spritesheets/mine-sheet.png" id="1_kqr42"]
 [ext_resource type="Script" uid="uid://vgo0ptohmmv3" path="res://scripts/mine.gd" id="1_yym1a"]
 [ext_resource type="Shader" uid="uid://djdajod804d6o" path="res://shaders/blink.gdshader" id="2_m55k0"]
+[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="4_j4qwv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yym1a"]
 
@@ -81,9 +82,17 @@ one_shot = true
 autostart = true
 
 [node name="BlinkTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.75
 one_shot = true
+
+[node name="DeathTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Explosion" parent="." instance=ExtResource("4_j4qwv")]
+visible = false
+scale = Vector2(0.25, 0.25)
 
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
 [connection signal="timeout" from="WaitTimer" to="." method="_on_wait_timer_timeout"]
 [connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
