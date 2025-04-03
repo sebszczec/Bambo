@@ -16,15 +16,26 @@ extends CharacterBody2D
 
 var _blinkCount: int = 0
 var _detonating: bool = false
+var _world = null
+var _weapon = null
 
 var floatTextScene = preload("res://scenes/floating_text.tscn")
 
 func _ready() -> void:
+	_world = get_tree().root
+	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, false)
+	_weapon.set_owner(_world)
+	_weapon.register_internal_nodes(self)
+	
 	sprite.play("blink")
 
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
+		var bullet = area.get_parent()
+		if !bullet.is_damaging_enemy():
+			return
+			
 		var floatingText = floatTextScene.instantiate()
 		floatingText.set_color(Color.WHITE)
 		add_child(floatingText)
@@ -68,6 +79,7 @@ func _on_blink_timer_timeout() -> void:
 		blink_timer.start()
 	else:
 		_explode()
+		_weapon.shoot(_world, get_global_position(), get_global_position())
 		death_timer.start()
 		
 func _explode() -> void:
