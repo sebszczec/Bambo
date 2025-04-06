@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var death_timer = $DeathTimer
 @onready var collision = $CollisionShape2D
 @onready var hitbox_collision = $HitBox/CollisionShape2D
+@onready var player = $AudioStreamPlayer2D
 
 var is_dead : bool = false
 
@@ -18,6 +19,7 @@ func explode():
 	explosion.visible = true
 	explosion.scale = sprite.scale
 	explosion.explode()
+	player.play()
 	death_timer.start()
 
 

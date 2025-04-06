@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=26 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/kenney_planets/Planets/planet05.png" id="15_2lf6f"]
 [ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/kenney_planets/Planets/planet07.png" id="16_2lf6f"]
 [ext_resource type="PackedScene" uid="uid://cd28o5h6cf3l8" path="res://scenes/lightning.tscn" id="21_7iits"]
+[ext_resource type="PackedScene" uid="uid://3sxj6tk54eah" path="res://scenes/mine.tscn" id="22_oo54l"]
 [ext_resource type="PackedScene" uid="uid://b21jyms5o2ch" path="res://scenes/rock.tscn" id="23_kpybi"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
@@ -211,7 +212,7 @@ stream = ExtResource("14_o8fc1")
 autoplay = true
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-position = Vector2(-10, 315)
+position = Vector2(200, 432)
 navigation_polygon = SubResource("NavigationPolygon_y1cda")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -351,6 +352,51 @@ position = Vector2(560, 144)
 
 [node name="Rock6" parent="." instance=ExtResource("23_kpybi")]
 position = Vector2(624, 144)
+
+[node name="Mine" parent="." instance=ExtResource("22_oo54l")]
+position = Vector2(560, 32)
+
+[node name="Rock7" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(496, 32)
+
+[node name="Rock8" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(624, 32)
+
+[node name="Rock9" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(496, -24)
+
+[node name="Rock10" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(560, -24)
+
+[node name="Rock11" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(624, -24)
+
+[node name="Rock12" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(432, 32)
+
+[node name="Rock13" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(432, -24)
+
+[node name="Rock14" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(432, -80)
+
+[node name="Rock15" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(496, -80)
+
+[node name="Rock16" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(560, -80)
+
+[node name="Rock17" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(624, -80)
+
+[node name="Rock18" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(688, 32)
+
+[node name="Rock19" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(688, -24)
+
+[node name="Rock20" parent="." instance=ExtResource("23_kpybi")]
+position = Vector2(688, -80)
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
