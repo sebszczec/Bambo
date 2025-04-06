@@ -108,7 +108,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		add_child(hit_effect)
 		hit_effect.emitting = true
 		
-		if !_isDead and handleDamage(DamageValues.get_damage(PlayerStatus.CurrentWeapon)) == false:
+		if !_isDead and handleDamage(PlayerStatus.get_damage()) == false:
 			_shootingTimer.stop()
 			_isDead = true
 			explode()
@@ -116,11 +116,14 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 func handleDamage(damage):
 	if _showDamage:
 		var damageText = floatingTextScene.instantiate()
-		damageText.set_color(Color.WHITE)
-		damageText.Amount = str(damage)
+		if damage.Critical:
+			damageText.set_color(Color.YELLOW)
+		else:
+			damageText.set_color(Color.WHITE)
+		damageText.Amount = str(damage.Value)
 		add_child(damageText)
 		
-	Life = Life - damage
+	Life = Life - damage.Value
 	lifeBar.setValue(Life)
 	
 	if Life <= 0:

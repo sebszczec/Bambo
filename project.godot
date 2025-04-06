@@ -23,8 +23,8 @@ Enums="*res://singletons/enums.gd"
 ConfigHandler="*res://singletons/config_handler.gd"
 WeaponFactory="*res://singletons/weapon_factory.gd"
 LevelSettings="*res://singletons/level_settings.gd"
-PlayerStatus="*res://singletons/player_status.gd"
 DamageValues="*res://singletons/damage_values.gd"
+PlayerStatus="*res://singletons/player_status.gd"
 
 [display]
 
