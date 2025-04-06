@@ -5,7 +5,7 @@ extends Node
 @export var MinY = -1304
 @export var MaxY =  2192
 
-var MaxEnemyCount : int = 0
+var MaxEnemyCount : int = 1
 
 var _points_dict : Dictionary = {
 	"Enemy 1" : 10,

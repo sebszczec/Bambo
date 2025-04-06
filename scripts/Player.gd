@@ -20,17 +20,14 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @export var SateliteRotationSpeed = 5
 @export var SateliteRadius = 60
 @export var PlayerRotationSpeed = 5
-@export var MaxLife = 100
-@export var MaxAfterburner = 100
-@export var MaxShield = 100
 var cameraShakeNoise = FastNoiseLite.new()
-var currentAfterburner = MaxAfterburner
+var currentAfterburner = PlayerStatus.MaxAfterburner
 var afterBurnerStep = 10
 var shieldRecoveryStep = 5
 var burn = false
-var life = MaxLife
-var shield = MaxShield
-var shield_aplha_step = 0.5 / MaxShield
+var life = PlayerStatus.MaxLife
+var shield = PlayerStatus.MaxShield
+var shield_aplha_step = 0.5 / PlayerStatus.MaxShield
 var isDead = false
 
 @export_category("Camera")
@@ -65,9 +62,9 @@ func _ready() -> void:
 	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_player_lifebar"]
 	showDamage = visualSettings["show_damage_taken"]
-	lifeBar.setMaxValue(MaxLife)
+	lifeBar.setMaxValue(PlayerStatus.MaxLife)
 	lifeBar.visible = showLifeBar
-	shieldBar.setMaxValue(MaxShield)
+	shieldBar.setMaxValue(PlayerStatus.MaxShield)
 	shieldBar.visible = showLifeBar
 	
 	var controlSettings = ConfigHandler.load_controls()
@@ -130,11 +127,11 @@ func calculateAfterburner(delta):
 	if burn && currentAfterburner > 0:
 		updateAfterBurner(-afterBurnerStep * delta)
 		
-	if !burn && currentAfterburner < MaxAfterburner:
+	if !burn && currentAfterburner < PlayerStatus.MaxAfterburner:
 		updateAfterBurner(afterBurnerStep * delta)
 
 func recoverShield(delta):
-	if canRecoverShield and shield < MaxShield:
+	if canRecoverShield and shield < PlayerStatus.MaxShield:
 		updateShield(shieldRecoveryStep * delta)
 
 func calculateAcceleration():
@@ -317,8 +314,8 @@ func updateShield(value):
 		tmp = shield + value
 		shield = 0
 	
-	if shield > MaxShield:
-		shield = MaxShield
+	if shield > PlayerStatus.MaxShield:
+		shield = PlayerStatus.MaxShield
 		
 	shieldBar.setValue(shield)
 	update_shield.emit(shield)
@@ -334,8 +331,8 @@ func updateLife(value):
 	if life < 0:
 		life = 0
 	
-	if life > MaxLife:
-		life = MaxLife
+	if life > PlayerStatus.MaxLife:
+		life = PlayerStatus.MaxLife
 	
 	lifeBar.setValue(life)
 	update_life.emit(life)

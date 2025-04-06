@@ -37,9 +37,9 @@ func _ready() -> void:
 	
 	activePerk.connect("timeout", _on_active_perk_timeout)
 	
-	lifeBar.value = player.MaxLife
-	shieldBar.value = player.MaxShield
-	afterburnerBar.value = player.MaxAfterburner
+	lifeBar.value = PlayerStatus.MaxLife
+	shieldBar.value = PlayerStatus.MaxShield
+	afterburnerBar.value = PlayerStatus.MaxAfterburner
 	
 	enemy_spawn_timer.start()
 	
