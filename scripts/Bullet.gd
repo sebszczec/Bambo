@@ -3,16 +3,15 @@ extends StaticBody2D
 class_name Bullet
 
 @export var Speed = 20
-@export var MinDamage = 10
-@export var MaxDamage = 20
 @export var LifeTime = 0.5
 @export var HitBox : Area2D
+@export var Type : Enums.WEAPONS = Enums.WEAPONS.SMALL
 
 @onready var lifeTimer = $LifeTimer
 @onready var bolid = $BulletEffect
 
+
 var velocity = Vector2(0, 0)
-var Damage = 0
 
 signal freeing
 
@@ -22,7 +21,6 @@ func _ready():
 	lifeTimer.wait_time = LifeTime
 	lifeTimer.start()
 	HitBox.connect("area_entered", _on_hit_box_area_entered)
-	Damage = randi_range(MinDamage, MaxDamage)
 
 
 func _physics_process(_delta):

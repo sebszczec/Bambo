@@ -44,6 +44,7 @@ class Weapon:
 	var speed = 20
 	var life_time = 0.5
 	var collision_mask = Enums.MASKS.PLAYER | Enums.MASKS.ENEMY
+	var type : Enums.WEAPONS = Enums.WEAPONS.SMALL
 	
 	var audio = AudioStreamPlayer2D.new()
 	var explosion_audio = AudioStreamPlayer2D.new()
@@ -88,6 +89,7 @@ class Weapon:
 			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
+			bullet.Type = type
 			bullet.set_collision_mask(collision_mask)
 			bullet.position = start_position
 			bullet.velocity = direction
@@ -117,6 +119,7 @@ class SmallHomingBullet extends SmallBullet:
 		shooting_delay = 0.2
 		speed = 5
 		life_time = 1
+		type = Enums.WEAPONS.SMALL_HOMING
 		
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		var enemy = object_owner.find_nearest_enemy()
@@ -131,12 +134,14 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 		shooting_delay = 0.2
 		speed = 10
 		life_time = 1
+		type = Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY
 		
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
 			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
+			bullet.Type = type
 			bullet.set_collision_mask(collision_mask)
 			bullet.position = start_position
 			bullet.velocity = direction
@@ -166,16 +171,16 @@ class BigBullet extends Weapon:
 		shooting_delay = 0.2
 		bullet_scene = preload("res://scenes/big_bullet.tscn")
 		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		type = Enums.WEAPONS.BIG
 
 class SmallBulletWave extends SmallBullet:
 	var size = 30
-	var min_damage = 25
-	var max_damage = 50
 	
 	func setup():
 		super.setup()
 		shooting_delay = 1
 		speed = 5
+		type = Enums.WEAPONS.SMALL_WAVE
 		
 	func shoot(owner: Node, start_position: Vector2, _direction: Vector2):
 		if canShoot:
@@ -184,10 +189,9 @@ class SmallBulletWave extends SmallBullet:
 			var radial_increment = (2.0 * PI) / float(size)
 			for i in range (0, size):
 				var bullet = bullet_scene.instantiate()
+				bullet.Type = type
 				bullet.set_collision_mask(collision_mask)
 				bullet.Speed = speed
-				bullet.MinDamage = min_damage
-				bullet.MaxDamage = max_damage
 				bullet.LifeTime = 1
 				
 				var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)
@@ -201,8 +205,6 @@ class SmallBulletWave extends SmallBullet:
 
 class Fireworks extends BigBullet:
 	var size = 30
-	var min_damage = 25
-	var max_damage = 50
 	var explosion_speed = 2
 	var explosion_bullet_scene = preload("res://scenes/bullet.tscn")
 	
@@ -213,6 +215,7 @@ class Fireworks extends BigBullet:
 		speed = 2
 		life_time = 2
 		explosion_audio.stream = load("res://resources/explode_sounds/350977__cabled_mess__boom_c_06.wav")
+		type = Enums.WEAPONS.FIREWORKS
 		
 	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
@@ -220,6 +223,7 @@ class Fireworks extends BigBullet:
 			audio.play()
 			canShoot = false
 			var bullet = bullet_scene.instantiate()
+			bullet.Type = type
 			bullet.set_collision_mask(collision_mask)
 			bullet.position = start_position
 			bullet.velocity = direction
@@ -237,10 +241,10 @@ class Fireworks extends BigBullet:
 		var radial_increment = (2.0 * PI) / float(size)
 		for i in range (0, size):
 			var bullet = explosion_bullet_scene.instantiate()
+			bullet.Type = type
 			bullet.set_collision_mask(collision_mask)
 			bullet.Speed = explosion_speed
-			bullet.MinDamage = min_damage
-			bullet.MaxDamage = max_damage
+
 			bullet.LifeTime = 1
 			
 			var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)

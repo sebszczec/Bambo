@@ -22,7 +22,8 @@ func _ready() -> void:
 	player = world.find_child("Player")
 	
 	init_weapons()
-	weapon = weapons[Enums.WEAPONS.SMALL]
+	PlayerStatus.CurrentWeapon = Enums.WEAPONS.SMALL
+	weapon = weapons[PlayerStatus.CurrentWeapon]
 	
 	score = world.find_child("Score")
 	lifeBar = world.find_child("LifeBar")
@@ -69,18 +70,21 @@ func _physics_process(_delta):
 		weapon.shoot(self, player.getSatelitePosition(), player.getShootingVector())
 
 
-func change_weapon(id: int):
+func change_weapon(id: Enums.WEAPONS):
 	if id >= Enums.WEAPONS.size():
 		return
 	
-	weapon = weapons[id]
+	PlayerStatus.CurrentWeapon = id
+	weapon = weapons[PlayerStatus.CurrentWeapon]
 
 func _on_active_perk_timeout(type: Enums.WEAPONS):
-	weapon = weapons[type]
+	PlayerStatus.CurrentWeapon = type
+	weapon = weapons[PlayerStatus.CurrentWeapon]
 
 func _on_weapon_perk_taken(type: Enums.WEAPONS):
-	weapon = weapons[type]
-	activePerk.changeState(type)
+	PlayerStatus.CurrentWeapon = type
+	weapon = weapons[PlayerStatus.CurrentWeapon]
+	activePerk.changeState(PlayerStatus.CurrentWeapon)
 
 func _on_weapon_bullet_number_change(value):
 	informationBox.setBulletCount(value)
