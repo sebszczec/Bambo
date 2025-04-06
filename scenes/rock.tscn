@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://b21jyms5o2ch"]
+[gd_scene load_steps=6 format=3 uid="uid://b21jyms5o2ch"]
 
 [ext_resource type="Texture2D" uid="uid://din64w8k8iej2" path="res://resources/meteors/Meteor_05.png" id="1_1di36"]
 [ext_resource type="Script" uid="uid://5mh2ygoclipj" path="res://scripts/rock.gd" id="1_mek2u"]
+[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="3_ik6fu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1di36"]
 radius = 26.0
@@ -24,9 +25,20 @@ shape = SubResource("CapsuleShape2D_1di36")
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_1di36")
 
-[node name="HitBox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="." groups=["Rock"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2(2, 0)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_ik6fu")
+
+[node name="Explosion" parent="." instance=ExtResource("3_ik6fu")]
+visible = false
+PathToSprite = "res://resources/meteors/Meteor_05.png"
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]

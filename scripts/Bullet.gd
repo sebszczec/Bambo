@@ -55,3 +55,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 			dispose()
 		return
 		
+	if area.is_in_group("Rock"):
+		dispose()
+		return
+		
