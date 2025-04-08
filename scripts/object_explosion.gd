@@ -85,4 +85,7 @@ func explode():
 	_explode = true
 	effect.emitting = true
 	
+
+func set_particle_color(color : Color) -> void:
+	effect.self_modulate = color
 	

@@ -87,7 +87,7 @@ func _physics_process(delta: float) -> void:
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 
-	move_and_collide(velocity)
+	move_and_collide(velocity * delta)
 	
 
 # public
