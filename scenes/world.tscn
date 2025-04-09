@@ -143,6 +143,10 @@ text = "Enemies: 0"
 layout_mode = 2
 text = "Bullets: 0"
 
+[node name="MeteorCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
+layout_mode = 2
+text = "Meteors: 0"
+
 [node name="GameLogic" type="Node" parent="."]
 script = ExtResource("1_ib5o5")
 

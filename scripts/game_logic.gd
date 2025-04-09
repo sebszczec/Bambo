@@ -180,7 +180,10 @@ func _on_meteor_spawn_timer_timeout() -> void:
 	meteor.velocity = temp_vel
 	meteor.connect("destroyed", _on_meteor_destroyed)
 	world.add_child(meteor)
+	
+	informationBox.increaseMeteorCount()
 
 
 func _on_meteor_destroyed():
 	meteor_count = meteor_count - 1
+	informationBox.decreaseMeteorCount()
