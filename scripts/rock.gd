@@ -15,11 +15,12 @@ var rock_scene = preload("res://scenes/rock.tscn")
 @export var MaxRotationSpeed : float = 5.0
 @export var NumberOfPieces : int = 3
 
-
 var is_dead : bool = false
 var rotation_speed : float = 0.0
 var r_direction : int = 1
 var world = null
+
+signal destroyed
 
 func _ready() -> void:
 	world = get_tree().get_root()
@@ -63,6 +64,7 @@ func _physics_process(delta: float) -> void:
 
 func dispose():
 	if !is_queued_for_deletion():
+		destroyed.emit()
 		queue_free()
 
 func handle_destruction():
