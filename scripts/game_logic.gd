@@ -1,6 +1,7 @@
 extends Node
 
 var enemy_count = 0
+var meteor_count = 0
 var world = null
 var score = null
 var player = null
@@ -15,6 +16,7 @@ var weapons : Dictionary = {}
 var active_enemies : Dictionary = {}
 
 @onready var enemy_spawn_timer = $EnemySpawnTimer
+@onready var meteor_spawn_timer = $MeteorSpawnTimer
 @onready var shootingTimer = $ShootingTimer
 
 func _ready() -> void:
@@ -43,6 +45,7 @@ func _ready() -> void:
 	afterburnerBar.value = PlayerStatus.MaxAfterburner
 	
 	enemy_spawn_timer.start()
+	meteor_spawn_timer.start()
 	
 
 func init_weapons():
@@ -164,3 +167,20 @@ func find_nearest_enemy():
 			result = enemy
 	
 	return result
+
+
+func _on_meteor_spawn_timer_timeout() -> void:
+	if meteor_count >= LevelSettings.MaxMeteorCount:
+		return
+	
+	var meteor = LevelSettings.get_random_meteor()
+	var tmp_pos = Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY))
+	meteor.set_global_position(tmp_pos)
+	var temp_vel = Vector2(randf_range(-100.0, 100.0), randf_range(-100.0, 100.0))
+	meteor.velocity = temp_vel
+	meteor.connect("destroyed", _on_meteor_destroyed)
+	world.add_child(meteor)
+
+
+func _on_meteor_destroyed():
+	meteor_count = meteor_count - 1

@@ -6,6 +6,7 @@ extends Node
 @export var MaxY =  2192
 
 var MaxEnemyCount : int = 0
+var MaxMeteorCount : int = 20
 
 var _points_dict : Dictionary = {
 	"Enemy 1" : 10,
@@ -28,6 +29,13 @@ var _perk_scenes : Dictionary = {
  	Enums.PERKS.WAVE : preload("res://scenes/wave_perk.tscn"),
  	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn")
 }
+
+var _meteor_scenes = [
+	preload("res://scenes/rock.tscn"),
+	preload("res://scenes/rock_green.tscn"),
+	preload("res://scenes/rock_red.tscn"),
+	preload("res://scenes/rock_yellow.tscn")
+]
 
 var _enemy_scenes = [
 	preload("res://scenes/enemy_1.tscn"), 
@@ -55,3 +63,6 @@ func drop_perk(perk : Enums.PERKS):
 func get_random_enemy():
 	return _enemy_scenes[randi_range(0, _enemy_scenes.size() - 1)].instantiate()
 	#return _enemy_scenes[0].instantiate()
+	
+func get_random_meteor():
+	return _meteor_scenes[randi_range(0, _meteor_scenes.size() - 1)].instantiate()

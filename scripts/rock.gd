@@ -78,7 +78,7 @@ func handle_destruction():
 		temp_pos.x = get_global_position().x + r * cos(i * angle)
 		temp_pos.y = get_global_position().y + r * sin(i * angle)
 		rock.set_global_position(temp_pos)
-		rock.velocity = temp_pos - get_global_position()
+		rock.velocity = velocity + (temp_pos - get_global_position())
 		rock.z_index = z_index - 1
 		world.call_deferred("add_child", rock)
 		

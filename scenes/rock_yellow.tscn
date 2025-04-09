@@ -6,8 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://b4aljvf8bjh6m" path="res://resources/sfx/crack.mp3" id="4_nphuy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_83c4h"]
-radius = 29.6786
-height = 77.6777
+radius = 28.0
+height = 75.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cihpx"]
 radius = 29.7636

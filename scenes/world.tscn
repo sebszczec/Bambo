@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=24 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -21,10 +21,6 @@
 [ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/kenney_planets/Planets/planet05.png" id="15_2lf6f"]
 [ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/kenney_planets/Planets/planet07.png" id="16_2lf6f"]
 [ext_resource type="PackedScene" uid="uid://cd28o5h6cf3l8" path="res://scenes/lightning.tscn" id="21_7iits"]
-[ext_resource type="PackedScene" uid="uid://d1xsd3buwaxrv" path="res://scenes/rock_red.tscn" id="23_ctatt"]
-[ext_resource type="PackedScene" uid="uid://b21jyms5o2ch" path="res://scenes/rock.tscn" id="23_kpybi"]
-[ext_resource type="PackedScene" uid="uid://dfbcvgt3xonh4" path="res://scenes/rock_green.tscn" id="24_ctatt"]
-[ext_resource type="PackedScene" uid="uid://gr4nucka3crs" path="res://scenes/rock_yellow.tscn" id="25_xgqkh"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(3072, 1875, -1596.01, 1875, -1597.99, -1616, 3072, -1616.99)
@@ -155,6 +151,8 @@ script = ExtResource("1_ib5o5")
 [node name="ShootingTimer" type="Timer" parent="GameLogic"]
 wait_time = 0.1
 one_shot = true
+
+[node name="MeteorSpawnTimer" type="Timer" parent="GameLogic"]
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
@@ -337,47 +335,6 @@ rotation = 1.5708
 position = Vector2(3130, -1632)
 rotation = 1.5708
 
-[node name="Rock" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(592, 72)
-
-[node name="Rock2" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(512, 72)
-
-[node name="Rock3" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(432, 72)
-
-[node name="Rock4" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(352, 72)
-
-[node name="Rock5" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(592, 144)
-
-[node name="Rock6" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(512, 144)
-
-[node name="Rock7" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(432, 144)
-
-[node name="Rock8" parent="." instance=ExtResource("23_kpybi")]
-position = Vector2(352, 144)
-
-[node name="RockRed" parent="." instance=ExtResource("23_ctatt")]
-position = Vector2(672, 72)
-
-[node name="RockRed2" parent="." instance=ExtResource("23_ctatt")]
-position = Vector2(672, 144)
-
-[node name="RockGreen" parent="." instance=ExtResource("24_ctatt")]
-position = Vector2(744, 72)
-
-[node name="RockGreen2" parent="." instance=ExtResource("24_ctatt")]
-position = Vector2(744, 144)
-
-[node name="RockYellow" parent="." instance=ExtResource("25_xgqkh")]
-position = Vector2(864, 80)
-
-[node name="RockYellow2" parent="." instance=ExtResource("25_xgqkh")]
-position = Vector2(984, 80)
-
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]
+[connection signal="timeout" from="GameLogic/MeteorSpawnTimer" to="GameLogic" method="_on_meteor_spawn_timer_timeout"]
