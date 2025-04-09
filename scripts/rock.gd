@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+class_name Rock
+
 var rock_scene = preload("res://scenes/rock.tscn")
 
 @onready var sprite = $Sprite2D
@@ -28,7 +30,7 @@ func _ready() -> void:
 	r_direction = randi_range(0, 1)
 	if r_direction == 0:
 		r_direction = -1
-		
+
 
 func explode():
 	sprite.visible = false
@@ -83,11 +85,12 @@ func handle_destruction():
 
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Bullet"):
+	if area.is_in_group("Bullet") or area.is_in_group("Rock"):
 		if is_dead:
 			return
 		
 		handle_destruction()
+		
 
 
 

@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://dfbcvgt3xonh4"]
+
+[ext_resource type="Script" uid="uid://bpurqmuk63wgt" path="res://scripts/rock_green.gd" id="1_3ynpk"]
+[ext_resource type="Texture2D" uid="uid://wyjtpmr7qi0k" path="res://resources/meteors/Meteor_07.png" id="2_3ynpk"]
+[ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="3_ojgii"]
+[ext_resource type="AudioStream" uid="uid://b4aljvf8bjh6m" path="res://resources/sfx/crack.mp3" id="4_1olmy"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0sxej"]
+radius = 30.0
+height = 60.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j2drs"]
+radius = 30.0
+height = 60.0
+
+[node name="RockGreen" type="CharacterBody2D"]
+script = ExtResource("1_3ynpk")
+metadata/_custom_type_script = "uid://5mh2ygoclipj"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_0sxej")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_3ynpk")
+
+[node name="HitBox" type="Area2D" parent="." groups=["Rock"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(-1, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_j2drs")
+
+[node name="Explosion" parent="." instance=ExtResource("3_ojgii")]
+visible = false
+PathToSprite = "res://resources/meteors/Meteor_07.png"
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_1olmy")
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
