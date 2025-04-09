@@ -173,6 +173,8 @@ func _on_meteor_spawn_timer_timeout() -> void:
 	if meteor_count >= LevelSettings.MaxMeteorCount:
 		return
 	
+	meteor_count += 1
+	
 	var meteor = LevelSettings.get_random_meteor()
 	var tmp_pos = Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY))
 	meteor.set_global_position(tmp_pos)
