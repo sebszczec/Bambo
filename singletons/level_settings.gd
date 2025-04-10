@@ -22,6 +22,8 @@ var _perk_chances : Dictionary = {
 	Enums.PERKS.HOMING : 50,
 }
 
+var _meteor_mine_chance = 50
+
 var _perk_scenes : Dictionary = {
 	Enums.PERKS.LIFE : preload("res://scenes/life_perk.tscn"),
 	Enums.PERKS.SHIELD : preload("res://scenes/shield_perk.tscn"),
@@ -42,6 +44,8 @@ var _enemy_scenes = [
 	preload("res://scenes/enemy_2.tscn"), 
 	preload("res://scenes/enemy_3.tscn")
 ]
+
+var _mine_scene = preload("res://scenes/mine.tscn")
 
 func _ready() -> void:
 	pass
@@ -66,3 +70,8 @@ func get_random_enemy():
 	
 func get_random_meteor():
 	return _meteor_scenes[randi_range(0, _meteor_scenes.size() - 1)].instantiate()
+	
+func get_random_mine_from_meteor():
+	if randi_range(0, 100) < _meteor_mine_chance:
+		return _mine_scene.instantiate()
+	return null

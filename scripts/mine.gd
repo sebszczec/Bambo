@@ -7,6 +7,8 @@ extends CharacterBody2D
 @onready var explosion = $Explosion
 @onready var explosion_sound = $ExplosionSoundPlayer
 @onready var blinking_sound = $BlinkingSoundPlayer
+@onready var collision = $CollisionShape2D
+@onready var hit_box_collision = $HitBox/CollisionShape2D
 
 # public
 @export var Damage = 0
@@ -26,7 +28,7 @@ var floatTextScene = preload("res://scenes/floating_text.tscn")
 
 func _ready() -> void:
 	_world = get_tree().root
-	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, false)
+	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, true)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)
 	
@@ -91,6 +93,8 @@ func _on_blink_timer_timeout() -> void:
 		
 func _explode() -> void:
 	sprite.visible = false
+	collision.disabled = true
+	hit_box_collision.disabled = true
 	explosion.position = sprite.position
 	explosion.SpriteTexture = sprite.get_sprite_frames().get_frame_texture(sprite.animation, sprite.get_frame())
 	explosion.init()

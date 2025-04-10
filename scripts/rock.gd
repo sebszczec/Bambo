@@ -81,6 +81,11 @@ func handle_destruction():
 		rock.velocity = velocity + (temp_pos - get_global_position())
 		rock.z_index = z_index - 1
 		world.call_deferred("add_child", rock)
+	
+	var mine = LevelSettings.get_random_mine_from_meteor()
+	if mine != null:
+		mine.set_global_position(get_global_position())
+		world.call_deferred("add_child", mine)
 		
 	explode()
 	is_dead = true
