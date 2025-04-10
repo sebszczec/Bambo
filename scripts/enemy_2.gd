@@ -29,6 +29,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var lifeBar = $LifeBar
 @onready var explosion = $Explosion
 @onready var audio = $AudioStreamPlayer2D
+@onready var mark = $Mark
 
 var _halfPI : float = PI / 2
 var _accelerate = false
@@ -110,6 +111,10 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
+
+# public
+func set_mark():
+	mark.activate(1.0)
 
 func _on_preparing_strike_timer_timeout():
 	_accelerate = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ca6sxsibqlyef"]
+[gd_scene load_steps=14 format=3 uid="uid://ca6sxsibqlyef"]
 
 [ext_resource type="Script" uid="uid://debwj5r60hgpb" path="res://scripts/enemy_1.gd" id="1_ww31q"]
 [ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="2_6nrqq"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="3_tycq0"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_qxt44"]
 [ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_vngkm"]
+[ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="8_oweuj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]
 radius = 7.0
@@ -66,6 +67,8 @@ PathToSprite = "res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyRed1
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("6_vngkm")
 volume_db = 5.0
+
+[node name="Mark" parent="." instance=ExtResource("8_oweuj")]
 
 [connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
 [connection signal="navigation_finished" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_navigation_finished"]

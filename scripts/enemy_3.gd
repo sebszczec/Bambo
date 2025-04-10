@@ -23,6 +23,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var audio = $AudioStreamPlayer2D
 @onready var aim = $Ship/Aim
 @onready var raycast = $Ship/RayCast2D
+@onready var mark = $Mark
 
 var _theta = 0.0
 var _halfPI : float = PI / 2
@@ -97,6 +98,10 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
+	
+# public
+func set_mark():
+	mark.activate(1.0)
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):

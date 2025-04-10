@@ -164,6 +164,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 	func _homing_timer_on_timeout(bullet):
 		var enemy = object_owner.find_nearest_enemy()
 		if enemy != null:
+			enemy.set_mark()
 			bullet.velocity = enemy.position - bullet.position
 
 class BigBullet extends Weapon:

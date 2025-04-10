@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://x6huptovxly5"]
+
+[ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/kenney_particle_pack/magic_04.png" id="1_44jxp"]
+[ext_resource type="Script" uid="uid://bxcx70eecxc0c" path="res://scripts/mark.gd" id="1_g57e7"]
+
+[node name="Mark" type="Node2D"]
+script = ExtResource("1_g57e7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+self_modulate = Color(1, 0, 0, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_44jxp")
+
+[node name="ActivationPeriodTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="ActivationPeriodTimer" to="." method="_on_activation_period_timer_timeout"]

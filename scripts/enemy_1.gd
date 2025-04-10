@@ -11,6 +11,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var ship = $Ship
 @onready var explosion = $Explosion
 @onready var audio = $AudioStreamPlayer2D
+@onready var mark = $Mark
 
 
 @export var ResizeSpeed = 0.05
@@ -73,6 +74,10 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
+	
+# public
+func set_mark():
+	mark.activate(1.0)
 
 func skip_frame():
 	await get_tree().physics_frame
