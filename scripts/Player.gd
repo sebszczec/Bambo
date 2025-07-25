@@ -356,6 +356,11 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		createShieldFloatingText("+" + str(area.Shield), 2)
 		updateShield(area.Shield)
 		return
+		
+	if area.is_in_group("DamageUpPerk"):
+		createShieldFloatingText("Damage +" + str(int(area.DamageUp * 100)) + "%", 2)
+		PlayerStatus.increase_damage(area.DamageUp)
+		return
 
 func updateAfterBurner(value):
 	currentAfterburner += value

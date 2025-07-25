@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=25 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://snwsk5j436tk" path="res://scenes/score.tscn" id="6_btsp4"]
 [ext_resource type="PackedScene" uid="uid://ckojs6xfmg620" path="res://scenes/active_perk.tscn" id="7_4045b"]
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
+[ext_resource type="PackedScene" uid="uid://bqe5io5j7p56k" path="res://scenes/player_info.tscn" id="8_oo54l"]
 [ext_resource type="Texture2D" uid="uid://cwvljcbccx4bo" path="res://resources/background/space_bg.jpg" id="10_o8fc1"]
 [ext_resource type="Texture2D" uid="uid://cttmsh76aflb3" path="res://resources/kenney_planets/Planets/planet00.png" id="11_xo05s"]
 [ext_resource type="Texture2D" uid="uid://cea5o47hm7hhf" path="res://resources/kenney_planets/Planets/planet02.png" id="12_dss4m"]
@@ -118,32 +119,13 @@ offset_bottom = 1072.0
 
 [node name="ActivePerk" parent="GUI/CanvasLayer/ActivePerkPanel" instance=ExtResource("7_4045b")]
 
-[node name="PlayerInfo" type="Panel" parent="GUI/CanvasLayer"]
+[node name="PlayerInfoPanel" type="Panel" parent="GUI/CanvasLayer"]
 offset_left = 1736.0
 offset_top = 472.0
 offset_right = 1912.0
 offset_bottom = 536.0
 
-[node name="BaseDamageLabel" type="Label" parent="GUI/CanvasLayer/PlayerInfo"]
-layout_mode = 0
-offset_left = 8.0
-offset_right = 129.0
-offset_bottom = 23.0
-text = "Base damage: 0"
-
-[node name="CriticalChanceLabel" type="Label" parent="GUI/CanvasLayer/PlayerInfo"]
-offset_left = 8.0
-offset_top = 20.0
-offset_right = 153.0
-offset_bottom = 43.0
-text = "Cricital chance: 0%"
-
-[node name="CriticalMultiplayerLabel" type="Label" parent="GUI/CanvasLayer/PlayerInfo"]
-offset_left = 8.0
-offset_top = 40.0
-offset_right = 173.0
-offset_bottom = 63.0
-text = "Critical multiplayer: 0"
+[node name="PlayerInfo" parent="GUI/CanvasLayer/PlayerInfoPanel" instance=ExtResource("8_oo54l")]
 
 [node name="InformationBox" type="Control" parent="."]
 layout_mode = 3

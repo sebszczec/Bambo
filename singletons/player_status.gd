@@ -13,6 +13,10 @@ signal base_damage_changed (value : float)
 signal critical_hit_chance_changed (value : float)
 signal ciritcal_hit_multipayer_changes (value : float)
 
+func increase_damage(value : float):
+	BaseDamage = BaseDamage + value
+	base_damage_changed.emit(BaseDamage)
+
 func get_damage():
 	var damage = Damage.new()
 	damage.Value = BaseDamage * DamageValues.get_damage(CurrentWeapon)

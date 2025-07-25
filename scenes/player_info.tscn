@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqe5io5j7p56k"]
+
+[ext_resource type="Script" uid="uid://blrt52hp7riho" path="res://scripts/player_info.gd" id="1_oojiu"]
+
+[node name="PlayerInfo" type="Node2D"]
+script = ExtResource("1_oojiu")
+
+[node name="BaseDamageLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_right = 129.0
+offset_bottom = 23.0
+text = "Base damage: 0"
+
+[node name="CriticalChanceLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 20.0
+offset_right = 153.0
+offset_bottom = 43.0
+text = "Cricital chance: 0%"
+
+[node name="CriticalMultiplayerLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 40.0
+offset_right = 173.0
+offset_bottom = 63.0
+text = "Critical multiplayer: 0"
