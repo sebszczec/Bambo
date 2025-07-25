@@ -118,6 +118,33 @@ offset_bottom = 1072.0
 
 [node name="ActivePerk" parent="GUI/CanvasLayer/ActivePerkPanel" instance=ExtResource("7_4045b")]
 
+[node name="PlayerInfo" type="Panel" parent="GUI/CanvasLayer"]
+offset_left = 1736.0
+offset_top = 472.0
+offset_right = 1912.0
+offset_bottom = 536.0
+
+[node name="BaseDamageLabel" type="Label" parent="GUI/CanvasLayer/PlayerInfo"]
+layout_mode = 0
+offset_left = 8.0
+offset_right = 129.0
+offset_bottom = 23.0
+text = "Base damage: 0"
+
+[node name="CriticalChanceLabel" type="Label" parent="GUI/CanvasLayer/PlayerInfo"]
+offset_left = 8.0
+offset_top = 20.0
+offset_right = 153.0
+offset_bottom = 43.0
+text = "Cricital chance: 0%"
+
+[node name="CriticalMultiplayerLabel" type="Label" parent="GUI/CanvasLayer/PlayerInfo"]
+offset_left = 8.0
+offset_top = 40.0
+offset_right = 173.0
+offset_bottom = 63.0
+text = "Critical multiplayer: 0"
+
 [node name="InformationBox" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -216,7 +243,7 @@ stream = ExtResource("14_o8fc1")
 autoplay = true
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-position = Vector2(-400, 128)
+position = Vector2(-504, 128)
 navigation_polygon = SubResource("NavigationPolygon_y1cda")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
