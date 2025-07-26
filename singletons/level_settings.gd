@@ -46,11 +46,11 @@ var _meteor_scenes = [
 	preload("res://scenes/rock_yellow.tscn")
 ]
 
-var _enemy_scenes = [
-	preload("res://scenes/enemy_1.tscn"), 
-	preload("res://scenes/enemy_2.tscn"), 
-	preload("res://scenes/enemy_3.tscn")
-]
+var _enemy_scenes : Dictionary = {
+	Enums.ENEMIES.SCOUT : preload("res://scenes/enemy_1.tscn"), 
+	Enums.ENEMIES.GUARD : preload("res://scenes/enemy_2.tscn"), 
+	Enums.ENEMIES.HUNTER : preload("res://scenes/enemy_3.tscn")
+}
 
 var _mine_scene = preload("res://scenes/mine.tscn")
 
@@ -85,9 +85,11 @@ func get_random_perk():
 	
 	return null
 
+func get_enemy(enemy : Enums.ENEMIES):
+	return _enemy_scenes[enemy].instantiate()
+
 func get_random_enemy():
-	return _enemy_scenes[randi_range(0, _enemy_scenes.size() - 1)].instantiate()
-	#return _enemy_scenes[0].instantiate()
+	return _enemy_scenes[randi_range(0, Enums.ENEMIES.size() - 1)].instantiate()
 	
 func get_random_meteor():
 	return _meteor_scenes[randi_range(0, _meteor_scenes.size() - 1)].instantiate()

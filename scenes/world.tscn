@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=26 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 [ext_resource type="PackedScene" uid="uid://bqe5io5j7p56k" path="res://scenes/player_info.tscn" id="8_oo54l"]
 [ext_resource type="Texture2D" uid="uid://cwvljcbccx4bo" path="res://resources/background/space_bg.jpg" id="10_o8fc1"]
+[ext_resource type="Script" uid="uid://cm2qnkjn3qfsr" path="res://scripts/phase_guard.gd" id="11_kpybi"]
 [ext_resource type="Texture2D" uid="uid://cttmsh76aflb3" path="res://resources/kenney_planets/Planets/planet00.png" id="11_xo05s"]
 [ext_resource type="Texture2D" uid="uid://cea5o47hm7hhf" path="res://resources/kenney_planets/Planets/planet02.png" id="12_dss4m"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
@@ -122,7 +123,7 @@ offset_bottom = 1072.0
 [node name="PlayerInfoPanel" type="Panel" parent="GUI/CanvasLayer"]
 offset_left = 1720.0
 offset_top = 472.0
-offset_right = 1896.0
+offset_right = 1912.0
 offset_bottom = 536.0
 
 [node name="PlayerInfo" parent="GUI/CanvasLayer/PlayerInfoPanel" instance=ExtResource("8_oo54l")]
@@ -158,6 +159,9 @@ text = "Meteors: 0"
 
 [node name="GameLogic" type="Node" parent="."]
 script = ExtResource("1_ib5o5")
+
+[node name="PhaseGuard" type="Node" parent="GameLogic"]
+script = ExtResource("11_kpybi")
 
 [node name="EnemySpawnTimer" type="Timer" parent="GameLogic"]
 

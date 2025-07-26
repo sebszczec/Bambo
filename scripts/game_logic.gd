@@ -15,6 +15,7 @@ var weapon = null
 var weapons : Dictionary = {}
 var active_enemies : Dictionary = {}
 
+@onready var phase_guard = $PhaseGuard
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var meteor_spawn_timer = $MeteorSpawnTimer
 @onready var shootingTimer = $ShootingTimer
@@ -44,7 +45,10 @@ func _ready() -> void:
 	shieldBar.value = PlayerStatus.MaxShield
 	afterburnerBar.value = PlayerStatus.MaxAfterburner
 	
-	enemy_spawn_timer.start()
+	#enemy_spawn_timer.start()
+	phase_guard.connect("phase_timeout", _on_phase_timeout)
+	phase_guard.start_phase(Enums.PHASE.Phase1)
+	
 	meteor_spawn_timer.start()
 	
 
@@ -79,6 +83,21 @@ func change_weapon(id: Enums.WEAPONS):
 	
 	PlayerStatus.CurrentWeapon = id
 	weapon = weapons[PlayerStatus.CurrentWeapon]
+
+func _on_phase_timeout(value):
+	for i in range(value.count):
+		var enemy = LevelSettings.get_enemy(value.enemy)
+		active_enemies[enemy.get_instance_id()] = enemy
+		enemy.connect("killed", _on_enemy_killed)
+		
+		enemy.position.x = get_new_enemy_position(player.position.x, LevelSettings.MinX, LevelSettings.MaxX)
+		enemy.position.y = get_new_enemy_position(player.position.y, LevelSettings.MinY, LevelSettings.MaxY)
+		
+		world.add_child(enemy)
+		enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
+		
+		enemy_count = enemy_count + 1
+		informationBox.increaseEnemyCount()
 
 func _on_active_perk_timeout(type: Enums.WEAPONS):
 	PlayerStatus.CurrentWeapon = type
