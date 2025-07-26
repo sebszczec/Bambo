@@ -144,13 +144,11 @@ func _on_player_update_shield(value):
 	shieldBar.value = value
 
 func addPerk(pos : Vector2) -> bool:
-	var type = randi_range(0, Enums.PERKS.size() - 1)
-	
-	var perk = LevelSettings.drop_perk(type)
+	var perk = LevelSettings.get_random_perk()
 	if perk == null:
 		return false
-		
-	if type >= Enums.PERKS.BIG_GUN:
+	
+	if perk.get_perk_type() >= Enums.PERKS.BIG_GUN:
 		perk.connect("taken", _on_weapon_perk_taken)
 	
 	perk.position = pos

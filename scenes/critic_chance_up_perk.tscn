@@ -12,6 +12,7 @@ scale = Vector2(0.3, 0.3)
 script = ExtResource("1_snc1p")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+self_modulate = Color(1, 0.517647, 0.517647, 1)
 texture = ExtResource("2_snc1p")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

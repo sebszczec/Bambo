@@ -14,15 +14,16 @@ var _points_dict : Dictionary = {
 	"Enemy 3" : 20
 }
 
+var _no_perk_chance = 50
 var _perk_chances : Dictionary = {
-	Enums.PERKS.LIFE : 25,
-	Enums.PERKS.SHIELD : 25,
-	Enums.PERKS.DAMAGE_UP : 50,
-	Enums.PERKS.CRITIC_CHANCE_UP : 100,
-	Enums.PERKS.CRITIC_HIT_MULTIPLIER : 100,
-	Enums.PERKS.BIG_GUN : 50,
-	Enums.PERKS.WAVE : 50,
-	Enums.PERKS.HOMING : 50,
+	Enums.PERKS.LIFE : 10,
+	Enums.PERKS.SHIELD : 10,
+	Enums.PERKS.DAMAGE_UP : 10,
+	Enums.PERKS.CRITIC_CHANCE_UP : 10,
+	Enums.PERKS.CRITIC_HIT_MULTIPLIER : 10,
+	Enums.PERKS.BIG_GUN : 10,
+	Enums.PERKS.WAVE : 10,
+	Enums.PERKS.HOMING : 10,
 }
 
 var _meteor_mine_chance = 50
@@ -54,7 +55,11 @@ var _enemy_scenes = [
 var _mine_scene = preload("res://scenes/mine.tscn")
 
 func _ready() -> void:
-	pass
+	var sum = 0
+	for chance in _perk_chances.values():
+		sum += chance
+	
+	assert(sum == 80)
 
 func get_points(enemy: String) -> int:
 	return _points_dict[enemy]
@@ -62,13 +67,23 @@ func get_points(enemy: String) -> int:
 func get_chance(perk : Enums.PERKS) -> int:
 	return _perk_chances[perk]
 	
-func drop_perk(perk : Enums.PERKS):
+
+func get_random_perk():
 	var chance = randi_range(0, 100)
+	if chance < _no_perk_chance:
+		return null
 	
-	if chance > LevelSettings.get_chance(perk):
-			return null
+	chance = randi_range(0, 80)
+	var _temp_sum = 0
+	for perk in _perk_chances:
+		if chance >= _temp_sum and chance < _temp_sum + _perk_chances[perk]:
+			var result = _perk_scenes[perk].instantiate()
+			result.set_perk_type(perk)
+			return result
+			
+		_temp_sum += _perk_chances[perk]
 	
-	return _perk_scenes[perk].instantiate()
+	return null
 
 func get_random_enemy():
 	return _enemy_scenes[randi_range(0, _enemy_scenes.size() - 1)].instantiate()

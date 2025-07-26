@@ -303,7 +303,7 @@ func createLifeFloatingText(value, scale_factor: float = 1):
 	
 func createShieldFloatingText(value, scale_factor: float = 1):
 	createFloatingText(value, Color.DODGER_BLUE, scale_factor)
-
+	
 
 func updateShield(value):
 	
@@ -358,17 +358,17 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		return
 		
 	if area.is_in_group("DamageUpPerk"):
-		createShieldFloatingText("Damage +" + str(int(area.DamageUp)) + "%", 2)
+		createFloatingText("Damage +" + str(int(area.DamageUp)) + "%", Color.DEEP_SKY_BLUE,  2)
 		PlayerStatus.increase_damage(area.DamageUp)
 		return
 		
 	if area.is_in_group("CriticChanceUpPerk"):
-		createShieldFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", 2)
+		createFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", Color.ORANGE, 2)
 		PlayerStatus.increase_critic_chance(area.CriticChanceUp)
 		return
 	
 	if area.is_in_group("CriticHitMultiplierPerk"):
-		createShieldFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", 2)
+		createFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", Color.CHARTREUSE, 2)
 		PlayerStatus.increase_critic_hit_multiplier(area.CriticHitMultiplier)
 		return
 	
