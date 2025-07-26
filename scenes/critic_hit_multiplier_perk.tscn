@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxy4m2wxyeyet"]
+
+[ext_resource type="Script" uid="uid://43s84buirgge" path="res://scripts/critic_hit_multiplier_perk.gd" id="1_wkua4"]
+[ext_resource type="Texture2D" uid="uid://dkwh3b7xt6euy" path="res://resources/perks/critic_damage_multiplier.png" id="2_wkua4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hiqwj"]
+radius = 24.0
+
+[node name="CriticHitMultuplierPerk" type="Area2D" groups=["CriticHitMultiplierPerk"]]
+rotation = -0.261799
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_wkua4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_wkua4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -5)
+shape = SubResource("CircleShape2D_hiqwj")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

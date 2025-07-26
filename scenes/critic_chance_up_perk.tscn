@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc1l33g6fmpep"]
+
+[ext_resource type="Script" uid="uid://lkxnvd136rw" path="res://scripts/critic_chance_up_perk.gd" id="1_snc1p"]
+[ext_resource type="Texture2D" uid="uid://f0enkrp3knhi" path="res://resources/perks/critic_chance_up.png" id="2_snc1p"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hiqwj"]
+radius = 24.0
+
+[node name="CriticChanceUpPerk" type="Area2D" groups=["CriticChanceUpPerk"]]
+rotation = -0.261799
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_snc1p")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_snc1p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -5)
+shape = SubResource("CircleShape2D_hiqwj")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

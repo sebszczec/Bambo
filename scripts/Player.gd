@@ -358,9 +358,20 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		return
 		
 	if area.is_in_group("DamageUpPerk"):
-		createShieldFloatingText("Damage +" + str(int(area.DamageUp * 100)) + "%", 2)
+		createShieldFloatingText("Damage +" + str(int(area.DamageUp)) + "%", 2)
 		PlayerStatus.increase_damage(area.DamageUp)
 		return
+		
+	if area.is_in_group("CriticChanceUpPerk"):
+		createShieldFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", 2)
+		PlayerStatus.increase_critic_chance(area.CriticChanceUp)
+		return
+	
+	if area.is_in_group("CriticHitMultiplierPerk"):
+		createShieldFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", 2)
+		PlayerStatus.increase_critic_hit_multiplier(area.CriticHitMultiplier)
+		return
+	
 
 func updateAfterBurner(value):
 	currentAfterburner += value

@@ -1,6 +1,6 @@
 extends Perk
 
-@export var DamageUp = 10
+@export var CriticHitMultiplier = 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
