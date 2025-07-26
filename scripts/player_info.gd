@@ -18,7 +18,7 @@ func on_base_damage_changed(value):
 	baseDamageLabel.text = "Base damage: " + str(int(value)) + "%"
 	
 func on_cirtic_chance_up_changed(value):
-	cirticalChanceLabel.text = "Cricital chance: " + str(int(PlayerStatus.CriticalHitChance)) + "%"
+	cirticalChanceLabel.text = "Cricital chance: " + str(int(value)) + "%"
 	
 func on_critic_hit_multiplier_changed(value):
-	criticalMultiplierLabel.text = "Critical multiplier: " + str(int(PlayerStatus.CriticalHitMultiplier)) + "%"
+	criticalMultiplierLabel.text = "Critical multiplier: " + str(int(value)) + "%"
