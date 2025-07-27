@@ -75,7 +75,7 @@ func get_random_perk():
 	if chance < _no_perk_chance:
 		return null
 	
-	chance = randi_range(0, 80)
+	chance = randi_range(0, 90)
 	var _temp_sum = 0
 	for perk in _perk_chances:
 		if chance >= _temp_sum and chance < _temp_sum + _perk_chances[perk]:

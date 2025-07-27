@@ -27,4 +27,4 @@ func on_critic_hit_multiplier_changed(value):
 	criticalMultiplierLabel.text = "Critical multiplier: " + str(int(value)) + "%"
 	
 func on_speed_changed(value):
-	speedLabel.text = "Speed: " + str(int(PlayerStatus.Speed)) + "%"
+	speedLabel.text = "Speed: " + str(int(value)) + "%"

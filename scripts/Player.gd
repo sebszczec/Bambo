@@ -358,12 +358,12 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		return
 		
 	if area.is_in_group("DamageUpPerk"):
-		createFloatingText("Damage +" + str(int(area.DamageUp)) + "%", Color.DEEP_SKY_BLUE,  2)
+		createFloatingText("Damage +" + str(int(area.DamageUp)) + "%", Color.PURPLE,  2)
 		PlayerStatus.increase_damage(area.DamageUp)
 		return
 		
 	if area.is_in_group("CriticChanceUpPerk"):
-		createFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", Color.ORANGE, 2)
+		createFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", Color.DEEP_PINK, 2)
 		PlayerStatus.increase_critic_chance(area.CriticChanceUp)
 		return
 	
@@ -373,7 +373,7 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 		return
 	
 	if area.is_in_group("SpeedUpPerk"):
-		createFloatingText("Speed +" + str(int(area.SpeedUp)) + "%", Color.CHARTREUSE, 2)
+		createFloatingText("Speed +" + str(int(area.SpeedUp)) + "%", Color.DODGER_BLUE, 2)
 		PlayerStatus.increase_speed(area.SpeedUp)
 		return
 	

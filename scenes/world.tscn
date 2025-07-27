@@ -128,7 +128,7 @@ offset_bottom = 1072.0
 offset_left = 1720.0
 offset_top = 472.0
 offset_right = 1912.0
-offset_bottom = 536.0
+offset_bottom = 560.0
 
 [node name="PlayerInfo" parent="GUI/CanvasLayer/PlayerInfoPanel" instance=ExtResource("8_oo54l")]
 
