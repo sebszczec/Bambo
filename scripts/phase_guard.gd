@@ -8,28 +8,62 @@ signal phase_timeout(value : PhaseTimeoutResult)
 
 # PHASE1
 var phase1_delay = 1.0
+var phase1_enemy_ratio = 1
+var phase1_enemy = Enums.ENEMIES.SCOUT
+
+# PHASE2
+var phase2_delay = 1.0
+var phase2_enemy_ratio = 2
+var phase2_enemy = Enums.ENEMIES.SCOUT
+
+# PHASE3
+var phase3_delay = 1.0
+var phase3_enemy_ratio1 = 2
+var phase3_enemy1 = Enums.ENEMIES.SCOUT
+var phase3_enemy_ratio2 = 1
+var phase3_enemy2 = Enums.ENEMIES.GUARD
 
 func _ready() -> void:
+	phase_timer.connect("timeout", on_phase_timer_timeout)
+	add_child(phase_timer)
 	pass
 	
 func start_phase(phase : Enums.PHASE):
+	stop_phase(current_phase)
+	current_phase = phase
 	if phase == Enums.PHASE.Phase1:
-		current_phase = phase
 		phase_timer.wait_time = phase1_delay
 		phase_timer.one_shot = false
-		phase_timer.connect("timeout", on_phase_timer_timeout)
-		add_child(phase_timer)
 		phase_timer.start()
 	elif phase == Enums.PHASE.Phase2:
-		pass
+		phase_timer.wait_time = phase2_delay
+		phase_timer.one_shot = false
+		phase_timer.start()
 	elif phase == Enums.PHASE.Phase3:
-		pass
+		phase_timer.wait_time = phase3_delay
+		phase_timer.one_shot = false
+		phase_timer.start()
+
+func stop_phase(_phase : Enums.PHASE):
+	phase_timer.stop()
 
 func on_phase_timer_timeout():
 	if current_phase == Enums.PHASE.Phase1:
-		var result = PhaseTimeoutResult.new()
-		result.enemy = Enums.ENEMIES.SCOUT
-		result.count = 1
+		var result = [PhaseTimeoutResult.new()]
+		result[0].enemy = phase1_enemy
+		result[0].count = phase1_enemy_ratio
+		phase_timeout.emit(result)
+	elif current_phase == Enums.PHASE.Phase2:
+		var result = [PhaseTimeoutResult.new()]
+		result[0].enemy = phase2_enemy
+		result[0].count = phase2_enemy_ratio
+		phase_timeout.emit(result)
+	elif current_phase == Enums.PHASE.Phase3:
+		var result = [PhaseTimeoutResult.new(), PhaseTimeoutResult.new()]
+		result[0].enemy = phase3_enemy1
+		result[0].count = phase3_enemy_ratio1
+		result[1].enemy = phase3_enemy2
+		result[1].count = phase3_enemy_ratio2
 		phase_timeout.emit(result)
 
 class PhaseTimeoutResult:

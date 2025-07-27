@@ -35,6 +35,9 @@ func _ready() -> void:
 	informationBox = world.find_child("InformationBox")
 	activePerk = world.find_child("ActivePerk")
 	
+	score.connect("reached_1000_points", _on_reached_1000_points)
+	score.connect("reached_2000_points", _on_reached_2000_points)
+	
 	player.connect("update_life", _on_player_damage_taken)
 	player.connect("update_afterburner", _on_player_update_afterburner)
 	player.connect("update_shield", _on_player_update_shield)
@@ -84,20 +87,29 @@ func change_weapon(id: Enums.WEAPONS):
 	PlayerStatus.CurrentWeapon = id
 	weapon = weapons[PlayerStatus.CurrentWeapon]
 
+func _on_reached_1000_points():
+	print("PHASE 2")
+	phase_guard.start_phase(Enums.PHASE.Phase2)
+	
+func _on_reached_2000_points():
+	print("PHASE 3")
+	phase_guard.start_phase(Enums.PHASE.Phase3)
+
 func _on_phase_timeout(value):
-	for i in range(value.count):
-		var enemy = LevelSettings.get_enemy(value.enemy)
-		active_enemies[enemy.get_instance_id()] = enemy
-		enemy.connect("killed", _on_enemy_killed)
-		
-		enemy.position.x = get_new_enemy_position(player.position.x, LevelSettings.MinX, LevelSettings.MaxX)
-		enemy.position.y = get_new_enemy_position(player.position.y, LevelSettings.MinY, LevelSettings.MaxY)
-		
-		world.add_child(enemy)
-		enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
-		
-		enemy_count = enemy_count + 1
-		informationBox.increaseEnemyCount()
+	for step in value:
+		for i in range(step.count):
+			var enemy = LevelSettings.get_enemy(step.enemy)
+			active_enemies[enemy.get_instance_id()] = enemy
+			enemy.connect("killed", _on_enemy_killed)
+			
+			enemy.position.x = get_new_enemy_position(player.position.x, LevelSettings.MinX, LevelSettings.MaxX)
+			enemy.position.y = get_new_enemy_position(player.position.y, LevelSettings.MinY, LevelSettings.MaxY)
+			
+			world.add_child(enemy)
+			enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
+			
+			enemy_count = enemy_count + 1
+			informationBox.increaseEnemyCount()
 
 func _on_active_perk_timeout(type: Enums.WEAPONS):
 	PlayerStatus.CurrentWeapon = type

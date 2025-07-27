@@ -3,13 +3,23 @@ extends Node2D
 @onready var label = $Label
 var score = 0
 
-# Called when the node enters the scene tree for the first time.
+signal reached_1000_points
+signal reached_2000_points
+
 func _ready() -> void:
-	pass # Replace with function body.
+	pass 
 
 func add_score(value):
+	if score < 1000 and score + value >= 1000:
+		reached_1000_points.emit()
+	elif score < 2000 and score + value >= 2000:
+		reached_2000_points.emit()
+		
 	score += value
 	set_value(score)
+
+func get_score():
+	return score
 
 func set_value(value : int):
 	var text = ""
