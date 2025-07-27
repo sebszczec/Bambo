@@ -141,12 +141,12 @@ func calculateAcceleration():
 			frame_id = mainBody.get_sprite_frames().get_frame_count("accelerate") - 1 - frame_id
 			mainBody.play("accelerate")
 			mainBody.set_frame(frame_id)
-			calculatedMaxVelocity = PlayerMaxVelocity * TurboFactor
+			calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity * TurboFactor
 			calculatedAcceleration = PlayerAcceleration * TurboFactor
 			playerRotationDirection = -2
 			burn = true
 	else:
-		calculatedMaxVelocity = PlayerMaxVelocity
+		calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
 		
@@ -155,7 +155,7 @@ func calculateAcceleration():
 		frame_id = mainBody.get_sprite_frames().get_frame_count("spin") - 1 - frame_id
 		mainBody.play("spin")
 		mainBody.set_frame(frame_id)
-		calculatedMaxVelocity = PlayerMaxVelocity
+		calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity
 		calculatedAcceleration = PlayerAcceleration
 		playerRotationDirection = 1
 		burn = false
@@ -370,6 +370,11 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 	if area.is_in_group("CriticHitMultiplierPerk"):
 		createFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", Color.CHARTREUSE, 2)
 		PlayerStatus.increase_critic_hit_multiplier(area.CriticHitMultiplier)
+		return
+	
+	if area.is_in_group("SpeedUpPerk"):
+		createFloatingText("Speed +" + str(int(area.SpeedUp)) + "%", Color.CHARTREUSE, 2)
+		PlayerStatus.increase_speed(area.SpeedUp)
 		return
 	
 

@@ -21,6 +21,7 @@ var _perk_chances : Dictionary = {
 	Enums.PERKS.DAMAGE_UP : 10,
 	Enums.PERKS.CRITIC_CHANCE_UP : 10,
 	Enums.PERKS.CRITIC_HIT_MULTIPLIER : 10,
+	Enums.PERKS.SPEED_UP : 10,
 	Enums.PERKS.BIG_GUN : 10,
 	Enums.PERKS.WAVE : 10,
 	Enums.PERKS.HOMING : 10,
@@ -34,6 +35,7 @@ var _perk_scenes : Dictionary = {
 	Enums.PERKS.DAMAGE_UP : preload("res://scenes/damage_up_perk.tscn"),
 	Enums.PERKS.CRITIC_CHANCE_UP : preload("res://scenes/critic_chance_up_perk.tscn"),
 	Enums.PERKS.CRITIC_HIT_MULTIPLIER : preload("res://scenes/critic_hit_multiplier_perk.tscn"),
+	Enums.PERKS.SPEED_UP : preload("res://scenes/speed_up_perk.tscn"),
  	Enums.PERKS.BIG_GUN : preload("res://scenes/big_gun_perk.tscn"),
  	Enums.PERKS.WAVE : preload("res://scenes/wave_perk.tscn"),
  	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn")
@@ -59,7 +61,7 @@ func _ready() -> void:
 	for chance in _perk_chances.values():
 		sum += chance
 	
-	assert(sum == 80)
+	assert(sum == 90)
 
 func get_points(enemy: String) -> int:
 	return _points_dict[enemy]

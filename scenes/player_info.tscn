@@ -24,3 +24,10 @@ offset_top = 40.0
 offset_right = 173.0
 offset_bottom = 63.0
 text = "Critical multiplier: 0%"
+
+[node name="SpeedLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 60.0
+offset_right = 174.0
+offset_bottom = 83.0
+text = "Speed: 100%"
