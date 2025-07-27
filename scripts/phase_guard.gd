@@ -23,6 +23,11 @@ var phase3_enemy1 = Enums.ENEMIES.SCOUT
 var phase3_enemy_ratio2 = 1
 var phase3_enemy2 = Enums.ENEMIES.GUARD
 
+# PHASE4
+var phase4_delay = 4.0
+var phase4_enemy_ratio = 1
+var phase4_enemy = Enums.ENEMIES.HUNTER
+
 func _ready() -> void:
 	phase_timer.connect("timeout", on_phase_timer_timeout)
 	add_child(phase_timer)
@@ -41,6 +46,10 @@ func start_phase(phase : Enums.PHASE):
 		phase_timer.start()
 	elif phase == Enums.PHASE.Phase3:
 		phase_timer.wait_time = phase3_delay
+		phase_timer.one_shot = false
+		phase_timer.start()
+	elif phase == Enums.PHASE.Phase4:
+		phase_timer.wait_time = phase4_delay
 		phase_timer.one_shot = false
 		phase_timer.start()
 
@@ -64,6 +73,11 @@ func on_phase_timer_timeout():
 		result[0].count = phase3_enemy_ratio1
 		result[1].enemy = phase3_enemy2
 		result[1].count = phase3_enemy_ratio2
+		phase_timeout.emit(result)
+	elif current_phase == Enums.PHASE.Phase4:
+		var result = [PhaseTimeoutResult.new()]
+		result[0].enemy = phase4_enemy
+		result[0].count = phase4_enemy_ratio
 		phase_timeout.emit(result)
 
 class PhaseTimeoutResult:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=30 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -13,13 +13,17 @@
 [ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/pause_menu.tscn" id="7_cxjtb"]
 [ext_resource type="PackedScene" uid="uid://bqe5io5j7p56k" path="res://scenes/player_info.tscn" id="8_oo54l"]
 [ext_resource type="Texture2D" uid="uid://cwvljcbccx4bo" path="res://resources/background/space_bg.jpg" id="10_o8fc1"]
+[ext_resource type="AudioStream" uid="uid://cq10n6jcyrn64" path="res://resources/sfx/speech/phase1_speech.mp3" id="11_ctatt"]
 [ext_resource type="Script" uid="uid://cm2qnkjn3qfsr" path="res://scripts/phase_guard.gd" id="11_kpybi"]
 [ext_resource type="Texture2D" uid="uid://cttmsh76aflb3" path="res://resources/kenney_planets/Planets/planet00.png" id="11_xo05s"]
 [ext_resource type="Texture2D" uid="uid://cea5o47hm7hhf" path="res://resources/kenney_planets/Planets/planet02.png" id="12_dss4m"]
 [ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/game_over_menu.tscn" id="12_glc5x"]
+[ext_resource type="AudioStream" uid="uid://bl807my34byur" path="res://resources/sfx/speech/phase2_speech.mp3" id="12_munwf"]
 [ext_resource type="Texture2D" uid="uid://d4b548tu05a4v" path="res://resources/kenney_planets/Planets/planet09.png" id="13_7t5mc"]
+[ext_resource type="AudioStream" uid="uid://denud1kbhiex6" path="res://resources/sfx/speech/phase3_speech.mp3" id="13_ts3gi"]
 [ext_resource type="AudioStream" uid="uid://dnug1msrm6e4m" path="res://resources/music/awake10_megaWall.mp3" id="14_o8fc1"]
 [ext_resource type="Texture2D" uid="uid://b3wb5qpkbs3i5" path="res://resources/kenney_planets/Planets/planet04.png" id="14_pm21f"]
+[ext_resource type="AudioStream" uid="uid://b65hk36m4ht0v" path="res://resources/sfx/speech/phase4_speech.mp3" id="14_ts3gi"]
 [ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/kenney_planets/Planets/planet05.png" id="15_2lf6f"]
 [ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/kenney_planets/Planets/planet07.png" id="16_2lf6f"]
 [ext_resource type="PackedScene" uid="uid://cd28o5h6cf3l8" path="res://scenes/lightning.tscn" id="21_7iits"]
@@ -159,6 +163,22 @@ text = "Meteors: 0"
 
 [node name="GameLogic" type="Node" parent="."]
 script = ExtResource("1_ib5o5")
+
+[node name="Phase1Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("11_ctatt")
+volume_db = 6.0
+
+[node name="Phase2Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("12_munwf")
+volume_db = 6.0
+
+[node name="Phase3Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("13_ts3gi")
+volume_db = 6.0
+
+[node name="Phase4Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("14_ts3gi")
+volume_db = 6.0
 
 [node name="PhaseGuard" type="Node" parent="GameLogic"]
 script = ExtResource("11_kpybi")

@@ -176,13 +176,17 @@ class BigBullet extends Weapon:
 
 class SmallBulletWave extends SmallBullet:
 	var size = 30
+	var modulate_color : Color = Color.WHITE
 	
 	func setup():
 		super.setup()
 		shooting_delay = 1
 		speed = 5
 		type = Enums.WEAPONS.SMALL_WAVE
-		
+	
+	func set_modulate_color(color : Color):
+		modulate_color = color
+	
 	func shoot(owner: Node, start_position: Vector2, _direction: Vector2):
 		if canShoot:
 			audio.play()
@@ -200,6 +204,7 @@ class SmallBulletWave extends SmallBullet:
 				bullet.velocity = radial_v
 				bullet.connect("freeing", _on_bullet_freeing)
 				owner.add_child(bullet)
+				bullet.set_modulate_color(modulate_color)
 			
 			timer.start()	
 			updateBulletNumber(size)

@@ -126,7 +126,11 @@ func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Bullet"):
+	if area.is_in_group("Player"):
+		if !isDead:
+			isDead = true
+			explode()
+	elif area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
 		if !bullet.is_damaging_enemy():
 			return

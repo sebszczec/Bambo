@@ -28,6 +28,9 @@ func _physics_process(_delta):
 	velocity = velocity.normalized() * Speed
 	var _collision = move_and_collide(velocity)
 
+func set_modulate_color(color : Color):
+	bolid.self_modulate = color
+
 func dispose():
 	if is_queued_for_deletion():
 		return

@@ -19,6 +19,10 @@ var active_enemies : Dictionary = {}
 @onready var enemy_spawn_timer = $EnemySpawnTimer
 @onready var meteor_spawn_timer = $MeteorSpawnTimer
 @onready var shootingTimer = $ShootingTimer
+@onready var phase1_sound = $Phase1Sound
+@onready var phase2_sound = $Phase2Sound
+@onready var phase3_sound = $Phase3Sound
+@onready var phase4_sound = $Phase4Sound
 
 func _ready() -> void:
 	world = get_parent()
@@ -37,6 +41,7 @@ func _ready() -> void:
 	
 	score.connect("reached_1000_points", _on_reached_1000_points)
 	score.connect("reached_2000_points", _on_reached_2000_points)
+	score.connect("reached_4000_points", _on_reached_4000_points)
 	
 	player.connect("update_life", _on_player_damage_taken)
 	player.connect("update_afterburner", _on_player_update_afterburner)
@@ -51,6 +56,8 @@ func _ready() -> void:
 	#enemy_spawn_timer.start()
 	phase_guard.connect("phase_timeout", _on_phase_timeout)
 	phase_guard.start_phase(Enums.PHASE.Phase1)
+	phase1_sound.position = player.position
+	phase1_sound.play()
 	
 	meteor_spawn_timer.start()
 	
@@ -74,7 +81,6 @@ func init_weapons():
 		w.connect("bulletNumerChange", _on_weapon_bullet_number_change)
 
 
-
 func _physics_process(_delta):
 	if Input.is_action_pressed("ui_shoot"):
 		weapon.shoot(self, player.getSatelitePosition(), player.getShootingVector())
@@ -88,12 +94,19 @@ func change_weapon(id: Enums.WEAPONS):
 	weapon = weapons[PlayerStatus.CurrentWeapon]
 
 func _on_reached_1000_points():
-	print("PHASE 2")
 	phase_guard.start_phase(Enums.PHASE.Phase2)
+	phase2_sound.position = player.position
+	phase2_sound.play()
 	
 func _on_reached_2000_points():
-	print("PHASE 3")
 	phase_guard.start_phase(Enums.PHASE.Phase3)
+	phase3_sound.position = player.position
+	phase3_sound.play()
+	
+func _on_reached_4000_points():
+	phase_guard.start_phase(Enums.PHASE.Phase4)
+	phase4_sound.position = player.position
+	phase4_sound.play()
 
 func _on_phase_timeout(value):
 	for step in value:
@@ -148,7 +161,7 @@ func get_new_enemy_position(player_position : float, min_value: float, max_value
 	if randi_range(0, 1) == 1:
 		left_or_right = 1
 		
-	var result = player_position + randf_range(200, 250) * left_or_right
+	var result = player_position + randf_range(300, 350) * left_or_right
 	
 	if result < min_value  or result > max_value:
 		result = get_new_enemy_position(player_position, min_value, max_value)

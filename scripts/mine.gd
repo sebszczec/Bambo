@@ -31,6 +31,7 @@ func _ready() -> void:
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, true)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)
+	_weapon.set_modulate_color(Color.RED)
 	
 	wait_timer.wait_time = TimeToDetonate
 	wait_timer.start()
