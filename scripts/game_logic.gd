@@ -23,6 +23,7 @@ var active_enemies : Dictionary = {}
 @onready var phase2_sound = $Phase2Sound
 @onready var phase3_sound = $Phase3Sound
 @onready var phase4_sound = $Phase4Sound
+@onready var phase5_sound = $Phase5Sound
 
 func _ready() -> void:
 	world = get_parent()
@@ -42,6 +43,7 @@ func _ready() -> void:
 	score.connect("reached_1000_points", _on_reached_1000_points)
 	score.connect("reached_2000_points", _on_reached_2000_points)
 	score.connect("reached_4000_points", _on_reached_4000_points)
+	score.connect("reached_7000_points", _on_reached_7000_points)
 	
 	player.connect("update_life", _on_player_damage_taken)
 	player.connect("update_afterburner", _on_player_update_afterburner)
@@ -107,6 +109,11 @@ func _on_reached_4000_points():
 	phase_guard.start_phase(Enums.PHASE.Phase4)
 	phase4_sound.position = player.position
 	phase4_sound.play()
+	
+func _on_reached_7000_points():
+	phase_guard.start_phase(Enums.PHASE.Phase5)
+	phase5_sound.position = player.position
+	phase5_sound.play()
 
 func _on_phase_timeout(value):
 	for step in value:

@@ -6,6 +6,7 @@ var score = 0
 signal reached_1000_points
 signal reached_2000_points
 signal reached_4000_points
+signal reached_7000_points
 
 func _ready() -> void:
 	pass 
@@ -17,6 +18,8 @@ func add_score(value):
 		reached_2000_points.emit()
 	elif score < 4000 and score + value >= 4000:
 		reached_4000_points.emit()
+	elif score < 7000 and score + value >= 7000:
+		reached_7000_points.emit()
 	
 	score += value
 	set_value(score)
