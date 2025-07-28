@@ -10,11 +10,9 @@ class_name Bullet
 @onready var lifeTimer = $LifeTimer
 @onready var bolid = $BulletEffect
 
-
 var velocity = Vector2(0, 0)
 
 signal freeing
-
 
 func _ready():
 	lifeTimer.connect("timeout", _on_life_timer_timeout)
@@ -24,7 +22,7 @@ func _ready():
 
 
 func _physics_process(_delta):
-	bolid.rotation = PI / 2 + atan2(velocity.y, velocity.x)
+	rotation = PI / 2 + atan2(velocity.y, velocity.x)
 	velocity = velocity.normalized() * Speed
 	var _collision = move_and_collide(velocity)
 

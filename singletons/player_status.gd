@@ -35,9 +35,9 @@ func increase_damage(value : float):
 	BaseDamage = BaseDamage + value
 	base_damage_changed.emit(BaseDamage)
 
-func get_damage():
+func get_damage_from_weapon(weapon : Enums.WEAPONS):
 	var damage = Damage.new()
-	damage.Value = 0.01 * BaseDamage * DamageValues.get_damage(CurrentWeapon)
+	damage.Value = 0.01 * BaseDamage * DamageValues.get_damage(weapon)
 	damage.Critical = false
 	
 	if randf_range(0.0, 100.0) <= CriticalHitChance:
@@ -45,6 +45,9 @@ func get_damage():
 		damage.Critical = true
 	
 	return damage
+
+func get_damage():
+	return get_damage_from_weapon(CurrentWeapon)
 
 class Damage:
 	var Value : int

@@ -25,6 +25,7 @@ var _perk_chances : Dictionary = {
 	Enums.PERKS.BIG_GUN : 10,
 	Enums.PERKS.WAVE : 10,
 	Enums.PERKS.HOMING : 10,
+	Enums.PERKS.BOMB : 100
 }
 
 var _meteor_mine_chance = 50
@@ -38,7 +39,8 @@ var _perk_scenes : Dictionary = {
 	Enums.PERKS.SPEED_UP : preload("res://scenes/speed_up_perk.tscn"),
  	Enums.PERKS.BIG_GUN : preload("res://scenes/big_gun_perk.tscn"),
  	Enums.PERKS.WAVE : preload("res://scenes/wave_perk.tscn"),
- 	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn")
+ 	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn"),
+	Enums.PERKS.BOMB : preload("res://scenes/bomb_perk.tscn")
 }
 
 var _meteor_scenes = [
@@ -61,7 +63,7 @@ func _ready() -> void:
 	for chance in _perk_chances.values():
 		sum += chance
 	
-	assert(sum == 90)
+	assert(sum == 190)
 
 func get_points(enemy: String) -> int:
 	return _points_dict[enemy]
@@ -75,7 +77,7 @@ func get_random_perk():
 	if chance < _no_perk_chance:
 		return null
 	
-	chance = randi_range(0, 90)
+	chance = randi_range(0, 190)
 	var _temp_sum = 0
 	for perk in _perk_chances:
 		if chance >= _temp_sum and chance < _temp_sum + _perk_chances[perk]:

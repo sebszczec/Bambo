@@ -66,19 +66,15 @@ func _ready() -> void:
 
 func init_weapons():
 	weapons[Enums.WEAPONS.SMALL] = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, false, true)
-	weapons[Enums.WEAPONS.SMALL].set_owner(self)
 	weapons[Enums.WEAPONS.BIG] = WeaponFactory.get_weapon(Enums.WEAPONS.BIG, false, true)
-	weapons[Enums.WEAPONS.BIG].set_owner(self)
 	weapons[Enums.WEAPONS.SMALL_WAVE] = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, false, true)
-	weapons[Enums.WEAPONS.SMALL_WAVE].set_owner(self)
 	weapons[Enums.WEAPONS.SMALL_HOMING] = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_HOMING, false, true)
-	weapons[Enums.WEAPONS.SMALL_HOMING].set_owner(self)
 	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY, false, true)
-	weapons[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY].set_owner(self)
 	weapons[Enums.WEAPONS.FIREWORKS] = WeaponFactory.get_weapon(Enums.WEAPONS.FIREWORKS, false, true)
-	weapons[Enums.WEAPONS.FIREWORKS].set_owner(self)
+	weapons[Enums.WEAPONS.BOMB] = WeaponFactory.get_weapon(Enums.WEAPONS.BOMB, false, true)
 	
 	for w in weapons.values():
+		w.set_owner(self)
 		w.register_internal_nodes(player)
 		w.connect("bulletNumerChange", _on_weapon_bullet_number_change)
 
@@ -94,6 +90,8 @@ func change_weapon(id: Enums.WEAPONS):
 	
 	PlayerStatus.CurrentWeapon = id
 	weapon = weapons[PlayerStatus.CurrentWeapon]
+	activePerk.changeState(PlayerStatus.CurrentWeapon)
+	weapon.shoot_on_start(self, player.getSatelitePosition(), player.getShootingVector())
 
 func _on_reached_1000_points():
 	phase_guard.start_phase(Enums.PHASE.Phase2)
@@ -132,13 +130,10 @@ func _on_phase_timeout(value):
 			informationBox.increaseEnemyCount()
 
 func _on_active_perk_timeout(type: Enums.WEAPONS):
-	PlayerStatus.CurrentWeapon = type
-	weapon = weapons[PlayerStatus.CurrentWeapon]
+	change_weapon(type)
 
 func _on_weapon_perk_taken(type: Enums.WEAPONS):
-	PlayerStatus.CurrentWeapon = type
-	weapon = weapons[PlayerStatus.CurrentWeapon]
-	activePerk.changeState(PlayerStatus.CurrentWeapon)
+	change_weapon(type)
 
 func _on_weapon_bullet_number_change(value):
 	informationBox.setBulletCount(value)

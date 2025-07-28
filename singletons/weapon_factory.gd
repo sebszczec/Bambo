@@ -25,6 +25,8 @@ func get_weapon(weapon: Enums.WEAPONS, damaging_player: bool, damaging_enemy: bo
 		result = SmallHomingBulletWithDelay.new()
 	elif weapon == Enums.WEAPONS.FIREWORKS:
 		result = Fireworks.new()
+	elif weapon == Enums.WEAPONS.BOMB:
+		result = Bomb.new()
 	else:
 		result = SmallBullet.new()
 		
@@ -84,6 +86,9 @@ class Weapon:
 		owner.add_child(audio)
 		owner.add_child(explosion_audio)
 	
+	func shoot_on_start(_owner: Node, _start_position: Vector2, _direction: Vector2):
+		pass
+	
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
 			audio.play()
@@ -109,6 +114,27 @@ class Weapon:
 		bullet_number += diff
 		bulletNumerChange.emit(bullet_number)
 
+class Bomb extends Weapon:
+	func setup():
+		shooting_delay = 0.01
+		bullet_scene = preload("res://scenes/bomb.tscn")
+		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		type = Enums.WEAPONS.BOMB
+		
+	func shoot(_owner: Node, _start_position: Vector2, _direction: Vector2):
+		pass
+	
+	func shoot_on_start(owner: Node, start_position: Vector2, _direction: Vector2):
+		audio.play()
+		var bullet = bullet_scene.instantiate()
+		bullet.Type = type
+		bullet.set_collision_mask(collision_mask)
+		bullet.position = start_position
+		bullet.connect("freeing", _on_bullet_freeing)
+		owner.call_deferred("add_child", bullet)
+		timer.start()
+			
+		updateBulletNumber(1)
 
 class SmallBullet extends Weapon:
 	pass

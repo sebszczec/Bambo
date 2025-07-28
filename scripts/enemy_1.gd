@@ -139,7 +139,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		add_child(hit_effect)
 		hit_effect.emitting = true
 		
-		if !isDead and handleDamage(PlayerStatus.get_damage()) == false:
+		if !isDead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
 			isDead = true
 			explode()
 
