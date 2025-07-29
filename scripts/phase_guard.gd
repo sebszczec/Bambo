@@ -58,7 +58,7 @@ func start_phase(phase : Enums.PHASE):
 		phase_timer.one_shot = false
 		phase_timer.start()
 	elif phase == Enums.PHASE.Phase4:
-		phase_timer.wait_time = phase4_delay
+		phase_timer.wait_time = phase5_delay
 		phase_timer.one_shot = false
 		phase_timer.start()
 	elif phase == Enums.PHASE.Phase5:
@@ -88,9 +88,13 @@ func on_phase_timer_timeout():
 		result[1].count = phase3_enemy_ratio2
 		phase_timeout.emit(result)
 	elif current_phase == Enums.PHASE.Phase4:
-		var result = [PhaseTimeoutResult.new()]
-		result[0].enemy = phase4_enemy
-		result[0].count = phase4_enemy_ratio
+		var result = [PhaseTimeoutResult.new(), PhaseTimeoutResult.new(), PhaseTimeoutResult.new()]
+		result[0].enemy = phase5_enemy1
+		result[0].count = phase5_enemy_ratio1
+		result[1].enemy = phase5_enemy2
+		result[1].count = phase5_enemy_ratio2
+		result[2].enemy = phase5_enemy3
+		result[2].count = phase5_enemy_ratio3
 		phase_timeout.emit(result)
 	elif current_phase == Enums.PHASE.Phase5:
 		var result = [PhaseTimeoutResult.new(), PhaseTimeoutResult.new(), PhaseTimeoutResult.new()]

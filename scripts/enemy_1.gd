@@ -167,6 +167,7 @@ func dispose():
 func handleDamage(damage):
 	if showDamage:
 		var damageText = floatingTextScene.instantiate()
+		damageText.RoundNumber = true
 		if damage.Critical:
 			damageText.set_color(Color.YELLOW)
 		else:

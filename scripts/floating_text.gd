@@ -1,6 +1,7 @@
 extends Node2D
 
 @export var Amount : String = "0"
+@export var RoundNumber : bool = false
 var velocity = Vector2()
 var color: Color
 
@@ -8,7 +9,11 @@ var color: Color
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	textValue.text = str(Amount)
+	if RoundNumber == true and int(Amount) > 1000:
+		textValue.text = str(int(int(Amount) / 1000.0)) + "k"
+		pass
+	else:
+		textValue.text = str(Amount)
 	textValue.add_theme_color_override("font_color", color)
 	
 	velocity.x = randf_range(-50, 50)
