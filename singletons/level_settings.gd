@@ -25,7 +25,7 @@ var _perk_chances : Dictionary = {
 	Enums.PERKS.BIG_GUN : 10,
 	Enums.PERKS.WAVE : 10,
 	Enums.PERKS.HOMING : 10,
-	Enums.PERKS.BOMB : 100
+	Enums.PERKS.BOMB : 5
 }
 
 var _meteor_mine_chance = 50
@@ -63,7 +63,7 @@ func _ready() -> void:
 	for chance in _perk_chances.values():
 		sum += chance
 	
-	assert(sum == 190)
+	assert(sum == 95)
 
 func get_points(enemy: String) -> int:
 	return _points_dict[enemy]
@@ -77,7 +77,7 @@ func get_random_perk():
 	if chance < _no_perk_chance:
 		return null
 	
-	chance = randi_range(0, 190)
+	chance = randi_range(0, 95)
 	var _temp_sum = 0
 	for perk in _perk_chances:
 		if chance >= _temp_sum and chance < _temp_sum + _perk_chances[perk]:
