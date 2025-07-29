@@ -118,14 +118,14 @@ class Bomb extends Weapon:
 	func setup():
 		shooting_delay = 0.01
 		bullet_scene = preload("res://scenes/bomb.tscn")
-		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		audio.stream = load("res://resources/sfx/seismic_charge.mp3")
 		type = Enums.WEAPONS.BOMB
 		
 	func shoot(_owner: Node, _start_position: Vector2, _direction: Vector2):
 		pass
 	
 	func shoot_on_start(owner: Node, start_position: Vector2, _direction: Vector2):
-		audio.play()
+		audio.play(1.3)
 		var bullet = bullet_scene.instantiate()
 		bullet.Type = type
 		bullet.set_collision_mask(collision_mask)
