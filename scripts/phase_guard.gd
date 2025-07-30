@@ -71,10 +71,11 @@ func stop_phase(_phase : Enums.PHASE):
 
 func on_phase_timer_timeout():
 	if current_phase == Enums.PHASE.Phase1:
-		var result = [PhaseTimeoutResult.new()]
-		result[0].enemy = phase1_enemy
-		result[0].count = phase1_enemy_ratio
-		phase_timeout.emit(result)
+		pass
+		#var result = [PhaseTimeoutResult.new()]
+		#result[0].enemy = phase1_enemy
+		#result[0].count = phase1_enemy_ratio
+		#phase_timeout.emit(result)
 	elif current_phase == Enums.PHASE.Phase2:
 		var result = [PhaseTimeoutResult.new()]
 		result[0].enemy = phase2_enemy
