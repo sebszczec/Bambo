@@ -1,7 +1,8 @@
-[gd_scene load_steps=66 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=67 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="Texture2D" uid="uid://cq06iq8ajhvju" path="res://resources/boss/boss_000.png" id="2_b55u5"]
+[ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="2_uc18t"]
 [ext_resource type="Texture2D" uid="uid://bdcdr0bob3q6g" path="res://resources/boss/boss_001.png" id="3_uc18t"]
 [ext_resource type="Texture2D" uid="uid://v040brvi3cb8" path="res://resources/boss/boss_002.png" id="4_0i4fg"]
 [ext_resource type="Texture2D" uid="uid://dhfxn3w1e8jrv" path="res://resources/boss/boss_003.png" id="5_6vfmo"]
@@ -63,6 +64,10 @@
 [ext_resource type="Texture2D" uid="uid://bcu1h5f7qtt8v" path="res://resources/boss/boss_059.png" id="61_f5b45"]
 [ext_resource type="Texture2D" uid="uid://jdfsprgo2s7x" path="res://resources/boss/boss_060.png" id="62_4wqk0"]
 [ext_resource type="Texture2D" uid="uid://cosepmilqtfyf" path="res://resources/boss/boss_061.png" id="63_d5ofm"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gny1c"]
+radius = 136.0
+height = 416.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuav7"]
 animations = [{
@@ -258,20 +263,26 @@ animations = [{
 "speed": 60.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gny1c"]
-radius = 136.0
-height = 416.0
-
 [node name="Boss" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 11
 script = ExtResource("1_i78ob")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_gny1c")
+
+[node name="Ship" type="Node2D" parent="."]
+
+[node name="EngineBurst" parent="Ship" instance=ExtResource("2_uc18t")]
+position = Vector2(-23, -150)
+
+[node name="EngineBurst2" parent="Ship" instance=ExtResource("2_uc18t")]
+position = Vector2(20, -149)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Ship"]
 scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_tuav7")
 animation = &"Idle"
 frame = 14
 frame_progress = 0.380449
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_gny1c")
