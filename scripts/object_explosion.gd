@@ -21,9 +21,9 @@ var _velocity : Array[Vector2] = []
 var _rotation : Array[float] = []
 var _transparency : Array[float] = []
 var _friction = 0.05
-var _rad_fricton = 0.00
-var _alpha_friciton = 0.005
-var _speed = 500
+var _rad_fricton = 2
+var _alpha_friciton = 1
+var _speed = 5
 
 var _explode = false
 
@@ -42,7 +42,7 @@ func init():
 		add_child(tmp)
 		var v = Vector2(randf_range(-1, 1), randf_range(-1, 1))
 		v = v.normalized()
-		v = v * _speed
+		v = 10.0 * v * _speed
 		_velocity.append(v)
 		var r = randf_range(-PI, PI)
 		_rotation.append(r)
@@ -64,10 +64,10 @@ func _process(delta: float) -> void:
 			_velocity[i] = _velocity[i].move_toward(Vector2(0, 0), _friction)
 			_obj[i].position += _velocity[i] * delta
 			
-			_rotation[i] = move_toward(_rotation[i], 0, _rad_fricton)
+			_rotation[i] = move_toward(0, _rotation[i], _rad_fricton * delta)
 			_obj[i].rotate(_rotation[i])
 			
-			_transparency[i] = move_toward(_transparency[i], 0, _alpha_friciton)
+			_transparency[i] = move_toward(_transparency[i], 0, _alpha_friciton * delta)
 			_obj[i].modulate.a = _transparency[i]
 	else:
 		return

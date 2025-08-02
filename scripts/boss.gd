@@ -3,7 +3,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
-@export var Life = 5000
+@export var Life = 200
 @export var Damage = 100
 @export var IsDamageOverTime = false
 @export var MoveSpeed = 100
@@ -89,6 +89,8 @@ func explode():
 	mainBody.visible = false
 	explosion.position = mainBody.position
 	explosion.SpriteTexture = mainBody.get_sprite_frames().get_frame_texture(mainBody.animation, mainBody.get_frame())
+	explosion.scale = mainBody.scale
+	explosion.rotation = ship.rotation
 	explosion.init()
 	explosion.visible = true
 	explosion.explode()
