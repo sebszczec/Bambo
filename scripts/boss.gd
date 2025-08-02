@@ -3,7 +3,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
-@export var Life = 5000
+@export var Life = 200
 @export var Damage = 100
 @export var IsDamageOverTime = false
 @export var MoveSpeed = 100
@@ -14,6 +14,9 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var ship = $Ship
 @onready var sprite = $Ship/AnimatedSprite2D
 @onready var lifeBar = $LifeBar
+@onready var audio = $AudioStreamPlayer2D
+@onready var collisionShape = $CollisionShape2D
+@onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
 
 var _player = null
 var _theta = 0.0
@@ -21,6 +24,9 @@ var _halfPI : float = PI / 2
 var _speed = Vector2(0, 0)
 var _is_dead = false
 var _show_damage = true
+var _deathTimer = Timer.new()
+
+signal killed
 
 func _ready() -> void:
 	var visualSettings = ConfigHandler.load_visuals()
@@ -29,6 +35,11 @@ func _ready() -> void:
 	lifeBar.setColor(Color.GREEN)
 	
 	_player = get_node("/root/World/Player")
+	
+	_deathTimer.one_shot = true
+	_deathTimer.wait_time = 2
+	_deathTimer.connect("timeout", _on_death_timer_timeout)
+	add_child(_deathTimer)
 	
 	sprite.play("Idle")
 
@@ -44,6 +55,12 @@ func _physics_process(delta: float) -> void:
 
 	move_and_collide(velocity)
 
+func _on_death_timer_timeout():
+	dispose()
+
+func dispose():
+	if !is_queued_for_deletion():
+		queue_free()
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Bullet"):
@@ -59,7 +76,19 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		
 		if !_is_dead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type), bullet.get_global_position()) == false:
 			_is_dead = true
-			# explode()
+			explode()
+
+func explode():
+	audio.play()
+	ship.visible = false
+	collisionShape.set_deferred("disabled", true)
+	hitBoxCollisionShape.set_deferred("disabled", true)
+	lifeBar.visible = false
+	# explosion.visible = true
+	# explosion.rotation = ship.rotation
+	# explosion.explode()
+	_deathTimer.start()
+	killed.emit(get_instance_id())
 
 func handleDamage(damage, label_position : Vector2):
 	if _show_damage:

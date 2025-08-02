@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=70 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_0i4fg"]
@@ -65,6 +65,7 @@
 [ext_resource type="Texture2D" uid="uid://bcu1h5f7qtt8v" path="res://resources/boss/boss_059.png" id="61_f5b45"]
 [ext_resource type="Texture2D" uid="uid://jdfsprgo2s7x" path="res://resources/boss/boss_060.png" id="62_4wqk0"]
 [ext_resource type="Texture2D" uid="uid://cosepmilqtfyf" path="res://resources/boss/boss_061.png" id="63_d5ofm"]
+[ext_resource type="AudioStream" uid="uid://bjvas00tfexnf" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="66_0i4fg"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gny1c"]
 radius = 119.0
@@ -303,5 +304,9 @@ offset_left = -27.0
 offset_top = -176.0
 offset_right = 25.0
 offset_bottom = -170.0
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("66_0i4fg")
+volume_db = 5.0
 
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
