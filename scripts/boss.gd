@@ -3,7 +3,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
-@export var Life = 200
+@export var Life = 5000
 @export var Damage = 100
 @export var IsDamageOverTime = true
 @export var DamageTickTime = 0.5
@@ -19,6 +19,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionShape = $HitBox/CollisionPolygon2D
 @onready var explosion = $Explosion
+@onready var mark = $Mark
 
 var _player = null
 var _theta = 0.0
@@ -28,7 +29,20 @@ var _is_dead = false
 var _show_damage = true
 var _deathTimer = Timer.new()
 
+
 signal killed
+
+# public
+func get_enemy_name():
+	return "Boss"
+
+# public
+func setup_rotation(angle):
+	ship.rotate(angle)
+	
+# public
+func set_mark():
+	mark.activate(1.0)
 
 func _ready() -> void:
 	var visualSettings = ConfigHandler.load_visuals()

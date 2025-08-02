@@ -11,7 +11,8 @@ var MaxMeteorCount : int = 20
 var _points_dict : Dictionary = {
 	"Enemy 1" : 10,
 	"Enemy 2" : 20,
-	"Enemy 3" : 20
+	"Enemy 3" : 20,
+	"Boss" : 10000,
 }
 
 var _no_perk_chance = 50
@@ -53,7 +54,8 @@ var _meteor_scenes = [
 var _enemy_scenes : Dictionary = {
 	Enums.ENEMIES.SCOUT : preload("res://scenes/enemy_1.tscn"), 
 	Enums.ENEMIES.GUARD : preload("res://scenes/enemy_2.tscn"), 
-	Enums.ENEMIES.HUNTER : preload("res://scenes/enemy_3.tscn")
+	Enums.ENEMIES.HUNTER : preload("res://scenes/enemy_3.tscn"),
+	Enums.ENEMIES.BOSS : preload("res://scenes/boss.tscn"),
 }
 
 var _mine_scene = preload("res://scenes/mine.tscn")

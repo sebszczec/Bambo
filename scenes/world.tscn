@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://3r5m53y3clh3"]
+[gd_scene load_steps=31 format=3 uid="uid://3r5m53y3clh3"]
 
 [ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/player.tscn" id="1_6neka"]
 [ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
@@ -28,7 +28,6 @@
 [ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/kenney_planets/Planets/planet05.png" id="15_2lf6f"]
 [ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/kenney_planets/Planets/planet07.png" id="16_2lf6f"]
 [ext_resource type="PackedScene" uid="uid://cd28o5h6cf3l8" path="res://scenes/lightning.tscn" id="21_7iits"]
-[ext_resource type="PackedScene" uid="uid://cfmu1bpgoioai" path="res://scenes/boss.tscn" id="29_37qwj"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
 vertices = PackedVector2Array(3072, 1875, -1596.01, 1875, -1597.99, -1616, 3072, -1616.99)
@@ -377,9 +376,6 @@ rotation = 1.5708
 [node name="lightning_h8" parent="BarierDown" instance=ExtResource("21_7iits")]
 position = Vector2(3130, -1632)
 rotation = 1.5708
-
-[node name="Boss" parent="." instance=ExtResource("29_37qwj")]
-position = Vector2(-8, 136)
 
 [connection signal="timeout" from="GameLogic/EnemySpawnTimer" to="GameLogic" method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="GameLogic/ShootingTimer" to="GameLogic" method="_on_shooting_timer_timeout"]

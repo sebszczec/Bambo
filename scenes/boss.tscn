@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=71 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_0i4fg"]
@@ -67,6 +67,7 @@
 [ext_resource type="Texture2D" uid="uid://cosepmilqtfyf" path="res://resources/boss/boss_061.png" id="63_d5ofm"]
 [ext_resource type="AudioStream" uid="uid://bjvas00tfexnf" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="66_0i4fg"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="67_6vfmo"]
+[ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="68_r8ox1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gny1c"]
 radius = 80.0
@@ -306,5 +307,7 @@ stream = ExtResource("66_0i4fg")
 volume_db = 5.0
 
 [node name="Explosion" parent="." instance=ExtResource("67_6vfmo")]
+
+[node name="Mark" parent="." instance=ExtResource("68_r8ox1")]
 
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
