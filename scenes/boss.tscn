@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=68 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="Texture2D" uid="uid://cq06iq8ajhvju" path="res://resources/boss/boss_000.png" id="2_b55u5"]
@@ -66,8 +66,8 @@
 [ext_resource type="Texture2D" uid="uid://cosepmilqtfyf" path="res://resources/boss/boss_061.png" id="63_d5ofm"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gny1c"]
-radius = 136.0
-height = 416.0
+radius = 119.0
+height = 372.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuav7"]
 animations = [{
@@ -263,6 +263,10 @@ animations = [{
 "speed": 60.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b55u5"]
+radius = 137.0
+height = 420.0
+
 [node name="Boss" type="CharacterBody2D"]
 collision_layer = 8
 collision_mask = 11
@@ -286,3 +290,11 @@ sprite_frames = SubResource("SpriteFrames_tuav7")
 animation = &"Idle"
 frame = 14
 frame_progress = 0.380449
+
+[node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_b55u5")
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]

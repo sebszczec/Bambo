@@ -1,5 +1,11 @@
 extends CharacterBody2D
 
+var floatingTextScene = preload("res://scenes/floating_text.tscn")
+var hitEffectScene = preload("res://scenes/hit_effect.tscn")
+
+@export var Life = 5000
+@export var Damage = 100
+@export var IsDamageOverTime = false
 @export var MoveSpeed = 100
 @export var Acceleration = 10
 @export var Friction = 5
@@ -12,6 +18,8 @@ var _player = null
 var _theta = 0.0
 var _halfPI : float = PI / 2
 var _speed = Vector2(0, 0)
+var _is_dead = false
+var _show_damage = true
 
 func _ready() -> void:
 	_player = get_node("/root/World/Player")
@@ -29,3 +37,41 @@ func _physics_process(delta: float) -> void:
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 
 	move_and_collide(velocity)
+
+
+func _on_hit_box_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Bullet"):
+		var bullet = area.get_parent()
+		if !bullet.is_damaging_enemy():
+			return
+
+
+		var hit_effect = hitEffectScene.instantiate()
+		add_child(hit_effect)
+		hit_effect.set_global_position(bullet.get_global_position())
+		hit_effect.emitting = true
+		
+		if !_is_dead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type), bullet.get_global_position()) == false:
+			_is_dead = true
+			# explode()
+
+func handleDamage(damage, label_position : Vector2):
+	if _show_damage:
+		var damageText = floatingTextScene.instantiate()
+		damageText.RoundNumber = true
+		if damage.Critical:
+			damageText.set_color(Color.YELLOW)
+		else:
+			damageText.set_color(Color.WHITE)
+			
+		damageText.Amount = str(damage.Value)
+		add_child(damageText)
+		damageText.set_global_position(label_position)
+		
+	Life = Life - damage.Value
+	# lifeBar.setValue(Life)
+	
+	if Life <= 0:
+		return false
+	
+	return true

@@ -111,6 +111,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		
 		var hit_effect = hitEffectScene.instantiate()
 		add_child(hit_effect)
+		hit_effect.set_global_position(bullet.get_global_position())
 		hit_effect.emitting = true
 		
 		if !_isDead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
