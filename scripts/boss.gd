@@ -34,8 +34,8 @@ var _show_damage = true
 var _death_timer = Timer.new()
 var _world = null
 var _weapon = null
-var _main_gun_timeout = 2
-var _shooting_timeot = 0.2
+var _main_gun_timeout = 4
+var _shooting_timeot = 1
 var _shot_count = 0
 var _max_shots = 6
 var _main_gun_timer = Timer.new()
@@ -64,7 +64,7 @@ func _ready() -> void:
 	_world = get_tree().root
 	_player = get_node("/root/World/Player")
 	
-	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, true, false)
+	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.FIREWORKS, true, false)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)
 	

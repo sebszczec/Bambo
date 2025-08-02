@@ -244,7 +244,7 @@ class Fireworks extends BigBullet:
 	func setup():
 		super.setup()
 		shooting_delay = 0.5
-		speed = 2
+		speed = 8
 		life_time = 2
 		explosion_audio.stream = load("res://resources/explode_sounds/350977__cabled_mess__boom_c_06.wav")
 		type = Enums.WEAPONS.FIREWORKS
