@@ -292,16 +292,29 @@ animation = &"Idle"
 frame = 14
 frame_progress = 0.380449
 
-[node name="Aim" type="Sprite2D" parent="."]
-visible = false
+[node name="Aim1" type="Sprite2D" parent="Ship"]
 position = Vector2(-129, 155)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("65_l1el4")
+
+[node name="Aim1_1" type="Sprite2D" parent="Ship"]
+position = Vector2(-129, 135)
 scale = Vector2(0.01, 0.01)
 texture = ExtResource("65_l1el4")
 
-[node name="Aim2" type="Sprite2D" parent="."]
-visible = false
+[node name="Aim2" type="Sprite2D" parent="Ship"]
 position = Vector2(131, 154)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("65_l1el4")
+
+[node name="Aim2_2" type="Sprite2D" parent="Ship"]
+position = Vector2(131, 133)
 scale = Vector2(0.01, 0.01)
+texture = ExtResource("65_l1el4")
+
+[node name="Aim2" type="Sprite2D" parent="Ship/Aim2_2"]
+position = Vector2(131, 154)
+scale = Vector2(0.1, 0.1)
 texture = ExtResource("65_l1el4")
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]

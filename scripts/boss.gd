@@ -20,6 +20,10 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var hitBoxCollisionShape = $HitBox/CollisionPolygon2D
 @onready var explosion = $Explosion
 @onready var mark = $Mark
+@onready var aim1 = $Ship/Aim1
+@onready var aim1_1 = $Ship/Aim1_1
+@onready var aim2 = $Ship/Aim2
+@onready var aim2_2 = $Ship/Aim2_2
 
 var _player = null
 var _theta = 0.0
@@ -28,8 +32,10 @@ var _speed = Vector2(0, 0)
 var _is_dead = false
 var _show_damage = true
 var _death_timer = Timer.new()
-var _main_gun_timeout = 10
-var _shooting_timeot = 1
+var _world = null
+var _weapon = null
+var _main_gun_timeout = 2
+var _shooting_timeot = 0.2
 var _shot_count = 0
 var _max_shots = 6
 var _main_gun_timer = Timer.new()
@@ -55,7 +61,12 @@ func _ready() -> void:
 	_show_damage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color.GREEN)
 	
+	_world = get_tree().root
 	_player = get_node("/root/World/Player")
+	
+	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, true, false)
+	_weapon.set_owner(_world)
+	_weapon.register_internal_nodes(self)
 	
 	_death_timer.one_shot = true
 	_death_timer.wait_time = 2
@@ -101,9 +112,9 @@ func _on_shooting_timer_timeout():
 		_main_gun_timer.start()
 		
 	if _shot_count % 2 == 0:
-		print("Left gun")
+		_weapon.shoot(_world, aim2.get_global_position(), aim2.get_global_position() - aim2_2.get_global_position())
 	else:
-		print("Right gun")
+		_weapon.shoot(_world, aim1.get_global_position(), aim1.get_global_position() - aim1_1.get_global_position())
 
 func _on_death_timer_timeout():
 	dispose()
