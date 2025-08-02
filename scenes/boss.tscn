@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=72 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_0i4fg"]
@@ -65,6 +65,7 @@
 [ext_resource type="Texture2D" uid="uid://bcu1h5f7qtt8v" path="res://resources/boss/boss_059.png" id="61_f5b45"]
 [ext_resource type="Texture2D" uid="uid://jdfsprgo2s7x" path="res://resources/boss/boss_060.png" id="62_4wqk0"]
 [ext_resource type="Texture2D" uid="uid://cosepmilqtfyf" path="res://resources/boss/boss_061.png" id="63_d5ofm"]
+[ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/kenney_particle_pack/magic_04.png" id="65_l1el4"]
 [ext_resource type="AudioStream" uid="uid://bjvas00tfexnf" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="66_0i4fg"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="67_6vfmo"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="68_r8ox1"]
@@ -290,6 +291,18 @@ sprite_frames = SubResource("SpriteFrames_tuav7")
 animation = &"Idle"
 frame = 14
 frame_progress = 0.380449
+
+[node name="Aim" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-129, 155)
+scale = Vector2(0.01, 0.01)
+texture = ExtResource("65_l1el4")
+
+[node name="Aim2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(131, 154)
+scale = Vector2(0.01, 0.01)
+texture = ExtResource("65_l1el4")
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
 

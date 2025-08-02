@@ -27,8 +27,13 @@ var _halfPI : float = PI / 2
 var _speed = Vector2(0, 0)
 var _is_dead = false
 var _show_damage = true
-var _deathTimer = Timer.new()
-
+var _death_timer = Timer.new()
+var _main_gun_timeout = 10
+var _shooting_timeot = 1
+var _shot_count = 0
+var _max_shots = 6
+var _main_gun_timer = Timer.new()
+var _shooting_timer = Timer.new()
 
 signal killed
 
@@ -52,10 +57,21 @@ func _ready() -> void:
 	
 	_player = get_node("/root/World/Player")
 	
-	_deathTimer.one_shot = true
-	_deathTimer.wait_time = 2
-	_deathTimer.connect("timeout", _on_death_timer_timeout)
-	add_child(_deathTimer)
+	_death_timer.one_shot = true
+	_death_timer.wait_time = 2
+	_death_timer.connect("timeout", _on_death_timer_timeout)
+	add_child(_death_timer)
+	
+	_main_gun_timer.one_shot = false
+	_main_gun_timer.wait_time = _main_gun_timeout
+	_main_gun_timer.connect("timeout", _on_main_gun_timer_timout)
+	add_child(_main_gun_timer)
+	_main_gun_timer.start()
+	
+	_shooting_timer.one_shot = false
+	_shooting_timer.wait_time = _shooting_timeot
+	_shooting_timer.connect("timeout", _on_shooting_timer_timeout)
+	add_child(_shooting_timer)
 	
 	mainBody.play("Idle")
 
@@ -72,6 +88,22 @@ func _physics_process(delta: float) -> void:
 	hitBoxCollisionShape.rotation = move_toward(hitBoxCollisionShape.rotation, hitBoxCollisionShape.rotation + diff, 0.1)
 
 	move_and_collide(velocity)
+
+func _on_main_gun_timer_timout():
+	_shooting_timer.start()
+	_main_gun_timer.stop()
+	
+func _on_shooting_timer_timeout():
+	_shot_count += 1
+	if _shot_count == _max_shots:
+		_shot_count = 0
+		_shooting_timer.stop()
+		_main_gun_timer.start()
+		
+	if _shot_count % 2 == 0:
+		print("Left gun")
+	else:
+		print("Right gun")
 
 func _on_death_timer_timeout():
 	dispose()
@@ -109,7 +141,7 @@ func explode():
 	explosion.init(Vector2(3.0, 3.0), 250)
 	explosion.visible = true
 	explosion.explode()
-	_deathTimer.start()
+	_death_timer.start()
 	killed.emit(get_instance_id())
 
 func handleDamage(damage, label_position : Vector2):
