@@ -16,7 +16,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var lifeBar = $LifeBar
 @onready var audio = $AudioStreamPlayer2D
 @onready var collisionShape = $CollisionShape2D
-@onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
+@onready var hitBoxCollisionShape = $HitBox/CollisionPolygon2D
 @onready var explosion = $Explosion
 
 var _player = null
@@ -53,6 +53,8 @@ func _physics_process(delta: float) -> void:
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
+	collisionShape.rotation = move_toward(collisionShape.rotation, collisionShape.rotation + diff, 0.1)
+	hitBoxCollisionShape.rotation = move_toward(hitBoxCollisionShape.rotation, hitBoxCollisionShape.rotation + diff, 0.1)
 
 	move_and_collide(velocity)
 

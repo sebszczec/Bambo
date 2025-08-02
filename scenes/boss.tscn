@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=70 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_0i4fg"]
@@ -69,8 +69,8 @@
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="67_6vfmo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gny1c"]
-radius = 119.0
-height = 372.0
+radius = 80.0
+height = 268.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tuav7"]
 animations = [{
@@ -266,10 +266,6 @@ animations = [{
 "speed": 60.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b55u5"]
-radius = 137.0
-height = 420.0
-
 [node name="Boss" type="CharacterBody2D"]
 collision_layer = 8
 collision_mask = 11
@@ -296,9 +292,8 @@ frame_progress = 0.380449
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_b55u5")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox"]
+polygon = PackedVector2Array(30, 150, 45, 80, 105, 75, 130, 140, 220, 10, 215, -35, 160, 0, 195, -100, 190, -145, 110, -80, 20, -140, -20, -140, -110, -80, -190, -145, -195, -100, -160, 0, -215, -35, -220, 10, -130, 140, -105, 75, -45, 80, -30, 150)
 
 [node name="LifeBar" parent="." instance=ExtResource("2_0i4fg")]
 offset_left = -27.0
