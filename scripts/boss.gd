@@ -13,6 +13,7 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var ship = $Ship
 @onready var sprite = $Ship/AnimatedSprite2D
+@onready var lifeBar = $LifeBar
 
 var _player = null
 var _theta = 0.0
@@ -22,6 +23,11 @@ var _is_dead = false
 var _show_damage = true
 
 func _ready() -> void:
+	var visualSettings = ConfigHandler.load_visuals()
+	lifeBar.visible = visualSettings["show_enemies_lifebar"]
+	_show_damage = visualSettings["show_damage_given"]
+	lifeBar.setColor(Color.GREEN)
+	
 	_player = get_node("/root/World/Player")
 	
 	sprite.play("Idle")
@@ -69,7 +75,7 @@ func handleDamage(damage, label_position : Vector2):
 		damageText.set_global_position(label_position)
 		
 	Life = Life - damage.Value
-	# lifeBar.setValue(Life)
+	lifeBar.setValue(Life)
 	
 	if Life <= 0:
 		return false

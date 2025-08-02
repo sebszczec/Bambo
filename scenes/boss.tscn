@@ -1,6 +1,7 @@
-[gd_scene load_steps=68 format=3 uid="uid://cfmu1bpgoioai"]
+[gd_scene load_steps=69 format=3 uid="uid://cfmu1bpgoioai"]
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
+[ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_0i4fg"]
 [ext_resource type="Texture2D" uid="uid://cq06iq8ajhvju" path="res://resources/boss/boss_000.png" id="2_b55u5"]
 [ext_resource type="PackedScene" uid="uid://c2iat65owg012" path="res://scenes/engine_burst.tscn" id="2_uc18t"]
 [ext_resource type="Texture2D" uid="uid://bdcdr0bob3q6g" path="res://resources/boss/boss_001.png" id="3_uc18t"]
@@ -296,5 +297,11 @@ frame_progress = 0.380449
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_b55u5")
+
+[node name="LifeBar" parent="." instance=ExtResource("2_0i4fg")]
+offset_left = -27.0
+offset_top = -176.0
+offset_right = 25.0
+offset_bottom = -170.0
 
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
