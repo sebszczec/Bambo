@@ -3,7 +3,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
-@export var Life = 200
+@export var Life = 5000
 @export var Damage = 100
 @export var IsDamageOverTime = false
 @export var MoveSpeed = 100
@@ -12,11 +12,12 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @export var RotationSpeed : float = TAU
 
 @onready var ship = $Ship
-@onready var sprite = $Ship/AnimatedSprite2D
+@onready var mainBody = $Ship/AnimatedSprite2D
 @onready var lifeBar = $LifeBar
 @onready var audio = $AudioStreamPlayer2D
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
+@onready var explosion = $Explosion
 
 var _player = null
 var _theta = 0.0
@@ -41,7 +42,7 @@ func _ready() -> void:
 	_deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(_deathTimer)
 	
-	sprite.play("Idle")
+	mainBody.play("Idle")
 
 func _physics_process(delta: float) -> void:
 	_speed = MoveSpeed
@@ -80,13 +81,15 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 func explode():
 	audio.play()
-	ship.visible = false
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)
 	lifeBar.visible = false
-	# explosion.visible = true
-	# explosion.rotation = ship.rotation
-	# explosion.explode()
+	mainBody.visible = false
+	explosion.position = mainBody.position
+	explosion.SpriteTexture = mainBody.get_sprite_frames().get_frame_texture(mainBody.animation, mainBody.get_frame())
+	explosion.init()
+	explosion.visible = true
+	explosion.explode()
 	_deathTimer.start()
 	killed.emit(get_instance_id())
 
