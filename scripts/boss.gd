@@ -5,7 +5,8 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @export var Life = 200
 @export var Damage = 100
-@export var IsDamageOverTime = false
+@export var IsDamageOverTime = true
+@export var DamageTickTime = 0.5
 @export var MoveSpeed = 100
 @export var Acceleration = 10
 @export var Friction = 5
@@ -86,12 +87,12 @@ func explode():
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)
 	lifeBar.visible = false
-	mainBody.visible = false
+	ship.visible = false
 	explosion.position = mainBody.position
 	explosion.SpriteTexture = mainBody.get_sprite_frames().get_frame_texture(mainBody.animation, mainBody.get_frame())
 	explosion.scale = mainBody.scale
 	explosion.rotation = ship.rotation
-	explosion.init()
+	explosion.init(Vector2(3.0, 3.0), 250)
 	explosion.visible = true
 	explosion.explode()
 	_deathTimer.start()

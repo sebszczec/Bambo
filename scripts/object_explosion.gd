@@ -30,7 +30,9 @@ var _explode = false
 func _ready() -> void:
 	pass
 
-func init():
+func init(effect_scale : Vector2 = Vector2(1.0, 1.0), effect_amount : int = 50):
+	effect.scale = effect_scale
+	effect.amount = effect_amount
 	for i in range(_all_frames): 
 		var tmp : Sprite2D = fragmentScene.instantiate()
 		if SpriteTexture == null:
