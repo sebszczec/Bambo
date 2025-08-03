@@ -26,7 +26,6 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @onready var aim2_2 = $Ship/Aim2_2
 
 var _player = null
-var _theta = 0.0
 var _halfPI : float = PI / 2
 var _speed = Vector2(0, 0)
 var _is_dead = false
@@ -34,14 +33,24 @@ var _show_damage = true
 var _death_timer = Timer.new()
 var _world = null
 var _weapon = null
-var _main_gun_timeout = 4
+
+var _state_timer = Timer.new()
+var _state_timeout = 4
+
+var _shooting_timer = Timer.new()
 var _shooting_timeot = 1
 var _shot_count = 0
 var _max_shots = 6
-var _main_gun_timer = Timer.new()
-var _shooting_timer = Timer.new()
+
+var _spawn_timer = Timer.new()
+var _spawn_timeout = 0.5
+var _spawn_count = 0
+var _max_spawn = 5
 
 signal killed
+
+enum STATE {SHOOT, SPAWN}
+var _current_state = STATE.SHOOT
 
 # public
 func get_enemy_name():
@@ -73,16 +82,21 @@ func _ready() -> void:
 	_death_timer.connect("timeout", _on_death_timer_timeout)
 	add_child(_death_timer)
 	
-	_main_gun_timer.one_shot = false
-	_main_gun_timer.wait_time = _main_gun_timeout
-	_main_gun_timer.connect("timeout", _on_main_gun_timer_timout)
-	add_child(_main_gun_timer)
-	_main_gun_timer.start()
+	_state_timer.one_shot = false
+	_state_timer.wait_time = _state_timeout
+	_state_timer.connect("timeout", _on_state_timer_timout)
+	add_child(_state_timer)
+	_state_timer.start()
 	
 	_shooting_timer.one_shot = false
 	_shooting_timer.wait_time = _shooting_timeot
 	_shooting_timer.connect("timeout", _on_shooting_timer_timeout)
 	add_child(_shooting_timer)
+	
+	_spawn_timer.one_shot = false
+	_spawn_timer.wait_time = _spawn_timeout
+	_spawn_timer.connect("timeout", _on_spawn_timer_timeout)
+	add_child(_spawn_timer)
 	
 	mainBody.play("Idle")
 
@@ -92,29 +106,44 @@ func _physics_process(delta: float) -> void:
 	var direction = global_position.direction_to(_player.get_global_position())
 	velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
 	
-	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
-	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
+	var theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
+	var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 	collisionShape.rotation = move_toward(collisionShape.rotation, collisionShape.rotation + diff, 0.1)
 	hitBoxCollisionShape.rotation = move_toward(hitBoxCollisionShape.rotation, hitBoxCollisionShape.rotation + diff, 0.1)
 
 	move_and_collide(velocity)
 
-func _on_main_gun_timer_timout():
-	_shooting_timer.start()
-	_main_gun_timer.stop()
+func _on_state_timer_timout():
+	if _current_state == STATE.SHOOT:
+		_shooting_timer.start()
+		_current_state = STATE.SPAWN
+	elif _current_state == STATE.SPAWN:
+		_spawn_timer.start()
+		_current_state = STATE.SHOOT
+	
+	_state_timer.stop()
 	
 func _on_shooting_timer_timeout():
 	_shot_count += 1
 	if _shot_count == _max_shots:
 		_shot_count = 0
 		_shooting_timer.stop()
-		_main_gun_timer.start()
+		_state_timer.start()
 		
 	if _shot_count % 2 == 0:
 		_weapon.shoot(_world, aim2.get_global_position(), aim2.get_global_position() - aim2_2.get_global_position())
 	else:
 		_weapon.shoot(_world, aim1.get_global_position(), aim1.get_global_position() - aim1_1.get_global_position())
+
+func _on_spawn_timer_timeout():
+	_spawn_count += 1
+	if _spawn_count == _max_spawn:
+		_spawn_count = 0
+		_spawn_timer.stop()
+		_state_timer.start()
+		
+	print ("Dupa")
 
 func _on_death_timer_timeout():
 	dispose()
