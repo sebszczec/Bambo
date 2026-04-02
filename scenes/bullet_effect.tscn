@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cywad70g636ip"]
 
-[ext_resource type="Texture2D" uid="uid://bit8fbonkj7ll" path="res://resources/kenney_particle_pack/trace_05.png" id="1_w3ues"]
+[ext_resource type="Texture2D" uid="uid://dnupacu74oerw" path="res://resources/kenney_particle_pack/trace_05.png" id="1_w3ues"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nk3k3"]
 particle_flag_disable_z = true

@@ -55,7 +55,7 @@ func _ready() -> void:
 	shieldBar.value = PlayerStatus.MaxShield
 	afterburnerBar.value = PlayerStatus.MaxAfterburner
 	
-	#enemy_spawn_timer.start()
+	enemy_spawn_timer.start()
 	phase_guard.connect("phase_timeout", _on_phase_timeout)
 	phase_guard.start_phase(Enums.PHASE.Phase1)
 	phase1_sound.position = player.position
@@ -141,22 +141,6 @@ func _on_weapon_bullet_number_change(value):
 func _on_shooting_timer_timeout() -> void:
 	canShoot = true
 
-func _on_enemy_spawn_timer_timeout() -> void:
-	if enemy_count == LevelSettings.MaxEnemyCount:
-		return
-
-	var enemy = LevelSettings.get_random_enemy()
-	active_enemies[enemy.get_instance_id()] = enemy
-	enemy.connect("killed", _on_enemy_killed)
-	
-	enemy.position.x = get_new_enemy_position(player.position.x, LevelSettings.MinX, LevelSettings.MaxX)
-	enemy.position.y = get_new_enemy_position(player.position.y, LevelSettings.MinY, LevelSettings.MaxY)
-	
-	world.add_child(enemy)
-	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
-	
-	enemy_count = enemy_count + 1
-	informationBox.increaseEnemyCount()
 	
 func get_new_enemy_position(player_position : float, min_value: float, max_value : float) -> float:
 	var left_or_right = -1
