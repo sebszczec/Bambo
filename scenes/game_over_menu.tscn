@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3ftwkyidl5vh"]
+[gd_scene load_steps=3 format=3 uid="uid://b3ftwkyidl5vh"]
 
 [ext_resource type="Script" uid="uid://cin6p3a564d2u" path="res://scripts/game_over_menu.gd" id="1_y0tgy"]
+[ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="2_sfx"]
 
 [node name="GameOverMenu" type="Control"]
 process_mode = 3
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,11 +42,43 @@ theme_override_constants/v_separation = 8
 layout_mode = 2
 theme_override_font_sizes/font_size = 68
 text = "Game over"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Score: 0"
+horizontal_alignment = 1
+
+[node name="PhaseLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Reached: Phase 1"
+horizontal_alignment = 1
+
+[node name="HighScoreLabel" type="Label" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "High score: 0"
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Retry"
 
 [node name="QuitButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Back to menu
-"
+text = "Back to menu"
 
+[node name="Sfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_sfx")
+volume_db = 10.0
+
+[connection signal="focus_entered" from="GridContainer/RetryButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/RetryButton" to="." method="_on_retry_button_mouse_entered"]
+[connection signal="pressed" from="GridContainer/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="focus_entered" from="GridContainer/QuitButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
 [connection signal="pressed" from="GridContainer/QuitButton" to="." method="_on_quit_button_pressed"]

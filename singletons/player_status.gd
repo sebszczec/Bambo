@@ -10,10 +10,29 @@ var Speed : float = 100
 
 var CurrentWeapon = Enums.WEAPONS.SMALL
 
+const DEFAULT_MAX_LIFE : float = 100.0
+const DEFAULT_MAX_AFTERBURNER : float = 100.0
+const DEFAULT_MAX_SHIELD : float = 100.0
+const DEFAULT_BASE_DAMAGE : float = 100
+const DEFAULT_CRITICAL_HIT_CHANCE : float = 10.0
+const DEFAULT_CRITICAL_HIT_MULTIPLIER : float = 200
+const DEFAULT_SPEED : float = 100
+
 signal base_damage_changed (value : float)
 signal critical_hit_chance_changed (value : float)
 signal critcal_hit_multipayer_changed (value : float)
 signal speed_changed (value : float)
+
+# called at the start of every run, so perks do not leak between runs
+func reset():
+	MaxLife = DEFAULT_MAX_LIFE
+	MaxAfterburner = DEFAULT_MAX_AFTERBURNER
+	MaxShield = DEFAULT_MAX_SHIELD
+	BaseDamage = DEFAULT_BASE_DAMAGE
+	CriticalHitChance = DEFAULT_CRITICAL_HIT_CHANCE
+	CriticalHitMultiplier = DEFAULT_CRITICAL_HIT_MULTIPLIER
+	Speed = DEFAULT_SPEED
+	CurrentWeapon = Enums.WEAPONS.SMALL
 
 func increase_critic_hit_multiplier(value: float):
 	CriticalHitMultiplier += value

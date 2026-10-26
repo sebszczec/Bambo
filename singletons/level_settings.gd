@@ -16,6 +16,7 @@ var _points_dict : Dictionary = {
 }
 
 var _no_perk_chance = 50
+var _perk_chances_sum = 0
 var _perk_chances : Dictionary = {
 	Enums.PERKS.LIFE : 10,
 	Enums.PERKS.SHIELD : 10,
@@ -38,9 +39,9 @@ var _perk_scenes : Dictionary = {
 	Enums.PERKS.CRITIC_CHANCE_UP : preload("res://scenes/critic_chance_up_perk.tscn"),
 	Enums.PERKS.CRITIC_HIT_MULTIPLIER : preload("res://scenes/critic_hit_multiplier_perk.tscn"),
 	Enums.PERKS.SPEED_UP : preload("res://scenes/speed_up_perk.tscn"),
- 	Enums.PERKS.BIG_GUN : preload("res://scenes/big_gun_perk.tscn"),
- 	Enums.PERKS.WAVE : preload("res://scenes/wave_perk.tscn"),
- 	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn"),
+	Enums.PERKS.BIG_GUN : preload("res://scenes/big_gun_perk.tscn"),
+	Enums.PERKS.WAVE : preload("res://scenes/wave_perk.tscn"),
+	Enums.PERKS.HOMING : preload("res://scenes/homing_perk.tscn"),
 	Enums.PERKS.BOMB : preload("res://scenes/bomb_perk.tscn")
 }
 
@@ -61,11 +62,8 @@ var _enemy_scenes : Dictionary = {
 var _mine_scene = preload("res://scenes/mine.tscn")
 
 func _ready() -> void:
-	var sum = 0
 	for chance in _perk_chances.values():
-		sum += chance
-	
-	assert(sum == 95)
+		_perk_chances_sum += chance
 
 func get_points(enemy: String) -> int:
 	return _points_dict[enemy]
@@ -75,11 +73,11 @@ func get_chance(perk : Enums.PERKS) -> int:
 	
 
 func get_random_perk():
-	var chance = randi_range(0, 100)
+	var chance = randi_range(0, 99)
 	if chance < _no_perk_chance:
 		return null
 	
-	chance = randi_range(0, 95)
+	chance = randi_range(0, _perk_chances_sum - 1)
 	var _temp_sum = 0
 	for perk in _perk_chances:
 		if chance >= _temp_sum and chance < _temp_sum + _perk_chances[perk]:
@@ -94,13 +92,15 @@ func get_random_perk():
 func get_enemy(enemy : Enums.ENEMIES):
 	return _enemy_scenes[enemy].instantiate()
 
+# boss is never returned here, it is spawned only by the phase logic
 func get_random_enemy():
-	return _enemy_scenes[randi_range(0, Enums.ENEMIES.size() - 1)].instantiate()
+	var types = [Enums.ENEMIES.SCOUT, Enums.ENEMIES.GUARD, Enums.ENEMIES.HUNTER]
+	return _enemy_scenes[types.pick_random()].instantiate()
 	
 func get_random_meteor():
 	return _meteor_scenes[randi_range(0, _meteor_scenes.size() - 1)].instantiate()
 	
 func get_random_mine_from_meteor():
-	if randi_range(0, 100) < _meteor_mine_chance:
+	if randi_range(0, 99) < _meteor_mine_chance:
 		return _mine_scene.instantiate()
 	return null

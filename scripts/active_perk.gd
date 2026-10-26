@@ -19,6 +19,7 @@ func _ready() -> void:
 	textures[Enums.WEAPONS.SMALL_HOMING] = load("res://resources/perks/rocket.png")
 	textures[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = load("res://resources/perks/rocket.png")
 	textures[Enums.WEAPONS.BOMB] = load("res://resources/perks/bomb.png")
+	textures[Enums.WEAPONS.FIREWORKS] = load("res://resources/perks/big_gun.png")
 	changeState(defaultState)
 
 
@@ -27,7 +28,7 @@ func _physics_process(delta: float) -> void:
 	
 
 func _updateTimeLeft(delta):
-	if TimeLeft == 0:
+	if TimeLeft <= 0:
 		_timeout()
 		return
 
@@ -47,7 +48,7 @@ func _timeout():
 
 func changeState(weapon : Enums.WEAPONS):
 	currentState = weapon
-	sprite.texture = textures[currentState]
+	sprite.texture = textures.get(currentState)
 	
 	if weapon == Enums.WEAPONS.SMALL or weapon == Enums.WEAPONS.BOMB:
 		TimeLeft = 0

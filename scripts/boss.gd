@@ -46,8 +46,12 @@ var _spawn_timer = Timer.new()
 var _spawn_timeout = 0.5
 var _spawn_count = 0
 var _max_spawn = 5
+var _spawn_distance = 150
+var _max_life = 0
 
 signal killed
+signal spawn_requested(enemy : Enums.ENEMIES, spawn_position : Vector2)
+signal health_changed(value : int, max_value : int)
 
 enum STATE {SHOOT, SPAWN}
 var _current_state = STATE.SHOOT
@@ -69,9 +73,12 @@ func _ready() -> void:
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	_show_damage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color.GREEN)
+	lifeBar.setMaxValue(Life)
+	_max_life = Life
+	lifeBar.setValue(Life)
 	
-	_world = get_tree().root
-	_player = get_node("/root/World/Player")
+	_world = get_tree().current_scene
+	_player = get_tree().get_first_node_in_group("player")
 	
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.FIREWORKS, true, false)
 	_weapon.set_owner(_world)
@@ -101,10 +108,13 @@ func _ready() -> void:
 	mainBody.play("Idle")
 
 func _physics_process(delta: float) -> void:
+	if _is_dead:
+		return
+
 	_speed = MoveSpeed
-	
+
 	var direction = global_position.direction_to(_player.get_global_position())
-	velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
+	velocity = velocity.move_toward(direction * _speed, Acceleration * 60 * delta)
 	
 	var theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
@@ -112,7 +122,7 @@ func _physics_process(delta: float) -> void:
 	collisionShape.rotation = move_toward(collisionShape.rotation, collisionShape.rotation + diff, 0.1)
 	hitBoxCollisionShape.rotation = move_toward(hitBoxCollisionShape.rotation, hitBoxCollisionShape.rotation + diff, 0.1)
 
-	move_and_collide(velocity)
+	move_and_collide(velocity * delta)
 
 func _on_state_timer_timout():
 	if _current_state == STATE.SHOOT:
@@ -142,8 +152,14 @@ func _on_spawn_timer_timeout():
 		_spawn_count = 0
 		_spawn_timer.stop()
 		_state_timer.start()
-		
-	print ("Dupa")
+
+	if _is_dead:
+		return
+
+	# spawn scouts around the boss, game logic creates and tracks them
+	var angle = ship.rotation + _spawn_count * TAU / _max_spawn
+	var offset = Vector2(_spawn_distance, 0).rotated(angle)
+	spawn_requested.emit(Enums.ENEMIES.SCOUT, global_position + offset)
 
 func _on_death_timer_timeout():
 	dispose()
@@ -169,6 +185,9 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 			explode()
 
 func explode():
+	_state_timer.stop()
+	_shooting_timer.stop()
+	_spawn_timer.stop()
 	audio.play()
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)
@@ -199,6 +218,7 @@ func handleDamage(damage, label_position : Vector2):
 		
 	Life = Life - damage.Value
 	lifeBar.setValue(Life)
+	health_changed.emit(max(Life, 0), _max_life)
 	
 	if Life <= 0:
 		return false

@@ -14,21 +14,35 @@ func _ready() -> void:
 func setPause(value):
 	if isPlayerKilled:
 		return
-		
+
 	isPaused = value
 	get_tree().paused = isPaused
 	visible = isPaused
-	
+
 	if isPaused:
 		resumeButton.grab_focus()
 
-func _physics_process(_delta: float) -> void:
-	if Input.is_action_just_pressed("ui_pause"):
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
 		setPause(!isPaused)
-	
+		get_viewport().set_input_as_handled()
+	elif isPaused and event.is_action_pressed("ui_cancel"):
+		setPause(false)
+		get_viewport().set_input_as_handled()
+
 
 func _on_resume_button_pressed() -> void:
 	setPause(false)
+
+
+func _on_restart_button_pressed() -> void:
+	setPause(false)
+	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
+
+
+func _on_menu_button_pressed() -> void:
+	setPause(false)
+	get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
 
 
 func _on_quit_button_pressed() -> void:
@@ -43,6 +57,14 @@ func _on_button_focus_changed() -> void:
 
 func _on_resume_button_mouse_entered() -> void:
 	resumeButton.grab_focus()
+
+
+func _on_restart_button_mouse_entered() -> void:
+	$GridContainer/RestartButton.grab_focus()
+
+
+func _on_menu_button_mouse_entered() -> void:
+	$GridContainer/MenuButton.grab_focus()
 
 
 func _on_quit_button_mouse_entered() -> void:

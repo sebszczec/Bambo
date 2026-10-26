@@ -7,7 +7,9 @@ extends Control
 @onready var enemyDamage = $TabContainer/Visuals/HBoxContainer/Checks/EnemyDamage
 @onready var bulletsCount = $TabContainer/Visuals/HBoxContainer/Checks/BulletsCount
 @onready var enemiesCount = $TabContainer/Visuals/HBoxContainer/Checks/EnemiesCount
-@onready var useGamepad = $TabContainer/Controls/HBoxContainer/Checks/UseGamepad
+@onready var inputMode = $TabContainer/Controls/HBoxContainer/Checks/InputMode
+
+var _input_modes = [ConfigHandler.INPUT_MODE_AUTO, ConfigHandler.INPUT_MODE_GAMEPAD, ConfigHandler.INPUT_MODE_KEYBOARD_MOUSE]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,13 +23,16 @@ func _ready() -> void:
 	enemyDamage.button_pressed = visualSettings["show_damage_given"]
 	bulletsCount.button_pressed = visualSettings["show_bullets_count"]
 	enemiesCount.button_pressed = visualSettings["show_enemies_count"]
-	useGamepad.button_pressed = controlSettings["use_gamepad"]
+	inputMode.add_item("Auto")
+	inputMode.add_item("Gamepad")
+	inputMode.add_item("Keyboard + mouse")
+	inputMode.select(max(0, _input_modes.find(controlSettings["input_mode"])))
 	
 	fps.grab_focus()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if Input.is_action_pressed("ui_cancel"):
+	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
 
 
@@ -63,5 +68,6 @@ func _on_enemies_count_toggled(toggled_on: bool) -> void:
 	ConfigHandler.save_visuals_setting("show_enemies_count", toggled_on)
 
 
-func _on_use_gamepad_toggled(toggled_on: bool) -> void:
-	ConfigHandler.save_controls_setting("use_gamepad", toggled_on)
+func _on_input_mode_selected(index: int) -> void:
+	ConfigHandler.save_controls_setting("input_mode", _input_modes[index])
+	InputManager.set_input_mode(_input_modes[index])

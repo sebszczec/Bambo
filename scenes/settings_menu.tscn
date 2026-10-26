@@ -115,16 +115,22 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="UseGamepadLabel" type="Label" parent="TabContainer/Controls/HBoxContainer/Labels"]
+[node name="InputModeLabel" type="Label" parent="TabContainer/Controls/HBoxContainer/Labels"]
 layout_mode = 2
-text = "Use gamepad"
+text = "Input device"
 
 [node name="Checks" type="VBoxContainer" parent="TabContainer/Controls/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="UseGamepad" type="CheckBox" parent="TabContainer/Controls/HBoxContainer/Checks"]
+[node name="InputMode" type="OptionButton" parent="TabContainer/Controls/HBoxContainer/Checks"]
 layout_mode = 2
+
+[node name="ControlsHelp" type="Label" parent="TabContainer/Controls"]
+layout_mode = 2
+text = "Keyboard + mouse:  WASD / arrows - move,  mouse - aim,  LMB / Space - shoot,  RMB / Shift - afterburner,  Z / MMB - zoom,  Esc / P - pause
+Gamepad:  left stick / D-pad - move,  right stick - aim,  RT - shoot,  LT - afterburner,  Y - zoom,  Start - pause
+Auto switches to the device you used last."
 
 [node name="BackButton" type="Button" parent="TabContainer/Controls"]
 layout_mode = 2
@@ -138,5 +144,5 @@ text = "Back"
 [connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/PlayerDamage" to="." method="_on_player_damage_toggled"]
 [connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
 [connection signal="pressed" from="TabContainer/Visuals/BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="toggled" from="TabContainer/Controls/HBoxContainer/Checks/UseGamepad" to="." method="_on_use_gamepad_toggled"]
+[connection signal="item_selected" from="TabContainer/Controls/HBoxContainer/Checks/InputMode" to="." method="_on_input_mode_selected"]
 [connection signal="pressed" from="TabContainer/Controls/BackButton" to="." method="_on_back_button_pressed"]

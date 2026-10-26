@@ -48,11 +48,13 @@ func _ready():
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	showDamage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color.GREEN)
+	lifeBar.setMaxValue(Life)
+	lifeBar.setValue(Life)
 	
 	explosion.init()
 	resizeTimer.start()
 
-	player = get_node("/root/World/Player")
+	player = get_tree().get_first_node_in_group("player")
 	
 	deathTimer.one_shot = true
 	deathTimer.wait_time = 2
@@ -62,7 +64,7 @@ func _ready():
 	var dissolveTween = get_tree().create_tween()
 	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
 	
-	make_path(Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y)))
+	make_path(Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY)))
 
 func set_shader_dissolve_value(value : float):
 	sprite.material.set_shader_parameter("DissolveValue", value)
@@ -117,7 +119,7 @@ func make_path(pos: Vector2):
 
 
 func _on_navigation_agent_2d_navigation_finished() -> void:
-	make_path(Vector2(randf_range(0, get_viewport_rect().size.x), randf_range(0, get_viewport_rect().size.y)))
+	make_path(Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY)))
 
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:

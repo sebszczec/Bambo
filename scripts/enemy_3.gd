@@ -41,13 +41,15 @@ var _world = null
 signal killed
 
 func _ready() -> void:
-	_world = get_tree().root
-	_player = get_node("/root/World/Player")
+	_world = get_tree().current_scene
+	_player = get_tree().get_first_node_in_group("player")
 	
 	var visualSettings = ConfigHandler.load_visuals()
 	_showDamage = visualSettings["show_damage_given"]
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	lifeBar.setColor(Color.GREEN)
+	lifeBar.setMaxValue(Life)
+	lifeBar.setValue(Life)
 	
 	explosion.init()
 	
@@ -82,13 +84,14 @@ func _physics_process(delta: float) -> void:
 		_speed = MoveSpeed
 	
 	var direction = global_position.direction_to(_player.get_global_position())
-	velocity = velocity.move_toward(direction * _speed * delta, Acceleration)
-	
+	velocity = velocity.move_toward(direction * _speed, Acceleration * 60 * delta)
+
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
 
-	move_and_collide(velocity)
+	if !_isDead:
+		move_and_collide(velocity * delta)
 	
 
 # public
@@ -135,6 +138,8 @@ func handleDamage(damage):
 	
 	if Life <= 0:
 		return false
+
+	return true
 
 func _on_shooting_timer_timeout():
 	if _shoot:

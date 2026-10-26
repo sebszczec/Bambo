@@ -307,7 +307,7 @@ radius = 14.4222
 [sub_resource type="CircleShape2D" id="CircleShape2D_or0rj"]
 radius = 37.0
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 z_index = 1
 position = Vector2(576, 324)
 collision_mask = 2

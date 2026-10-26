@@ -46,12 +46,14 @@ var _isDead = false
 signal killed
 
 func _ready() -> void:
-	_player = get_node("/root/World/Player")
+	_player = get_tree().get_first_node_in_group("player")
 	
 	var visualSettings = ConfigHandler.load_visuals()
 	_showDamage = visualSettings["show_damage_given"]
 	lifeBar.visible = visualSettings["show_enemies_lifebar"]
 	lifeBar.setColor(Color.GREEN)
+	lifeBar.setMaxValue(Life)
+	lifeBar.setValue(Life)
 	
 	explosion.init()
 	
@@ -173,7 +175,9 @@ func handleDamage(damage):
 	
 	if Life <= 0:
 		return false
-	
+
+	return true
+
 func explode():
 	audio.play()
 	ship.visible = false

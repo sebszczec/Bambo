@@ -27,7 +27,7 @@ var _weapon = null
 var floatTextScene = preload("res://scenes/floating_text.tscn")
 
 func _ready() -> void:
-	_world = get_tree().root
+	_world = get_tree().current_scene
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, true)
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)

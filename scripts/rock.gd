@@ -23,7 +23,7 @@ var world = null
 signal destroyed
 
 func _ready() -> void:
-	world = get_tree().get_root()
+	world = get_tree().current_scene
 	explosion.init()
 	explosion.set_particle_color(Color.GRAY)
 	

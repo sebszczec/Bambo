@@ -49,6 +49,16 @@ theme_override_font_sizes/font_size = 20
 text = "Resume
 "
 
+[node name="RestartButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Restart"
+
+[node name="MenuButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Main menu"
+
 [node name="QuitButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
@@ -65,3 +75,9 @@ volume_db = 10.0
 [connection signal="focus_entered" from="GridContainer/QuitButton" to="." method="_on_button_focus_changed"]
 [connection signal="mouse_entered" from="GridContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
 [connection signal="pressed" from="GridContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="focus_entered" from="GridContainer/RestartButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/RestartButton" to="." method="_on_restart_button_mouse_entered"]
+[connection signal="pressed" from="GridContainer/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="focus_entered" from="GridContainer/MenuButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/MenuButton" to="." method="_on_menu_button_mouse_entered"]
+[connection signal="pressed" from="GridContainer/MenuButton" to="." method="_on_menu_button_pressed"]

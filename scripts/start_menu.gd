@@ -10,7 +10,14 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	get_tree().paused = false
 	newGameButton.grab_focus()
+
+	var high_score = ConfigHandler.get_high_score()
+	if high_score > 0:
+		$HighScoreLabel.text = "High score: " + str(high_score) + "  (" + ConfigHandler.get_best_phase() + ")"
+	else:
+		$HighScoreLabel.text = ""
 
 
 func _on_quit_pressed() -> void:

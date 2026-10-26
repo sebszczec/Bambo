@@ -43,7 +43,6 @@ var aim_vector = Vector2(0, 0)
 var aim_angle = 0
 var showLifeBar = true
 var showDamage = true
-var useGamePad = true
 var canRecoverShield = true
 var shieldRecoveryTimer = Timer.new()
 var deathTimer = Timer.new()
@@ -58,7 +57,7 @@ signal killed
 func _ready() -> void:
 	lifeBar.setColor(Color.RED)
 	shieldBar.setColor(Color.DODGER_BLUE)
-	
+
 	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_player_lifebar"]
 	showDamage = visualSettings["show_damage_taken"]
@@ -66,31 +65,28 @@ func _ready() -> void:
 	lifeBar.visible = showLifeBar
 	shieldBar.setMaxValue(PlayerStatus.MaxShield)
 	shieldBar.visible = showLifeBar
-	
-	var controlSettings = ConfigHandler.load_controls()
-	useGamePad = controlSettings["use_gamepad"]
-	
+
 	deathTimer.one_shot = true
 	deathTimer.wait_time = 2
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
-	
+
 	shieldRecoveryTimer.one_shot = true
 	shieldRecoveryTimer.wait_time = 2
 	shieldRecoveryTimer.connect("timeout", on_shield_recovery_timer_timeout)
 	add_child(shieldRecoveryTimer)
-	
+
 	mainBody.play("spin")
 
 
 func _physics_process(delta):
-	handleZoom()	
+	handleZoom()
 	calculateSatelitePosition(delta)
 	calculateAcceleration()
 	calculateVelocity()
 	calculateAfterburner(delta)
 	recoverShield(delta)
-		
+
 	move_and_slide()
 
 func cameraShake(intensity : float):
@@ -115,18 +111,18 @@ func explode():
 	explosion.explode()
 
 func handleZoom():
-	if Input.is_action_just_pressed("ui_zoom"):
+	if Input.is_action_just_pressed("zoom"):
 		camera.zoom = Vector2(ZoomFactor, ZoomFactor)
 		return
-		
-	if Input.is_action_just_released("ui_zoom"):
+
+	if Input.is_action_just_released("zoom"):
 		camera.zoom = Vector2(1.25, 1.25)
 
 
 func calculateAfterburner(delta):
 	if burn && currentAfterburner > 0:
 		updateAfterBurner(-afterBurnerStep * delta)
-		
+
 	if !burn && currentAfterburner < PlayerStatus.MaxAfterburner:
 		updateAfterBurner(afterBurnerStep * delta)
 
@@ -135,36 +131,39 @@ func recoverShield(delta):
 		updateShield(shieldRecoveryStep * delta)
 
 func calculateAcceleration():
-	if currentAfterburner > 0:
-		if Input.is_action_just_pressed("ui_accelerate"):
-			var frame_id = mainBody.get_frame()
-			frame_id = mainBody.get_sprite_frames().get_frame_count("accelerate") - 1 - frame_id
-			mainBody.play("accelerate")
-			mainBody.set_frame(frame_id)
-			calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity * TurboFactor
-			calculatedAcceleration = PlayerAcceleration * TurboFactor
-			playerRotationDirection = -2
-			burn = true
-	else:
-		calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity
-		calculatedAcceleration = PlayerAcceleration
-		playerRotationDirection = 1
-		
-	if Input.is_action_just_released("ui_accelerate"):
-		var frame_id = mainBody.get_frame()
-		frame_id = mainBody.get_sprite_frames().get_frame_count("spin") - 1 - frame_id
-		mainBody.play("spin")
-		mainBody.set_frame(frame_id)
-		calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity
-		calculatedAcceleration = PlayerAcceleration
-		playerRotationDirection = 1
-		burn = false
-		
-		
+	var wantsBoost = Input.is_action_pressed("boost") and !isDead
+
+	if !burn and wantsBoost and currentAfterburner > 0:
+		startBoost()
+	elif burn and (!wantsBoost or currentAfterburner <= 0):
+		stopBoost()
+
+func startBoost():
+	var frame_id = mainBody.get_frame()
+	frame_id = mainBody.get_sprite_frames().get_frame_count("accelerate") - 1 - frame_id
+	mainBody.play("accelerate")
+	mainBody.set_frame(frame_id)
+	calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity * TurboFactor
+	calculatedAcceleration = PlayerAcceleration * TurboFactor
+	playerRotationDirection = -2
+	burn = true
+
+func stopBoost():
+	var frame_id = mainBody.get_frame()
+	frame_id = mainBody.get_sprite_frames().get_frame_count("spin") - 1 - frame_id
+	mainBody.play("spin")
+	mainBody.set_frame(frame_id)
+	calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity
+	calculatedAcceleration = PlayerAcceleration
+	playerRotationDirection = 1
+	burn = false
+
+
 func calculateVelocity():
-	direction.x = Input.get_axis("ui_left", "ui_right")
-	direction.y = Input.get_axis("ui_up", "ui_down")
-	
+	direction = InputManager.get_move_vector()
+	if !burn:
+		calculatedMaxVelocity = 0.01 * PlayerStatus.Speed * PlayerMaxVelocity
+
 	if direction.length() == 0 or isDead:
 		velocity = velocity.move_toward(Vector2(0, 0), PlayerFriction)
 	else:
@@ -173,35 +172,30 @@ func calculateVelocity():
 			direction.x = 1
 		elif pos.x >= LevelSettings.MaxX:
 			direction.x = -1
-			
+
 		if pos.y <= LevelSettings.MinY:
 			direction.y = 1
 		elif pos.y >= LevelSettings.MaxY:
 			direction.y = -1
-			
-		velocity = velocity.move_toward(direction.normalized() * calculatedMaxVelocity, calculatedAcceleration)
 
-var last_mouse_pos = Vector2(0, 0)
+		# analog stick gives partial speed, keyboard always full speed
+		velocity = velocity.move_toward(direction.limit_length(1.0) * calculatedMaxVelocity, calculatedAcceleration)
+
 func calculateSatelitePosition(delta):
-	if useGamePad:
-		aim_vector.x = Input.get_axis("ui_aim_left", "ui_aim_right")
-		aim_vector.y = Input.get_axis("ui_aim_up", "ui_aim_down")
-		aim_angle = atan2(aim_vector.y, aim_vector.x)
-		
-		if (aim_vector.x == 0 and aim_vector.y == 0):
-			sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
-			satelite.position.x = SateliteRadius * cos(sateliteAngle)
-			satelite.position.y = SateliteRadius * sin(sateliteAngle)
-			return
-		
-		satelite.position.x = SateliteRadius * cos(aim_angle)
-		satelite.position.y = SateliteRadius * sin(aim_angle)
-		sateliteAngle = aim_angle
-	else:
-		var mouse_pos = get_global_mouse_position()
-		mouse_pos = get_global_mouse_position() - position
-		satelite.position = mouse_pos.normalized() * SateliteRadius
-	
+	aim_vector = InputManager.get_aim_vector(self)
+
+	if aim_vector.length() == 0:
+		# gamepad stick released - satellite keeps orbiting
+		sateliteAngle = sateliteAngle + SateliteRotationSpeed * delta
+		satelite.position.x = SateliteRadius * cos(sateliteAngle)
+		satelite.position.y = SateliteRadius * sin(sateliteAngle)
+		return
+
+	aim_angle = atan2(aim_vector.y, aim_vector.x)
+	satelite.position.x = SateliteRadius * cos(aim_angle)
+	satelite.position.y = SateliteRadius * sin(aim_angle)
+	sateliteAngle = aim_angle
+
 
 func getSatelitePosition() -> Vector2:
 	return satelite.get_global_position()
@@ -214,25 +208,31 @@ func _on_death_timer_timeout():
 	killed.emit()
 
 func _on_life_box_area_entered(area: Area2D) -> void:
+	if isDead:
+		return
+
 	if area.is_in_group("Enemy"):
 		var enemy = area.get_parent()
 		var id = enemy.get_instance_id()
-		
-		if !isDead and handleDamage(enemy.Damage) == false:
+
+		if handleDamage(enemy.Damage) == false:
 			handleKilled()
 			return
-		
-		if enemy.IsDamageOverTime == true:
+
+		if enemy.IsDamageOverTime == true and !enemyDamageTimers.has(id):
 			var timer = Timer.new()
 			timer.one_shot = false
 			timer.wait_time = enemy.DamageTickTime
 			timer.connect("timeout", _on_take_damage_timeout.bind(enemy))
 			add_child(timer)
 			timer.start()
-			
+
 			enemyDamageTimers[id] = timer
+			var remove_timer = _remove_damage_timer.bind(id)
+			if !enemy.is_connected("tree_exiting", remove_timer):
+				enemy.connect("tree_exiting", remove_timer)
 		return
-		
+
 	if area.is_in_group("Bullet"):
 		var bullet = area.get_parent()
 		if !bullet.is_damaging_player():
@@ -241,22 +241,33 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 		var hit_effect = hitEffectScene.instantiate()
 		add_child(hit_effect)
 		hit_effect.emitting = true
-		
-		if !isDead and handleDamage(DamageValues.get_damage(bullet.Type)) == false:
+
+		if handleDamage(DamageValues.get_damage(bullet.Type)) == false:
 			handleKilled()
-			return
+		return
+
+	handlePerk(area)
 
 
 func _on_take_damage_timeout(enemy):
+	if isDead or !is_instance_valid(enemy):
+		return
+
 	if handleDamage(enemy.Damage) == false:
 		handleKilled()
 
 
+func _remove_damage_timer(id):
+	if enemyDamageTimers.has(id):
+		enemyDamageTimers[id].queue_free()
+		enemyDamageTimers.erase(id)
+
+
 func handleDamage(damage):
-	Input.start_joy_vibration(0, 0.5, 0.5, 0.1)
+	InputManager.vibrate(0.5, 0.5, 0.1)
 	var cameraShakeTween = get_tree().create_tween()
 	cameraShakeTween.tween_method(cameraShake, 5.0, 1.0, 0.5)
-	
+
 	var real_damage = damage
 	if shield > 0:
 		real_damage -= shield
@@ -265,8 +276,8 @@ func handleDamage(damage):
 		var tmp = updateShield(-damage)
 		if showDamage:
 			createShieldFloatingText(str(-tmp as int))
-		
-	
+
+
 	if real_damage > 0:
 		#barrier.changeState(false)
 		shieldRecoveryTimer.stop()
@@ -274,17 +285,24 @@ func handleDamage(damage):
 		shieldRecoveryTimer.start()
 		if showDamage:
 			createLifeFloatingText(str(real_damage as int))
-	
+
 	updateLife(-real_damage)
-	
+
 	if life <= 0:
 		return false
-	
+
 	return true
 
 
 func handleKilled():
+	if isDead:
+		return
+
 	isDead = true
+	for id in enemyDamageTimers.keys():
+		_remove_damage_timer(id)
+	if burn:
+		stopBoost()
 	$LifeBox/CollisionShape2D.set_deferred("disabled", true)
 	explode()
 	deathTimer.start()
@@ -299,85 +317,80 @@ func createFloatingText(value: String, color: Color, scale_factor: float = 1):
 
 func createLifeFloatingText(value, scale_factor: float = 1):
 	createFloatingText(value, Color.RED, scale_factor)
-	
-	
+
+
 func createShieldFloatingText(value, scale_factor: float = 1):
 	createFloatingText(value, Color.DODGER_BLUE, scale_factor)
-	
+
 
 func updateShield(value):
-	
+
 	shield += value
-	
+
 	var tmp = value
 	if shield < 0:
 		tmp = shield + value
 		shield = 0
-	
+
 	if shield > PlayerStatus.MaxShield:
 		shield = PlayerStatus.MaxShield
-		
+
 	shieldBar.setValue(shield)
 	update_shield.emit(shield)
-	
+
 	barrier.set_alpha_value(shield_aplha_step * shield)
-	
+
 	return tmp
-	
+
 
 func updateLife(value):
 	life += value
-	
+
 	if life < 0:
 		life = 0
-	
+
 	if life > PlayerStatus.MaxLife:
 		life = PlayerStatus.MaxLife
-	
+
 	lifeBar.setValue(life)
 	update_life.emit(life)
 
 func _on_life_box_area_exited(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		var enemy = area.get_parent()
-		var id = enemy.get_instance_id()
-		
-		if enemyDamageTimers.has(id):
-			enemyDamageTimers[id].stop()
-			enemyDamageTimers.erase(id)
-		return
-	
+		_remove_damage_timer(area.get_parent().get_instance_id())
+
+func handlePerk(area: Area2D):
 	if area.is_in_group("LifePerk"):
 		createLifeFloatingText("+" + str(area.Life), 2)
 		updateLife(area.Life)
 		return
-		
+
 	if area.is_in_group("ShieldPerk"):
 		createShieldFloatingText("+" + str(area.Shield), 2)
 		updateShield(area.Shield)
 		return
-		
+
 	if area.is_in_group("DamageUpPerk"):
 		createFloatingText("Damage +" + str(int(area.DamageUp)) + "%", Color.PURPLE,  2)
 		PlayerStatus.increase_damage(area.DamageUp)
 		return
-		
+
 	if area.is_in_group("CriticChanceUpPerk"):
 		createFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", Color.DEEP_PINK, 2)
 		PlayerStatus.increase_critic_chance(area.CriticChanceUp)
 		return
-	
+
 	if area.is_in_group("CriticHitMultiplierPerk"):
 		createFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", Color.CHARTREUSE, 2)
 		PlayerStatus.increase_critic_hit_multiplier(area.CriticHitMultiplier)
 		return
-	
+
 	if area.is_in_group("SpeedUpPerk"):
 		createFloatingText("Speed +" + str(int(area.SpeedUp)) + "%", Color.DODGER_BLUE, 2)
 		PlayerStatus.increase_speed(area.SpeedUp)
 		return
-	
+
 
 func updateAfterBurner(value):
-	currentAfterburner += value
+	currentAfterburner = clamp(currentAfterburner + value, 0, PlayerStatus.MaxAfterburner)
 	update_afterburner.emit(currentAfterburner)

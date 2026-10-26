@@ -10,6 +10,7 @@ var timer = Timer.new()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().paused = false
+	PlayerStatus.reset()
 	timer.connect("timeout", _on_timer_timeout)
 	add_child(timer)
 	prepareTimer()
