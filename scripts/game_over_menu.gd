@@ -22,7 +22,7 @@ func setPause(value):
 # public - called by game logic when the player is dead
 func show_result(score : int, phase_name : String, high_score : int, new_record : bool):
 	scoreLabel.text = "Score: " + str(score)
-	phaseLabel.text = "Reached: " + phase_name
+	phaseLabel.text = "Survived: " + phase_name
 	if new_record:
 		highScoreLabel.text = "NEW RECORD!"
 		highScoreLabel.add_theme_color_override("font_color", Color.GOLD)

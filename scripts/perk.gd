@@ -4,7 +4,7 @@ class_name Perk
 var _perk_type : Enums.PERKS
 signal taken
 
-@export var Timeout = 5.0
+@export var Timeout = 15.0
 
 var timeout = Timer.new()
 

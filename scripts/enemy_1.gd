@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+# Scout - weak and fast horde enemy, flies straight at the player
+# and explodes on contact.
+
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
@@ -17,17 +20,16 @@ var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 @export var ResizeSpeed = 0.05
 @export_category("Movemement")
 @export var RotationSpeed : float = TAU
-@export var Speed = 3000
-@export var Acceleration = 0.1
+@export var Speed = 110
+@export var Acceleration = 500
+@export var Knockback = 260
 # public
-@export var Damage = 20
+@export var Damage = 8
 # public
 @export var IsDamageOverTime = true
 # public
 @export var DamageTickTime = 0.5
-@export var Life = 100
-
-@onready var agent = $NavigationAgent2D
+@export var Life = 30
 
 signal killed
 
@@ -40,33 +42,34 @@ var isDead = false
 var player = null
 var deathTimer = Timer.new()
 
-func _ready():	
+func _ready():
 	set_physics_process(false)
 	call_deferred("skip_frame")
-	
+
 	var visualSettings = ConfigHandler.load_visuals()
-	lifeBar.visible = visualSettings["show_enemies_lifebar"]
+	lifeBar.visible = false
 	showDamage = visualSettings["show_damage_given"]
 	lifeBar.setColor(Color.GREEN)
 	lifeBar.setMaxValue(Life)
 	lifeBar.setValue(Life)
-	
+
 	explosion.init()
 	resizeTimer.start()
 
 	player = get_tree().get_first_node_in_group("player")
-	
+	Speed *= randf_range(0.85, 1.2)
+
 	deathTimer.one_shot = true
 	deathTimer.wait_time = 2
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
-	
+
 	var dissolveTween = get_tree().create_tween()
-	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
-	
-	make_path(Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY)))
+	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 0.5)
 
 func set_shader_dissolve_value(value : float):
+	if Juice.is_flashing(sprite):
+		return
 	sprite.material.set_shader_parameter("DissolveValue", value)
 
 # public
@@ -76,7 +79,7 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
-	
+
 # public
 func set_mark():
 	mark.activate(1.0)
@@ -92,40 +95,21 @@ func _physics_process(delta):
 	collisionShape.scale.y = collisionShape.scale.x
 	hitBoxCollisionshape.scale.x = hitBoxCollisionshape.scale.x + ResizeSpeed * resizeFactor * delta * 5
 	hitBoxCollisionshape.scale.y = hitBoxCollisionshape.scale.x
-	
-	
-	var dist_to_player = player.position - global_position;
-	var next_position = Vector2()
-	if dist_to_player.length() < 200:
-		next_position = player.position
-	else:
-		next_position = agent.get_next_path_position()
-	
-	var direction = global_position.direction_to(next_position)
-	var vel = direction * Speed * delta
+
+	if isDead:
+		return
+
+	var direction = global_position.direction_to(player.global_position)
+	velocity = velocity.move_toward(direction * Speed, Acceleration * delta)
 
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
-	
-	agent.velocity = vel
-		
+
+	move_and_slide()
 
 func _on_resize_timer_timeout():
 	resizeFactor = resizeFactor * -1
-	
-func make_path(pos: Vector2):
-	agent.target_position = pos
-
-
-func _on_navigation_agent_2d_navigation_finished() -> void:
-	make_path(Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY)))
-
-
-func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
-	velocity = velocity.move_toward(safe_velocity, 100)
-	move_and_slide()
-
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
@@ -136,13 +120,19 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		var bullet = area.get_parent()
 		if !bullet.is_damaging_enemy():
 			return
-		
+
 		var hit_effect = hitEffectScene.instantiate()
 		add_child(hit_effect)
 		hit_effect.set_global_position(bullet.get_global_position())
 		hit_effect.emitting = true
-		
-		if !isDead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
+
+		if isDead:
+			return
+
+		velocity += bullet.global_position.direction_to(global_position) * Knockback
+		Juice.flash(sprite)
+
+		if handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
 			isDead = true
 			explode()
 
@@ -168,21 +158,22 @@ func dispose():
 
 
 func handleDamage(damage):
-	if showDamage:
+	if showDamage and FloatingText.can_spawn(damage.Critical):
 		var damageText = floatingTextScene.instantiate()
 		damageText.RoundNumber = true
+		damageText.Big = damage.Critical
 		if damage.Critical:
 			damageText.set_color(Color.YELLOW)
 		else:
 			damageText.set_color(Color.WHITE)
-			
+
 		damageText.Amount = str(damage.Value)
 		add_child(damageText)
-		
+
 	Life = Life - damage.Value
 	lifeBar.setValue(Life)
-	
+
 	if Life <= 0:
 		return false
-	
+
 	return true

@@ -47,9 +47,6 @@ texture = ExtResource("2_ywix3")
 
 [node name="ResizeTimer" type="Timer" parent="."]
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-avoidance_enabled = true
-
 [node name="LifeBar" parent="." instance=ExtResource("3_0fnij")]
 offset_top = -25.0
 offset_bottom = -19.0
@@ -71,6 +68,4 @@ volume_db = 5.0
 [node name="Mark" parent="." instance=ExtResource("8_oweuj")]
 
 [connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
-[connection signal="navigation_finished" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_navigation_finished"]
-[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]

@@ -2,14 +2,16 @@ extends CharacterBody2D
 
 @export var Speed = 0
 @export var MaxSpeed = 300
+@export var DriftSpeed = 70
 @export var Acceleration = 10
 @export var Friction = 5
 @export var RotationSpeed : float = TAU
 @export var StrikeDelay : float = 0.25
 @export var StrikeDuration : float = 1.0
-@export var Life = 200
+@export var Life = 120
+@export var Knockback = 120
 # public
-@export var Damage = 50
+@export var Damage = 20
 # public
 @export var IsDamageOverTime = true
 # public
@@ -80,28 +82,33 @@ func _ready() -> void:
 	
 	
 func set_shader_dissolve_value(value : float):
-	sprite.material.set_shader_parameter("DissolveValue", value)
+	if !Juice.is_flashing(sprite):
+		sprite.material.set_shader_parameter("DissolveValue", value)
 	beamSprite.material.set_shader_parameter("DissolveValue", value)
 
 
 func _physics_process(delta: float) -> void:
+	var to_player = global_position.direction_to(_player.position)
 	if _playerDetected:
-		_direction = global_position.direction_to(_player.position)
-		var theta = wrapf(atan2(_direction.y, _direction.x) - ship.rotation - _halfPI, -PI, PI)
-		var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
-		
-		ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
-		
+		_direction = to_player
 		if _prepareingStrikeTimer.is_stopped():
 			_prepareingStrikeTimer.start()
 	else:
 		if !_prepareingStrikeTimer.is_stopped():
 			_prepareingStrikeTimer.stop()
-	
+
+	# always face the player, so the radar finds him
+	var theta = wrapf(atan2(to_player.y, to_player.x) - ship.rotation - _halfPI, -PI, PI)
+	var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
+	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
+
 	if _accelerate:
 		velocity = velocity.move_toward(_direction * MaxSpeed, Acceleration)
-	else:
+	elif _playerDetected:
 		velocity = velocity.move_toward(Vector2(0, 0), Friction)
+	else:
+		# drift towards the player until he is in radar range
+		velocity = velocity.move_toward(to_player * DriftSpeed, Friction)
 #
 	if !_isDead:
 		move_and_collide(velocity * delta)
@@ -146,8 +153,14 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		add_child(hit_effect)
 		hit_effect.set_global_position(bullet.get_global_position())
 		hit_effect.emitting = true
-		
-		if !_isDead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
+
+		if _isDead:
+			return
+
+		velocity += bullet.global_position.direction_to(global_position) * Knockback
+		Juice.flash(sprite)
+
+		if handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
 			_isDead = true
 			explode()
 
@@ -160,9 +173,10 @@ func dispose():
 
 
 func handleDamage(damage):
-	if _showDamage:
+	if _showDamage and FloatingText.can_spawn(damage.Critical):
 		var damageText = floatingTextScene.instantiate()
 		damageText.RoundNumber = true
+		damageText.Big = damage.Critical
 		if damage.Critical:
 			damageText.set_color(Color.YELLOW)
 		else:

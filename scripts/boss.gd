@@ -3,7 +3,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
-@export var Life = 5000
+@export var Life = 15000
 @export var Damage = 100
 @export var IsDamageOverTime = true
 @export var DamageTickTime = 0.5
@@ -180,7 +180,15 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		hit_effect.set_global_position(bullet.get_global_position())
 		hit_effect.emitting = true
 		
-		if !_is_dead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type), bullet.get_global_position()) == false:
+		if _is_dead:
+			return
+
+		var damage = PlayerStatus.get_damage_from_weapon(bullet.Type)
+		Juice.flash(mainBody, 0.05)
+		if damage.Critical:
+			Juice.hitstop(0.03)
+
+		if handleDamage(damage, bullet.get_global_position()) == false:
 			_is_dead = true
 			explode()
 
@@ -204,9 +212,10 @@ func explode():
 	killed.emit(get_instance_id())
 
 func handleDamage(damage, label_position : Vector2):
-	if _show_damage:
+	if _show_damage and FloatingText.can_spawn(damage.Critical):
 		var damageText = floatingTextScene.instantiate()
 		damageText.RoundNumber = true
+		damageText.Big = damage.Critical
 		if damage.Critical:
 			damageText.set_color(Color.YELLOW)
 		else:

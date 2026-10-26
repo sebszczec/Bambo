@@ -116,7 +116,7 @@ texture_under = ExtResource("2_r3oad")
 texture_progress = ExtResource("5_mptyy")
 
 [node name="Score" parent="GUI/CanvasLayer" instance=ExtResource("6_btsp4")]
-position = Vector2(960, -8)
+position = Vector2(960, 16)
 
 [node name="ActivePerkPanel" type="Panel" parent="GUI/CanvasLayer"]
 offset_left = 960.0
@@ -179,8 +179,10 @@ script = ExtResource("2_0s2sw")
 [node name="CanvasLayer" type="CanvasLayer" parent="InformationBox"]
 
 [node name="BoxContainer" type="BoxContainer" parent="InformationBox/CanvasLayer"]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 16.0
+offset_top = 110.0
+offset_right = 56.0
+offset_bottom = 150.0
 vertical = true
 
 [node name="FpsCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]

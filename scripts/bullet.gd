@@ -6,6 +6,8 @@ class_name Bullet
 @export var LifeTime = 0.5
 @export var HitBox : Area2D
 @export var Type : Enums.WEAPONS = Enums.WEAPONS.SMALL
+# piercing bullets are not destroyed when they hit something (orbit blades)
+@export var Piercing = false
 
 @onready var lifeTimer = $LifeTimer
 @onready var bolid = $BulletEffect
@@ -47,16 +49,17 @@ func is_damaging_enemy() -> bool:
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		if is_damaging_enemy():
+		if is_damaging_enemy() and !Piercing:
 			dispose()
 		return
-		
+
 	if area.is_in_group("Player"):
 		if is_damaging_player():
 			dispose()
 		return
-		
+
 	if area.is_in_group("Rock"):
-		dispose()
+		if !Piercing:
+			dispose()
 		return
 		

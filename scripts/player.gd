@@ -49,6 +49,15 @@ var deathTimer = Timer.new()
 
 var enemyDamageTimers = {}
 
+const MAX_SHAKE = 14.0
+const SHAKE_DECAY = 30.0
+var shakeStrength = 0.0
+var baseZoom = 1.25
+var zoomed = false
+var xpAudio = AudioStreamPlayer.new()
+var xpPitch = 1.0
+var xpPitchResetTime = 0
+
 signal update_life(value: int)
 signal update_afterburner(value: int)
 signal update_shield(value: int)
@@ -78,6 +87,60 @@ func _ready() -> void:
 
 	mainBody.play("spin")
 
+	xpAudio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_zap.ogg")
+	xpAudio.volume_db = -14
+	xpAudio.max_polyphony = 4
+	add_child(xpAudio)
+
+	PlayerStatus.connect("max_life_changed", _on_max_life_changed)
+	PlayerStatus.connect("max_shield_changed", _on_max_shield_changed)
+
+func _on_max_life_changed(value):
+	lifeBar.setMaxValue(value)
+
+func _on_max_shield_changed(value):
+	shieldBar.setMaxValue(value)
+	shield_aplha_step = 0.5 / value
+
+# public - called by xp gems
+func collect_xp(value : int):
+	if isDead:
+		return
+
+	# quick pickups in a row raise the pitch
+	var now = Time.get_ticks_msec()
+	if now > xpPitchResetTime:
+		xpPitch = 1.0
+	else:
+		xpPitch = min(xpPitch + 0.04, 2.2)
+	xpPitchResetTime = now + 400
+	xpAudio.pitch_scale = xpPitch
+	xpAudio.play()
+
+	PlayerStatus.add_xp(value)
+
+# public - camera shake, strength is added up and fades out
+func addShake(amount : float):
+	shakeStrength = min(shakeStrength + amount, MAX_SHAKE)
+
+# public - camera zooms out a bit when the screen gets crowded
+func setBaseZoom(value : float):
+	baseZoom = value
+	if !zoomed:
+		camera.zoom = camera.zoom.lerp(Vector2(baseZoom, baseZoom), 0.02)
+
+func updateShake(delta):
+	if shakeStrength <= 0:
+		camera.offset = Vector2.ZERO
+		return
+
+	shakeStrength = max(shakeStrength - SHAKE_DECAY * delta, 0)
+	cameraShake(shakeStrength)
+
+func regenerate(delta):
+	if PlayerStatus.Regen > 0 and life < PlayerStatus.MaxLife and !isDead:
+		updateLife(PlayerStatus.Regen * delta)
+
 
 func _physics_process(delta):
 	handleZoom()
@@ -86,13 +149,15 @@ func _physics_process(delta):
 	calculateVelocity()
 	calculateAfterburner(delta)
 	recoverShield(delta)
+	regenerate(delta)
+	updateShake(delta)
 
 	move_and_slide()
 
 func cameraShake(intensity : float):
-	var cameraOffset = cameraShakeNoise.get_noise_1d(Time.get_ticks_msec()) * intensity
-	camera.offset.x = cameraOffset
-	camera.offset.y = cameraOffset
+	var t = Time.get_ticks_msec()
+	camera.offset.x = cameraShakeNoise.get_noise_1d(t) * intensity
+	camera.offset.y = cameraShakeNoise.get_noise_1d(t + 5000) * intensity
 
 func on_shield_recovery_timer_timeout():
 	#barrier.changeState(true)
@@ -112,11 +177,13 @@ func explode():
 
 func handleZoom():
 	if Input.is_action_just_pressed("zoom"):
+		zoomed = true
 		camera.zoom = Vector2(ZoomFactor, ZoomFactor)
 		return
 
 	if Input.is_action_just_released("zoom"):
-		camera.zoom = Vector2(1.25, 1.25)
+		zoomed = false
+		camera.zoom = Vector2(baseZoom, baseZoom)
 
 
 func calculateAfterburner(delta):
@@ -265,9 +332,9 @@ func _remove_damage_timer(id):
 
 func handleDamage(damage):
 	InputManager.vibrate(0.5, 0.5, 0.1)
-	var cameraShakeTween = get_tree().create_tween()
-	cameraShakeTween.tween_method(cameraShake, 5.0, 1.0, 0.5)
+	addShake(6.0)
 
+	damage = max(damage - PlayerStatus.Armor, 1)
 	var real_damage = damage
 	if shield > 0:
 		real_damage -= shield
@@ -383,6 +450,11 @@ func handlePerk(area: Area2D):
 	if area.is_in_group("CriticHitMultiplierPerk"):
 		createFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", Color.CHARTREUSE, 2)
 		PlayerStatus.increase_critic_hit_multiplier(area.CriticHitMultiplier)
+		return
+
+	if area.is_in_group("MagnetPerk"):
+		createFloatingText("Magnet!", Color.GOLD, 2)
+		get_tree().call_group("XpGem", "attract")
 		return
 
 	if area.is_in_group("SpeedUpPerk"):

@@ -1,7 +1,8 @@
 extends CharacterBody2D
 
-@export var Life = 200
-@export var Damage = 30
+@export var Life = 100
+@export var Knockback = 150
+@export var Damage = 12
 @export var IsDamageOverTime = false
 @export var DamageTickTime = 0.0
 @export var ShootingDelay = 0.5
@@ -72,6 +73,8 @@ func _ready() -> void:
 	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
 
 func set_shader_dissolve_value(value : float):
+	if Juice.is_flashing(sprite):
+		return
 	sprite.material.set_shader_parameter("DissolveValue", value)
 
 
@@ -116,16 +119,23 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		add_child(hit_effect)
 		hit_effect.set_global_position(bullet.get_global_position())
 		hit_effect.emitting = true
-		
-		if !_isDead and handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
+
+		if _isDead:
+			return
+
+		velocity += bullet.global_position.direction_to(global_position) * Knockback
+		Juice.flash(sprite)
+
+		if handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
 			_shootingTimer.stop()
 			_isDead = true
 			explode()
 
 func handleDamage(damage):
-	if _showDamage:
+	if _showDamage and FloatingText.can_spawn(damage.Critical):
 		var damageText = floatingTextScene.instantiate()
 		damageText.RoundNumber = true
+		damageText.Big = damage.Critical
 		if damage.Critical:
 			damageText.set_color(Color.YELLOW)
 		else:

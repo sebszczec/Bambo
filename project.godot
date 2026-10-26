@@ -30,6 +30,8 @@ WeaponFactory="*res://singletons/weapon_factory.gd"
 LevelSettings="*res://singletons/level_settings.gd"
 DamageValues="*res://singletons/damage_values.gd"
 PlayerStatus="*res://singletons/player_status.gd"
+Juice="*res://singletons/juice.gd"
+Upgrades="*res://singletons/upgrades.gd"
 
 [display]
 
