@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3x64e7u4k5mg"]
 
-[ext_resource type="Texture2D" uid="uid://b7ecthhebv3j3" path="res://resources/kenney_particle_pack/scorch_01.png" id="1_03g48"]
+[ext_resource type="Texture2D" uid="uid://bcc35m6gpqtvy" path="res://resources/kenney_particle_pack/scorch_01.png" id="1_03g48"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fygkt"]
 particle_flag_disable_z = true

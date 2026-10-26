@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dfw2m05fb74h0"]
 
 [ext_resource type="Shader" uid="uid://c0t6m0acigsmr" path="res://shaders/barrier.gdshader" id="1_kguv5"]
-[ext_resource type="Texture2D" uid="uid://g6jxk26pmu8c" path="res://resources/kenney_particle_pack/circle_02.png" id="1_tgs2o"]
+[ext_resource type="Texture2D" uid="uid://k38luuhpou4r" path="res://resources/kenney_particle_pack/circle_02.png" id="1_tgs2o"]
 [ext_resource type="Script" uid="uid://dooobqrcv60m" path="res://scripts/barrier.gd" id="1_wteub"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_wqfju"]

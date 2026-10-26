@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bmidh207xpy5i"]
 
 [ext_resource type="Script" uid="uid://cwktespqsmpo6" path="res://scripts/count_down.gd" id="1_1wb2h"]
-[ext_resource type="AudioStream" uid="uid://bw5lie1t5myg0" path="res://resources/sfx/countdown-a.ogg" id="2_i43cd"]
-[ext_resource type="AudioStream" uid="uid://bo2aogf8q25qe" path="res://resources/sfx/countdown-b.ogg" id="3_v7end"]
+[ext_resource type="AudioStream" uid="uid://bgknlth438vv4" path="res://resources/sfx/countdown-a.ogg" id="2_i43cd"]
+[ext_resource type="AudioStream" uid="uid://dv6b3cets30tg" path="res://resources/sfx/countdown-b.ogg" id="3_v7end"]
 
 [node name="CountDown" type="Control"]
 layout_mode = 3
