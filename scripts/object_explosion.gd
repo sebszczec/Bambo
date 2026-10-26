@@ -4,13 +4,15 @@ var fragmentScene = preload("res://scenes/object_fragment.tscn")
 
 @export var PathToSprite : String = "res://resources/kenney_particle_pack/window_04.png"
 @export var SpriteTexture : Texture2D = null
+# the sprite is cut into Grid x Grid fragments, smaller grid is cheaper
+@export var Grid : int = 5
 
 @onready var effect = $ExplosionEffect
 
 var _obj : Array[Sprite2D] = []
 var _h_frames = 5
 var _v_frames = 5
-var _all_frames = _h_frames * _v_frames
+var _all_frames = 25
 var _h_offset : float = 0
 var _w_offset : float = 0
 var _h_pixels : float = 0
@@ -26,19 +28,29 @@ var _alpha_friciton = 1
 var _speed = 5
 
 var _explode = false
+var _initialized = false
 
 func _ready() -> void:
-	pass
+	# nothing to animate until explode() is called
+	set_process(false)
 
 func init(effect_scale : Vector2 = Vector2(1.0, 1.0), effect_amount : int = 50):
+	if _initialized:
+		return
+	_initialized = true
+	_h_frames = Grid
+	_v_frames = Grid
+	_all_frames = Grid * Grid
 	effect.scale = effect_scale
 	effect.amount = effect_amount
-	for i in range(_all_frames): 
+	for i in range(_all_frames):
 		var tmp : Sprite2D = fragmentScene.instantiate()
 		if SpriteTexture == null:
 			tmp.texture = load(PathToSprite)
 		else:
 			tmp.texture = SpriteTexture
+		tmp.hframes = Grid
+		tmp.vframes = Grid
 		tmp.set_frame(i)
 		_obj.append(tmp)
 		add_child(tmp)
@@ -84,7 +96,10 @@ func _calculate_offset():
 	_w_pixels_half = _w_pixels / 2
 	
 func explode():
+	# fragments are created only when needed, so living objects stay light
+	init()
 	_explode = true
+	set_process(true)
 	effect.emitting = true
 	
 

@@ -11,7 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="9_nfosb"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_nfosb"]
-resource_local_to_scene = true
 frequency = 0.03
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_25yel"]
@@ -31,7 +30,7 @@ radius = 21.0
 
 [node name="Enemy_3" type="CharacterBody2D"]
 collision_layer = 8
-collision_mask = 11
+collision_mask = 3
 script = ExtResource("1_uk4cu")
 
 [node name="LifeBar" parent="." instance=ExtResource("2_caiu3")]

@@ -4,7 +4,6 @@ extends CharacterBody2D
 # and explodes on contact.
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
-var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var sprite = $Ship/Sprite2D
 @onready var resizeTimer = $ResizeTimer
@@ -53,7 +52,6 @@ func _ready():
 	lifeBar.setMaxValue(Life)
 	lifeBar.setValue(Life)
 
-	explosion.init()
 	resizeTimer.start()
 
 	player = get_tree().get_first_node_in_group("player")
@@ -91,10 +89,7 @@ func skip_frame():
 func _physics_process(delta):
 	sprite.scale.x = sprite.scale.x + ResizeSpeed * resizeFactor * delta
 	sprite.scale.y = sprite.scale.x
-	collisionShape.scale.x = collisionShape.scale.x + ResizeSpeed * resizeFactor * delta * 5
-	collisionShape.scale.y = collisionShape.scale.x
-	hitBoxCollisionshape.scale.x = hitBoxCollisionshape.scale.x + ResizeSpeed * resizeFactor * delta * 5
-	hitBoxCollisionshape.scale.y = hitBoxCollisionshape.scale.x
+	# collision shapes are not resized with the sprite, changing them every frame is expensive
 
 	if isDead:
 		return
@@ -121,10 +116,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		if !bullet.is_damaging_enemy():
 			return
 
-		var hit_effect = hitEffectScene.instantiate()
-		add_child(hit_effect)
-		hit_effect.set_global_position(bullet.get_global_position())
-		hit_effect.emitting = true
+		Juice.hit_effect(self, bullet.get_global_position())
 
 		if isDead:
 			return

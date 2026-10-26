@@ -13,7 +13,6 @@ extends CharacterBody2D
 @export var RotationSpeed : float = TAU
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
-var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var ship = $Ship
 @onready var sprite = $Ship/Sprite2D
@@ -52,7 +51,6 @@ func _ready() -> void:
 	lifeBar.setMaxValue(Life)
 	lifeBar.setValue(Life)
 	
-	explosion.init()
 	
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL, true, false)
 	_weapon.set_owner(_world)
@@ -115,10 +113,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		if !bullet.is_damaging_enemy():
 			return
 		
-		var hit_effect = hitEffectScene.instantiate()
-		add_child(hit_effect)
-		hit_effect.set_global_position(bullet.get_global_position())
-		hit_effect.emitting = true
+		Juice.hit_effect(self, bullet.get_global_position())
 
 		if _isDead:
 			return

@@ -2,8 +2,11 @@ extends Node
 
 # Game feel helpers: hit stop, camera shake and hit flash.
 
-const HITSTOP_COOLDOWN_MS = 150
+const HITSTOP_COOLDOWN_MS = 500
 const FLASH_COLOR = Color(6, 6, 6, 1)
+const HIT_EFFECT_NAME = "PooledHitEffect"
+
+var _hit_effect_scene = preload("res://scenes/hit_effect.tscn")
 
 var _last_hitstop = -100000
 var _hitstop_active = false
@@ -27,6 +30,18 @@ func hitstop(duration : float = 0.05, time_scale : float = 0.05):
 	await get_tree().create_timer(duration, true, false, true).timeout
 	Engine.time_scale = 1.0
 	_hitstop_active = false
+
+# public - every object reuses one hit particle effect,
+# creating a new one for each hit is too slow with many bullets
+func hit_effect(target : Node, pos : Vector2):
+	var effect = target.get_node_or_null(HIT_EFFECT_NAME)
+	if effect == null:
+		effect = _hit_effect_scene.instantiate()
+		effect.name = HIT_EFFECT_NAME
+		target.add_child(effect)
+
+	effect.global_position = pos
+	effect.restart()
 
 # public
 func shake(amount : float):

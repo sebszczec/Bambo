@@ -24,7 +24,6 @@ signal destroyed
 
 func _ready() -> void:
 	world = get_tree().current_scene
-	explosion.init()
 	explosion.set_particle_color(Color.GRAY)
 	
 	rotation_speed = randf_range(MinRotationSpeed, MaxRotationSpeed)

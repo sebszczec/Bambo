@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
-var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @export var Life = 15000
 @export var Damage = 100
@@ -175,18 +174,13 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 			return
 
 
-		var hit_effect = hitEffectScene.instantiate()
-		add_child(hit_effect)
-		hit_effect.set_global_position(bullet.get_global_position())
-		hit_effect.emitting = true
-		
+		Juice.hit_effect(self, bullet.get_global_position())
+
 		if _is_dead:
 			return
 
 		var damage = PlayerStatus.get_damage_from_weapon(bullet.Type)
 		Juice.flash(mainBody, 0.05)
-		if damage.Critical:
-			Juice.hitstop(0.03)
 
 		if handleDamage(damage, bullet.get_global_position()) == false:
 			_is_dead = true

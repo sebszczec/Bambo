@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
-var hitEffectScene = preload("res://scenes/hit_effect.tscn")
 
 @onready var satelite = $Satelite
 @onready var camera = $Camera2D
@@ -305,9 +304,7 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 		if !bullet.is_damaging_player():
 			return
 
-		var hit_effect = hitEffectScene.instantiate()
-		add_child(hit_effect)
-		hit_effect.emitting = true
+		Juice.hit_effect(self, global_position)
 
 		if handleDamage(DamageValues.get_damage(bullet.Type)) == false:
 			handleKilled()
