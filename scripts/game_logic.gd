@@ -403,7 +403,6 @@ func _on_boss_killed():
 func victory():
 	score.add_score(VICTORY_BONUS)
 	phaseBanner.show_text("SECTOR CLEARED  +" + str(VICTORY_BONUS), Color.GOLD)
-	ConfigHandler.save_run_result(score.get_score(), get_run_summary())
 	get_tree().create_timer(ENDLESS_START_DELAY, false).connect("timeout", _start_endless)
 
 func _start_endless():
@@ -424,8 +423,7 @@ func _on_player_killed():
 
 	var final_score = score.get_score()
 	var summary = get_run_summary()
-	var new_record = ConfigHandler.save_run_result(final_score, summary)
-	gameOverMenu.show_result(final_score, summary, ConfigHandler.get_high_score(), new_record)
+	gameOverMenu.show_result(final_score, summary)
 
 
 func _on_player_damage_taken(value):

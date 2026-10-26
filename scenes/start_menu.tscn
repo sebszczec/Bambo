@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cjhfvs5t1o0xn"]
+[gd_scene load_steps=9 format=3 uid="uid://cjhfvs5t1o0xn"]
 
 [ext_resource type="Script" uid="uid://broyn8g8twevf" path="res://scripts/start_menu.gd" id="1_xryhy"]
 [ext_resource type="PackedScene" uid="uid://rjw2vhq4jhs8" path="res://scenes/warp.tscn" id="2_h61rw"]
@@ -60,6 +60,15 @@ tracks/1/keys = {
 "values": [5.0, 0.0]
 }
 
+[sub_resource type="Environment" id="Environment_glow"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 0.6
+glow_levels/1 = 1.0
+glow_levels/2 = 1.0
+glow_levels/4 = 1.0
+glow_blend_mode = 1
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4v6gu"]
 _data = {
 &"RESET": SubResource("Animation_fcv5n"),
@@ -84,10 +93,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -640.0
+offset_top = 110.0
+offset_right = -240.0
+offset_bottom = 310.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/v_separation = 8
@@ -107,22 +116,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Quit"
 
-[node name="HighScoreLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -400.0
-offset_top = -120.0
-offset_right = 400.0
-offset_bottom = -70.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_font_sizes/font_size = 26
-horizontal_alignment = 1
-
 [node name="Music" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_thu50")
 autoplay = true
@@ -135,6 +128,9 @@ volume_db = 10.0
 libraries = {
 &"": SubResource("AnimationLibrary_4v6gu")
 }
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_glow")
 
 [connection signal="focus_entered" from="GridContainer/NewGame" to="." method="_on_button_focus_changed"]
 [connection signal="mouse_entered" from="GridContainer/NewGame" to="." method="_on_new_game_mouse_entered"]

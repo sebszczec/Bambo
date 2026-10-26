@@ -1,6 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://cp7v3lhjxqiom"]
+[gd_scene load_steps=5 format=3 uid="uid://cp7v3lhjxqiom"]
 
 [ext_resource type="Script" uid="uid://c7qd16bud6jjo" path="res://scripts/settings_menu.gd" id="1_fehxq"]
+[ext_resource type="PackedScene" uid="uid://rjw2vhq4jhs8" path="res://scenes/warp.tscn" id="2_warp"]
+[ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="3_sfx"]
+
+[sub_resource type="Environment" id="Environment_glow"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 0.6
+glow_levels/1 = 1.0
+glow_levels/2 = 1.0
+glow_levels/4 = 1.0
+glow_blend_mode = 1
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
@@ -11,14 +22,19 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fehxq")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Warp" parent="." instance=ExtResource("2_warp")]
+Speed = 0.6
+Brightness = 1.5
+
+[node name="Title" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_top = 60.0
+offset_bottom = 170.0
 grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0.0235294, 1)
+text = "SETTINGS"
+horizontal_alignment = 1
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -27,122 +43,123 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -97.0
-offset_top = -129.0
-offset_right = 97.0
-offset_bottom = 129.0
+offset_left = -480.0
+offset_top = -320.0
+offset_right = 480.0
+offset_bottom = 310.0
 grow_horizontal = 2
 grow_vertical = 2
 current_tab = 0
 
-[node name="Visuals" type="GridContainer" parent="TabContainer"]
+[node name="Visuals" type="VBoxContainer" parent="TabContainer"]
 layout_mode = 2
+theme_override_constants/separation = 10
 metadata/_tab_index = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Visuals"]
-layout_mode = 2
-
-[node name="Labes" type="VBoxContainer" parent="TabContainer/Visuals/HBoxContainer"]
-layout_mode = 2
-
-[node name="ShowFpsLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="Fps" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Show FPS"
 
-[node name="ShowBulletsCountLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="BulletsCount" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Show bullets count"
 
-[node name="ShowEnemiesCountLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="EnemiesCount" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Show enemies count"
 
-[node name="ShowPlayerLifebarLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="PlayerLifeBar" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Show player lifebar"
 
-[node name="ShowEnemiesLifebarLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="EnemyLifeBar" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Show enemies lifebar"
 
-[node name="ShowDamageTakenLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="PlayerDamage" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
-text = "Show damage taken
-"
+text = "Show damage taken"
 
-[node name="ShowDamageGivenLabel" type="Label" parent="TabContainer/Visuals/HBoxContainer/Labes"]
+[node name="EnemyDamage" type="CheckBox" parent="TabContainer/Visuals"]
 layout_mode = 2
 text = "Show damage given"
 
-[node name="Checks" type="VBoxContainer" parent="TabContainer/Visuals/HBoxContainer"]
-layout_mode = 2
-
-[node name="Fps" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="BulletsCount" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="EnemiesCount" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="PlayerLifeBar" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="EnemyLifeBar" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="PlayerDamage" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="EnemyDamage" type="CheckBox" parent="TabContainer/Visuals/HBoxContainer/Checks"]
-layout_mode = 2
-
-[node name="BackButton" type="Button" parent="TabContainer/Visuals"]
-layout_mode = 2
-text = "Back"
-
-[node name="Controls" type="GridContainer" parent="TabContainer"]
+[node name="Controls" type="VBoxContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
+theme_override_constants/separation = 24
 metadata/_tab_index = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Controls"]
+[node name="InputModeRow" type="HBoxContainer" parent="TabContainer/Controls"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="InputModeLabel" type="Label" parent="TabContainer/Controls/InputModeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="Labels" type="VBoxContainer" parent="TabContainer/Controls/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="InputModeLabel" type="Label" parent="TabContainer/Controls/HBoxContainer/Labels"]
-layout_mode = 2
 text = "Input device"
 
-[node name="Checks" type="VBoxContainer" parent="TabContainer/Controls/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-
-[node name="InputMode" type="OptionButton" parent="TabContainer/Controls/HBoxContainer/Checks"]
+[node name="InputMode" type="OptionButton" parent="TabContainer/Controls/InputModeRow"]
+custom_minimum_size = Vector2(380, 0)
 layout_mode = 2
 
 [node name="ControlsHelp" type="Label" parent="TabContainer/Controls"]
 layout_mode = 2
-text = "Keyboard + mouse:  WASD / arrows - move,  mouse - aim,  LMB / Space - shoot,  RMB / Shift - afterburner,  Z / MMB - zoom,  Esc / P - pause
-Gamepad:  left stick / D-pad - move,  right stick - aim,  RT - shoot,  LT - afterburner,  Y - zoom,  Start - pause
-Auto switches to the device you used last."
+theme_override_font_sizes/font_size = 18
+theme_override_constants/line_spacing = 8
+text = "KEYBOARD + MOUSE
+Move - WASD / arrows      Aim - mouse
+Shoot - LMB / Space      Afterburner - RMB / Shift
+Zoom - Z / MMB      Pause - Esc / P
 
-[node name="BackButton" type="Button" parent="TabContainer/Controls"]
+GAMEPAD
+Move - left stick / D-pad      Aim - right stick
+Shoot - RT      Afterburner - LT
+Zoom - Y      Pause - Start
+
+Auto switches to the device you used last."
+autowrap_mode = 3
+
+[node name="Scores" type="VBoxContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
+theme_override_constants/separation = 16
+metadata/_tab_index = 2
+
+[node name="ResetScoresButton" type="Button" parent="TabContainer/Scores"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Reset high scores"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -200.0
+offset_right = 140.0
+offset_bottom = -140.0
+grow_horizontal = 2
+grow_vertical = 0
 text = "Back"
 
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/Fps" to="." method="_on_fps_toggled"]
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/BulletsCount" to="." method="_on_bullets_count_toggled"]
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemiesCount" to="." method="_on_enemies_count_toggled"]
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/PlayerLifeBar" to="." method="_on_player_life_bar_toggled"]
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemyLifeBar" to="." method="_on_enemy_life_bar_toggled"]
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/PlayerDamage" to="." method="_on_player_damage_toggled"]
-[connection signal="toggled" from="TabContainer/Visuals/HBoxContainer/Checks/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
-[connection signal="pressed" from="TabContainer/Visuals/BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="item_selected" from="TabContainer/Controls/HBoxContainer/Checks/InputMode" to="." method="_on_input_mode_selected"]
-[connection signal="pressed" from="TabContainer/Controls/BackButton" to="." method="_on_back_button_pressed"]
+[node name="Sfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_sfx")
+volume_db = 10.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_glow")
+
+[connection signal="toggled" from="TabContainer/Visuals/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/BulletsCount" to="." method="_on_bullets_count_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/EnemiesCount" to="." method="_on_enemies_count_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/PlayerLifeBar" to="." method="_on_player_life_bar_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/EnemyLifeBar" to="." method="_on_enemy_life_bar_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/PlayerDamage" to="." method="_on_player_damage_toggled"]
+[connection signal="toggled" from="TabContainer/Visuals/EnemyDamage" to="." method="_on_enemy_damage_toggled"]
+[connection signal="item_selected" from="TabContainer/Controls/InputModeRow/InputMode" to="." method="_on_input_mode_selected"]
+[connection signal="pressed" from="TabContainer/Scores/ResetScoresButton" to="." method="_on_reset_scores_button_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

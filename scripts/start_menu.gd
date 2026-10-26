@@ -1,5 +1,7 @@
 extends Control
 
+const TitleBackdrop = preload("res://scripts/title_backdrop.gd")
+
 @onready var newGameButton = $GridContainer/NewGame
 @onready var settingsButton = $GridContainer/Settings
 @onready var quitButton = $GridContainer/Quit
@@ -7,17 +9,37 @@ extends Control
 @onready var anim = $AnimationPlayer
 @onready var warp = $Warp
 
+var logo : TitleLogo
+var highScoreTable : HighScoreTable
+var backdrop : Node2D
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().paused = false
-	newGameButton.grab_focus()
+	theme = MenuTheme.create(32)
 
-	var high_score = ConfigHandler.get_high_score()
-	if high_score > 0:
-		$HighScoreLabel.text = "High score: " + str(high_score) + "  (" + ConfigHandler.get_best_phase() + ")"
-	else:
-		$HighScoreLabel.text = ""
+	# drawn above the warp stars but below the menu
+	backdrop = TitleBackdrop.new()
+	add_child(backdrop)
+	move_child(backdrop, warp.get_index() + 1)
+
+	logo = TitleLogo.new()
+	logo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(logo)
+	move_child(logo, backdrop.get_index() + 1)
+
+	highScoreTable = HighScoreTable.new()
+	highScoreTable.set_anchors_preset(Control.PRESET_CENTER)
+	highScoreTable.offset_left = 80
+	highScoreTable.offset_right = 760
+	highScoreTable.offset_top = -10
+	highScoreTable.offset_bottom = 500
+	highScoreTable.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(highScoreTable)
+	move_child(highScoreTable, container.get_index())
+
+	newGameButton.grab_focus()
 
 
 func _on_quit_pressed() -> void:
@@ -28,6 +50,10 @@ func _on_new_game_pressed() -> void:
 	newGameButton.disabled = true
 	settingsButton.disabled = true
 	quitButton.disabled = true
+	logo.strike(1.5)
+	var tween = create_tween().set_parallel(true)
+	for node in [logo, highScoreTable, backdrop]:
+		tween.tween_property(node, "modulate:a", 0.0, 1.0)
 	anim.play("warp_speed")
 
 
@@ -37,7 +63,7 @@ func _on_settings_pressed() -> void:
 
 func _on_button_focus_changed() -> void:
 	$Sfx.play()
-	
+
 
 func _on_new_game_mouse_entered() -> void:
 	newGameButton.grab_focus()
