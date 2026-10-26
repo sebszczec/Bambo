@@ -24,6 +24,10 @@ func _ready():
 
 
 func _physics_process(_delta):
+	# bullets moved from outside (orbit blades) set their own rotation
+	if Speed == 0:
+		return
+
 	rotation = PI / 2 + atan2(velocity.y, velocity.x)
 	velocity = velocity.normalized() * Speed
 	var _collision = move_and_collide(velocity)

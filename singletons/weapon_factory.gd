@@ -385,7 +385,8 @@ class Orbit extends Weapon:
 		for i in range(blades.size()):
 			var offset = Vector2(radius, 0).rotated(angle + i * step)
 			blades[i].global_position = player.global_position + offset
-			blades[i].rotation = offset.angle()
+			# point along the direction of flight (tangent of the circle)
+			blades[i].rotation = offset.angle() + PI
 
 	# public - removes blades when the player dies
 	func clear():
