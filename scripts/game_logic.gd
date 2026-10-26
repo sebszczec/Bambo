@@ -54,6 +54,7 @@ var combo_time_left = 0.0
 @onready var phase3_sound = $Phase3Sound
 @onready var phase4_sound = $Phase4Sound
 @onready var phase5_sound = $Phase5Sound
+@onready var final_phase_sound = $FinalPhaseSound
 
 func _ready() -> void:
 	world = get_parent()
@@ -218,15 +219,18 @@ func _on_time_changed(_seconds : int):
 func _on_phase_started(phase : Enums.PHASE, _phase_name : String):
 	if phase == Enums.PHASE.Endless:
 		phaseBanner.show_text("ENDLESS MODE", Color.ORANGE)
+	elif phase == Enums.PHASE.Boss:
+		final_phase_sound.position = player.position
+		final_phase_sound.play()
 
 func _on_stage_started(stage : int):
 	if phase_guard.current_phase != Enums.PHASE.Survival:
 		return
 
-	# speech every two minutes
+	# speech for the first threat levels, matching the banner number
 	var sounds = [phase1_sound, phase2_sound, phase3_sound, phase4_sound, phase5_sound]
-	if stage % 2 == 0:
-		var sound = sounds[min(stage / 2, sounds.size() - 1)]
+	if stage < sounds.size():
+		var sound = sounds[stage]
 		sound.position = player.position
 		sound.play()
 
