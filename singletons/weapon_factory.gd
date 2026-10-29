@@ -29,6 +29,8 @@ func get_weapon(weapon: Enums.WEAPONS, damaging_player: bool, damaging_enemy: bo
 		result = Bomb.new()
 	elif weapon == Enums.WEAPONS.ORBIT:
 		result = Orbit.new()
+	elif weapon == Enums.WEAPONS.WORM_SPIT:
+		result = WormSpit.new()
 	else:
 		result = SmallBullet.new()
 
@@ -136,6 +138,12 @@ class Weapon:
 		bullet.connect("freeing", _on_bullet_freeing)
 		return bullet
 
+	# bigger, warm glow so homing rockets stand out from regular bullets
+	func apply_rocket_look(bullet):
+		var effect = bullet.get_node("BulletEffect")
+		effect.scale = Vector2(1.8, 1.8)
+		effect.self_modulate = Color(2.2, 1.1, 0.3)
+
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
 		if canShoot:
 			audio.play()
@@ -205,6 +213,11 @@ class SmallHomingBullet extends SmallBullet:
 		else:
 			super.shoot(owner, start_position, direction)
 
+	func create_bullet(start_position: Vector2, direction: Vector2):
+		var bullet = super.create_bullet(start_position, direction)
+		apply_rocket_look(bullet)
+		return bullet
+
 class SmallHomingBulletWithDelay extends SmallBullet:
 	func setup():
 		super.setup()
@@ -218,6 +231,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 			audio.play()
 			canShoot = false
 			var bullet = create_bullet(start_position, direction)
+			apply_rocket_look(bullet)
 
 			var homing_timer = Timer.new()
 			homing_timer.one_shot = true
@@ -394,3 +408,21 @@ class Orbit extends Weapon:
 			if is_instance_valid(blade):
 				blade.dispose()
 		blades.clear()
+
+# acid spit of the worm boss, fires count bullets in a fan,
+# spread = TAU / count gives a full ring
+class WormSpit extends Weapon:
+	var count = 5
+
+	func setup():
+		shooting_delay = 0.05
+		speed = 5
+		life_time = 3
+		spread = 0.2
+		bullet_scene = preload("res://scenes/worm_bullet.tscn")
+		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser1.ogg")
+		type = Enums.WEAPONS.WORM_SPIT
+		needs_target = false
+
+	func get_projectile_count() -> int:
+		return count

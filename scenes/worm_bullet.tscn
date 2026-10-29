@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" uid="uid://bvy862rpjgv0i" path="res://scripts/bullet.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://resources/wormboss/worm_spit.png" id="2_spit"]
+[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/light_01.png" id="3_glow"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 3.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hit"]
+radius = 6.0
+height = 20.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[node name="WormBullet" type="StaticBody2D" node_paths=PackedStringArray("HitBox")]
+collision_layer = 4
+collision_mask = 10
+script = ExtResource("1_script")
+HitBox = NodePath("HitBox")
+Type = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="LifeTimer" type="Timer" parent="." groups=["Bullet"]]
+
+[node name="HitBox" type="Area2D" parent="." groups=["Bullet"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CapsuleShape2D_hit")
+
+[node name="Glow" type="Sprite2D" parent="."]
+modulate = Color(0.2, 1, 0.3, 0.55)
+material = SubResource("CanvasItemMaterial_add")
+scale = Vector2(0.08, 0.13)
+texture = ExtResource("3_glow")
+
+[node name="BulletEffect" type="Sprite2D" parent="."]
+self_modulate = Color(1.4, 2.2, 1.4, 1)
+rotation = -0.785398
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_spit")

@@ -22,6 +22,8 @@ func _ready() -> void:
 	_values[Enums.WEAPONS.BOMB].MaxValue = 20000
 	_values[Enums.WEAPONS.ORBIT].MinValue = 15
 	_values[Enums.WEAPONS.ORBIT].MaxValue = 25
+	_values[Enums.WEAPONS.WORM_SPIT].MinValue = 20
+	_values[Enums.WEAPONS.WORM_SPIT].MaxValue = 30
 
 func get_damage(weapon : Enums.WEAPONS):
 	return randi_range(_values[weapon].MinValue, _values[weapon].MaxValue)

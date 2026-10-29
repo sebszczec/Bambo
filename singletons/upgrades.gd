@@ -84,6 +84,17 @@ func get_weapon_icon(type : Enums.WEAPONS) -> Texture2D:
 			return entry["icon"]
 	return null
 
+# public - dev console
+func get_pool() -> Array:
+	return _pool
+
+# public - dev console, empty when there is no such upgrade
+func get_entry(id : String) -> Dictionary:
+	for entry in _pool:
+		if entry["id"] == id:
+			return entry
+	return {}
+
 # public
 func get_level(id : String) -> int:
 	return _levels.get(id, 0)

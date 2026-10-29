@@ -13,6 +13,7 @@ var _points_dict : Dictionary = {
 	"Enemy 2" : 30,
 	"Enemy 3" : 30,
 	"Boss" : 10000,
+	"Worm" : 15000,
 }
 
 # xp given by the gem dropped from an enemy
@@ -21,6 +22,7 @@ var _xp_dict : Dictionary = {
 	"Enemy 2" : 5,
 	"Enemy 3" : 5,
 	"Boss" : 100,
+	"Worm" : 150,
 }
 
 # chances are in 1/1000, stats and weapons come from level ups,
@@ -62,6 +64,7 @@ var _enemy_scenes : Dictionary = {
 	Enums.ENEMIES.GUARD : preload("res://scenes/enemy_2.tscn"), 
 	Enums.ENEMIES.HUNTER : preload("res://scenes/enemy_3.tscn"),
 	Enums.ENEMIES.BOSS : preload("res://scenes/boss.tscn"),
+	Enums.ENEMIES.WORM_BOSS : preload("res://scenes/worm_boss.tscn"),
 }
 
 var _mine_scene = preload("res://scenes/mine.tscn")

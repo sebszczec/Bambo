@@ -28,6 +28,8 @@ var life = PlayerStatus.MaxLife
 var shield = PlayerStatus.MaxShield
 var shield_aplha_step = 0.5 / PlayerStatus.MaxShield
 var isDead = false
+# dev console cheat, no damage taken
+var godMode = false
 
 @export_category("Camera")
 @export var ZoomFactor = 2
@@ -313,6 +315,17 @@ func _on_life_box_area_entered(area: Area2D) -> void:
 	handlePerk(area)
 
 
+# public - damage from hazards that are neither bullets nor enemy bodies (worm laser)
+func take_damage(damage):
+	if isDead:
+		return
+
+	Juice.hit_effect(self, global_position)
+
+	if handleDamage(damage) == false:
+		handleKilled()
+
+
 func _on_take_damage_timeout(enemy):
 	if isDead or !is_instance_valid(enemy):
 		return
@@ -328,6 +341,9 @@ func _remove_damage_timer(id):
 
 
 func handleDamage(damage):
+	if godMode:
+		return true
+
 	InputManager.vibrate(0.5, 0.5, 0.1)
 	addShake(6.0)
 

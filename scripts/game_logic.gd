@@ -15,9 +15,12 @@ const COMBO_NAMES = ["KILLING SPREE!", "RAMPAGE!", "UNSTOPPABLE!", "GODLIKE!"]
 const CROWDED_ENEMY_COUNT = 120.0
 const BASE_ZOOM = 1.25
 const CROWDED_ZOOM = 1.0
+# enemy scripts name their dead flag differently, get() / set() ignore the missing ones
+const DEAD_FLAGS = ["isDead", "_isDead", "_is_dead"]
 
 var XpGemScript = preload("res://scripts/xp_gem.gd")
 var RunHudScript = preload("res://scripts/run_hud.gd")
+var DevConsoleScript = preload("res://scripts/dev_console.gd")
 var levelUpMenuScene = preload("res://scenes/level_up_menu.tscn")
 
 var enemy_count = 0
@@ -42,6 +45,8 @@ var owned_weapons : Array = []
 var active_enemies : Dictionary = {}
 var elites : Dictionary = {}
 var boss = null
+# number of bosses requested by the phase logic, decides which one comes next
+var boss_count = 0
 var run_over = false
 var kills = 0
 var combo = 0
@@ -81,6 +86,10 @@ func _ready() -> void:
 	add_child(hud)
 	levelUpMenu = levelUpMenuScene.instantiate()
 	add_child(levelUpMenu)
+	if OS.is_debug_build():
+		var console = DevConsoleScript.new()
+		console.game = self
+		add_child(console)
 	_update_weapons_hud()
 
 	player.connect("update_life", _on_player_damage_taken)
@@ -195,6 +204,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		phase_guard.skip_time(60)
 	elif event.keycode == KEY_F3:
 		phase_guard.skip_time(phase_guard.RUN_LENGTH)
+	elif event.keycode == KEY_F4 and boss == null:
+		spawn_boss(Enums.ENEMIES.WORM_BOSS)
 
 func _on_xp_changed(value : int, max_value : int):
 	hud.set_xp(value, max_value)
@@ -263,14 +274,56 @@ func _on_elite_requested():
 	elites[elite.get_instance_id()] = true
 
 func _on_boss_requested():
-	phaseBanner.show_text("BOSS INCOMING", Color.RED)
+	# the first boss is always the mothership, endless bosses take turns
+	if boss_count % 2 == 1:
+		spawn_boss(Enums.ENEMIES.WORM_BOSS)
+	else:
+		spawn_boss(Enums.ENEMIES.BOSS)
+	boss_count += 1
+
+# public - also used by the dev console
+func spawn_boss(type : Enums.ENEMIES):
+	if type == Enums.ENEMIES.WORM_BOSS:
+		phaseBanner.show_text("WORM INCOMING", Color.MEDIUM_PURPLE)
+	else:
+		phaseBanner.show_text("BOSS INCOMING", Color.RED)
 	Juice.shake(10.0)
-	boss = spawn_enemy(Enums.ENEMIES.BOSS, get_spawn_position())
+	boss = spawn_enemy(type, get_spawn_position())
 	boss.connect("spawn_requested", _on_boss_spawn_requested)
 	boss.connect("health_changed", _on_boss_health_changed)
+	if boss.has_signal("enraged"):
+		boss.connect("enraged", _on_boss_enraged)
 	bossBar.max_value = boss.Life
 	bossBar.value = boss.Life
 	bossBar.visible = true
+
+# public - dev console, takes percent of the boss max life
+func hurt_boss(percent : float):
+	if boss == null:
+		return
+	var damage = PlayerStatus.Damage.new()
+	damage.Value = int(bossBar.max_value * percent / 100.0)
+	damage.Critical = false
+	if boss.handleDamage(damage, boss.global_position) == false:
+		_kill_enemy(boss)
+
+# public - dev console, every enemy explodes as if shot, returns how many
+func kill_all_enemies() -> int:
+	var count = 0
+	for enemy in active_enemies.values():
+		if _kill_enemy(enemy):
+			count += 1
+	return count
+
+func _kill_enemy(enemy) -> bool:
+	# the worm stays in active_enemies during its death animation
+	for flag in DEAD_FLAGS:
+		if enemy.get(flag):
+			return false
+	for flag in DEAD_FLAGS:
+		enemy.set(flag, true)
+	enemy.explode()
+	return true
 
 func _on_boss_spawn_requested(type : Enums.ENEMIES, pos : Vector2):
 	if enemy_count >= phase_guard.get_max_alive() + BOSS_EXTRA_ALIVE:
@@ -280,6 +333,10 @@ func _on_boss_spawn_requested(type : Enums.ENEMIES, pos : Vector2):
 func _on_boss_health_changed(value : int, max_value : int):
 	bossBar.max_value = max_value
 	bossBar.value = value
+
+func _on_boss_enraged():
+	phaseBanner.show_text("WORM ENRAGED", Color.ORANGE_RED)
+	Juice.shake(8.0)
 
 func spawn_enemy(type : Enums.ENEMIES, pos : Vector2, life_factor : float = 1.0):
 	var enemy = LevelSettings.get_enemy(type)
@@ -444,12 +501,19 @@ func addPerk(pos : Vector2) -> bool:
 	if perk == null:
 		return false
 
+	_place_perk(perk, pos)
+	return true
+
+# public - dev console
+func drop_perk(type : Enums.PERKS, pos : Vector2):
+	_place_perk(LevelSettings.get_perk(type), pos)
+
+func _place_perk(perk, pos : Vector2):
 	if perk.get_perk_type() == Enums.PERKS.BOMB:
 		perk.connect("taken", _on_bomb_taken)
 
 	perk.position = pos
 	call_deferred("add_child", perk)
-	return true
 
 func find_nearest_enemy():
 	var result = null
