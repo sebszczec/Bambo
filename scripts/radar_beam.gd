@@ -9,6 +9,8 @@ var _halfPI = PI / 2
 var _rotationSpeed = TAU
 var _followPayer = false
 var _player = null
+var _alertTween : Tween = null
+var _alert : float = 0.0
 
 signal player_detected
 signal player_lost
@@ -34,13 +36,24 @@ func _process(delta: float) -> void:
 
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
-		sprite.modulate = Color.RED
+		_set_alert(1.0)
 		_followPayer = true
 		player_detected.emit()
 
 
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.is_in_group("Player"):
-		sprite.modulate = Color.WHITE
+		_set_alert(0.0)
 		_followPayer = false
 		player_lost.emit()
+
+# the beam shader blends from the scanning cyan to red
+func _set_alert(value : float):
+	if _alertTween:
+		_alertTween.kill()
+	_alertTween = create_tween()
+	_alertTween.tween_method(_apply_alert, _alert, value, 0.15)
+
+func _apply_alert(value : float):
+	_alert = value
+	sprite.material.set_shader_parameter("alert", value)

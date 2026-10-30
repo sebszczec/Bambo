@@ -115,7 +115,10 @@ video (MP4)**, and both work the same way. These rules make the clips usable:
 6. **Motion comes from the body**: segments waving, plates opening, mandibles snapping, glow
    pulsing, thruster flames flickering, small hover bob (max ~2 % of size).
 7. **No effects that the engine does itself.** Bullets, lasers, muzzle flashes, explosions,
-   impact sparks, white hit flash, shields and bloom halos are all added by the game. A
+   impact sparks, white hit flash, shields, **radar / scan waves and sweeping beams**, auras and
+   bloom halos are all added by the game. A ship can *have* the device (a radar dish, a cannon);
+   the signal or shot it emits must not be drawn. (Lesson from the Guard video: its baked radar
+   waves and sweep had to be cut out, and they tinted the dishes where they overlapped.) A
    **charging glow** inside the mouth or gun and **thruster flames** are allowed and wanted.
 8. **Glow stays inside the silhouette.** Glows are bright lines and dots on the hull with at most
    a thin soft edge. Large halos spill onto the background and break the transparency; the

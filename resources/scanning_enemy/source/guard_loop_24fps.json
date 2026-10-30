@@ -1,0 +1,15 @@
+{
+  "image": "guard_loop_24fps.png",
+  "frameWidth": 160,
+  "frameHeight": 60,
+  "columns": 5,
+  "rows": 16,
+  "frameCount": 79,
+  "fps": 24,
+  "clips": {
+    "guard_fly": [
+      0,
+      78
+    ]
+  }
+}

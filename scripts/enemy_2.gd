@@ -20,7 +20,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 
 @onready var ship = $Ship
-@onready var sprite = $Ship/Sprite2D
+@onready var sprite = $Ship/AnimatedSprite2D
 @onready var beamSprite = $Ship/RadarBeam/Sprite2D
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
@@ -75,6 +75,10 @@ func _ready() -> void:
 	_deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(_deathTimer)
 	
+	# random start frame, two guards should not move in sync
+	sprite.play(&"Fly")
+	sprite.frame = randi() % sprite.sprite_frames.get_frame_count(&"Fly")
+
 	var dissolveTween = get_tree().create_tween()
 	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
 	
@@ -99,6 +103,9 @@ func _physics_process(delta: float) -> void:
 	var theta = wrapf(atan2(to_player.y, to_player.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
+	# the ship is long, its capsules turn with it
+	collisionShape.rotation = ship.rotation
+	hitBoxCollisionShape.rotation = ship.rotation
 
 	if _accelerate:
 		velocity = velocity.move_toward(_direction * MaxSpeed, Acceleration)
@@ -118,6 +125,8 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
+	collisionShape.rotation = ship.rotation
+	hitBoxCollisionShape.rotation = ship.rotation
 
 # public
 func set_mark():
@@ -194,7 +203,10 @@ func explode():
 	hitBoxCollisionShape.set_deferred("disabled", true)
 	lifeBar.visible = false
 	explosion.visible = true
-	explosion.rotation = ship.rotation
+	# the explosion breaks the frame that was shown into fragments
+	explosion.SpriteTexture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	explosion.rotation = ship.rotation + sprite.rotation
+	explosion.scale = sprite.scale
 	explosion.explode()
 	_deathTimer.start()
 	killed.emit(get_instance_id())

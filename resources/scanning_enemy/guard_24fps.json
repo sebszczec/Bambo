@@ -1,0 +1,9 @@
+{
+  "image": "guard_24fps.png",
+  "frameWidth": 160,
+  "frameHeight": 60,
+  "columns": 5,
+  "rows": 16,
+  "frameCount": 80,
+  "fps": 24
+}

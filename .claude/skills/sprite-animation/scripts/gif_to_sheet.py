@@ -16,6 +16,9 @@
 # Alpha comes from the color distance to the key (soft edge between tol and tol+soft),
 # key spill is removed. All frames of all clips get the same crop (union of the visible
 # pixels) so the ship keeps its size and pivot in every animation.
+# Effects baked into the clip (bible rule 7 says they should not be): --effects 0.02 drops
+# translucent pixels where the key color still dominates, --keep X0,Y0,X1,Y1 (repeatable)
+# keeps only those rects of the source frame (cut off what is in front of the ship).
 import argparse
 import json
 import os
@@ -58,7 +61,7 @@ def detect_key(frames):
 	return np.median(border, axis=0)
 
 
-def matte(frame, key, tol, soft):
+def matte(frame, key, tol, soft, effects=None, keep=None):
 	dist = np.linalg.norm((frame - key) * 255.0, axis=2)
 	alpha = np.clip((dist - tol) / max(soft, 1e-3), 0.0, 1.0)
 	rgb = frame.copy()
@@ -67,7 +70,17 @@ def matte(frame, key, tol, soft):
 	if key[k] > 0.5 and key[k] - np.sort(key)[1] > 0.3:
 		others = [c for c in range(3) if c != k]
 		limit = np.maximum(rgb[..., others[0]], rgb[..., others[1]])
+		if effects is not None:
+			# translucent effects baked over the key (radar waves, glows) keep the key
+			# channel above the others, the ship itself does not
+			dominance = frame[..., k] - limit
+			alpha *= np.clip(1.0 - (dominance - effects) / 0.08, 0.0, 1.0)
 		rgb[..., k] = np.minimum(rgb[..., k], limit)
+	if keep:
+		mask = np.zeros(alpha.shape, dtype=bool)
+		for x0, y0, x1, y1 in keep:
+			mask[y0:y1, x0:x1] = True
+		alpha[~mask] = 0.0
 	# a gif has no partial transparency, small specks of key noise are dropped
 	alpha = cv2.morphologyEx(alpha, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
 	return np.concatenate([rgb * alpha[..., None], alpha[..., None]], axis=2)
@@ -94,9 +107,12 @@ def main():
 	ap.add_argument('--fps', type=float, default=12.0, help='resample every clip to this frame rate, 0 keeps it')
 	ap.add_argument('--trim', action='append', default=[], help='CLIP=START:END in seconds')
 	ap.add_argument('--shrink', type=int, default=0, help='erode the alpha edge by N px')
+	ap.add_argument('--effects', type=float, default=None, help='drop translucent effects over the key, e.g. 0.02')
+	ap.add_argument('--keep', action='append', default=[], help='X0,Y0,X1,Y1 in source pixels, only these rects stay')
 	args = ap.parse_args()
 
 	out, clips, fps_all, size = [], {}, [], None
+	keep = [tuple(int(v) for v in r.split(',')) for r in args.keep]
 	trims = {}
 	for t in args.trim:
 		clip, span = t.split('=')
@@ -121,7 +137,7 @@ def main():
 			sys.exit(f'{src}: {frames[0].shape[1]}x{frames[0].shape[0]} differs from the first clip - every clip of a ship needs the same canvas')
 		clips[name] = [len(out), len(out) + len(frames) - 1]
 		fps_all.append(fps)
-		out.extend(matte(f, key, args.tol, args.soft) for f in frames)
+		out.extend(matte(f, key, args.tol, args.soft, args.effects, keep) for f in frames)
 		print(f'{name}: frames {clips[name][0]}..{clips[name][1]} ({len(frames)} @ {fps:.1f} fps)')
 	fps = float(np.median(fps_all))
 	if args.shrink:
