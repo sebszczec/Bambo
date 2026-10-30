@@ -47,4 +47,5 @@ New scripts come with `*.gd.uid` files - commit them together. `.godot/` and `*.
 Edit `.tscn` by hand carefully: keep `[ext_resource]` ids unique, update `load_steps`, keep `uid=` values unique (or omit them for new resources).
 
 ## Related skills
-`add-enemy`, `add-weapon`, `add-upgrade`, `godot-check`, `sprite-animation` (sprite sheets -> smooth AnimatedSprite2D).
+`add-enemy`, `add-weapon`, `add-upgrade`, `godot-check`, `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
+Visual style of all ships: `art_bible.md` in the repo root (used as the Gemini brief).

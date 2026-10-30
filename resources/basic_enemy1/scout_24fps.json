@@ -1,0 +1,15 @@
+{
+  "image": "scout_24fps.png",
+  "frameWidth": 80,
+  "frameHeight": 47,
+  "columns": 6,
+  "rows": 10,
+  "frameCount": 59,
+  "fps": 24,
+  "clips": {
+    "scout_fly": [
+      0,
+      58
+    ]
+  }
+}

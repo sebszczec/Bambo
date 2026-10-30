@@ -39,7 +39,7 @@ Enemy weapons: `WeaponFactory.get_weapon(type, true, false)`, `set_owner(get_tre
 Mirror `enemy_1.tscn`: `CollisionShape2D`, `Ship` (Node2D, holds Sprite2D/AnimatedSprite2D, rotated to face player), `LifeBar` (instance of `life_bar.tscn`),
 `HitBox` (Area2D, **groups=["Enemy"]**, layer Enemy) + collision shape, `Explosion` (`object_explosion.tscn`), `AudioStreamPlayer2D`, `Mark` (`mark.tscn`).
 Sprites use the Dissolve material (`shaders/Dissolve.tres`) for the spawn tween; `Juice.is_flashing` must be checked before touching shader params.
-Animated sprite sheets (frame grid + json, e.g. AI-generated clips): use the `sprite-animation` skill to split it into animations, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
+Art: new ships follow `art_bible.md` (style, palette, size tiers, nose pointing right -> AnimatedSprite2D `rotation = 1.5708`). Animated art (Gemini GIFs or MP4 videos, frame grid + json): use the `sprite-animation` skill to build the sheet, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
 
 ## 4. Make it appear
 - Horde enemy: add `[Enums.ENEMIES.X, count, chance%]` entries to `_stages` waves in `scripts/phase_guard.gd`.

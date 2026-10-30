@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 
-@onready var sprite = $Ship/Sprite2D
+@onready var sprite = $Ship/AnimatedSprite2D
 @onready var resizeTimer = $ResizeTimer
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionshape = $HitBox/HitBoxCollisionShape
@@ -61,6 +61,10 @@ func _ready():
 	deathTimer.wait_time = 2
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
+
+	# random start frame, a swarm should not flap its legs in sync
+	sprite.play(&"Fly")
+	sprite.frame = randi() % sprite.sprite_frames.get_frame_count(&"Fly")
 
 	var dissolveTween = get_tree().create_tween()
 	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 0.5)
@@ -135,7 +139,9 @@ func explode():
 	hitBoxCollisionshape.set_deferred("disabled", true)
 	lifeBar.visible = false
 	explosion.visible = true
-	explosion.rotation = ship.rotation
+	# the explosion breaks the frame that was shown into fragments
+	explosion.SpriteTexture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	explosion.rotation = ship.rotation + sprite.rotation
 	explosion.scale = sprite.scale
 	explosion.explode()
 	deathTimer.start()

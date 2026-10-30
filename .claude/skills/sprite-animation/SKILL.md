@@ -1,6 +1,6 @@
 ---
 name: sprite-animation
-description: Turn a grid sprite sheet (e.g. an AI-generated clip with a frameWidth/columns json) into smooth Godot AnimatedSprite2D animations for Space Thunder - find unnatural jumps and loop seams, double the frame rate with optical-flow in-betweens, bridge loop seams, pick the best entry/exit frames so switching animations (move -> attack, attack -> idle) looks natural, regenerate the SpriteFrames in a .tscn and measure the switches in the running game. Use when adding/replacing enemy or boss sprite sheets or when animations look choppy or pop.
+description: Turn Gemini animated GIFs/videos or a grid sprite sheet (e.g. an AI-generated clip with a frameWidth/columns json) into smooth Godot AnimatedSprite2D animations for Space Thunder - find unnatural jumps and loop seams, double the frame rate with optical-flow in-betweens, bridge loop seams, pick the best entry/exit frames so switching animations (move -> attack, attack -> idle) looks natural, regenerate the SpriteFrames in a .tscn and measure the switches in the running game. Use when adding/replacing enemy or boss sprite sheets or when animations look choppy or pop.
 ---
 
 # Sprite sheet -> smooth Godot animations
@@ -11,8 +11,25 @@ Run them with `python -I` from the repo root. No downloaded binaries (RIFE etc.)
 Sheet json format (what the art tool exports, and what the scripts write):
 `{"image": "x.png", "frameWidth", "frameHeight", "columns", "rows", "frameCount", "fps"}` - image path relative to the json.
 
+## Where the art comes from
+The user designs ships in **Google Gemini** following `art_bible.md` (repo root): first a static key pose, then **one clip per animation** (idle, move, attack_*, death...) - an animated GIF (12 fps) **or an MP4 video** (any fps, often longer than the animation) - that starts and ends on the key pose, flat `#00FF00` background, nose pointing right. Claude Code turns the GIFs into the sheet. When new art breaks those rules (dark background, one long clip, drifting ship) tell the user which rule to ask Gemini for, and keep `art_bible.md` up to date with what was learned.
+
+0. **GIFs / videos -> sheet**: `python -I .../gif_to_sheet.py resources/<x>/source/<x>_12fps.json resources/<x>/source/<x>_idle.gif resources/<x>/source/<x>_move.mp4 ... --preview <scratch>/prev.png`
+   - GIF, MP4, WebM, MOV can be mixed; every clip is resampled to `--fps 12` (Gemini videos are 24/30 fps). Cut long videos with `--trim <clip>=START:END` (seconds, clip = file name without extension) - the user names the usable part, otherwise find where the clip leaves and returns to the key pose with `analyze.py` on the untrimmed sheet. Compression leaves green on the edges: despill handles most of it, `--shrink 1` if a fringe is left.
+   - one sheet for all clips of a ship, prints each clip's frame range (also `"clips"` in the json) - those ranges are the animations; idle/move clips loop, attacks start and end on the key pose so the switches are natural without bridges.
+   - same crop for all clips (union of visible pixels) keeps size and pivot; all clips must have the same canvas.
+   - `--key auto` for another flat background, `--width` to scale down (small ships: about 2-4x the in-game size, see art_bible.md tiers).
+   - Read the preview (frame over dark and light background): holes in dark armor = background too close to the hull colors (the worm GIF on dark purple lost most of its armor) -> ask for a `#00FF00` version. Green fringe -> raise `--tol`.
+   - `interpolate.py` makes in-betweens across clip boundaries too, they are just never used (output frame = 2 x source frame as usual).
+   - **24 fps video**: keep it native (`--fps 0`) instead of 12 fps + interpolation - real frames beat flow in-betweens. Find the loop on a mid-size copy (`--width 256`, compare `sheet.diff(fr[b], fr[a])` for windows of 1.5-6 s against the median step), then cut it with `--trim` (seconds = frame / 24). Scout example: `resources/basic_enemy1/` - one 10 s Gemini video, natural loop frames 170..228 (seam 1.2 steps), no bridge needed.
+   - **frame size**: textures use linear filtering without mipmaps (and `*.import` is gitignored, so no per-file mipmaps) - store frames at ~2x the on-screen size (scout: 80 px frames at scale 0.5 = 40 px). Much bigger frames shimmer on thin parts (legs) when shrunk.
+   - horde enemies: start the loop on a random frame (`sprite.frame = randi() % count`) so a swarm does not move in sync.
+   - `shaders/Dissolve.tres` samples its noise with `SCREEN_UV`, so it works on AnimatedSprite2D atlas frames; it ignores `modulate`/`self_modulate` (brightening has to be done in the sheet).
+   - `object_explosion` fragments: set `explosion.SpriteTexture` to the current frame texture and add `sprite.rotation` to `explosion.rotation` (sheet drawn nose-right).
+   - screenshots for checking (`get_viewport().get_texture().get_image()`) come out darker with `hdr_2d` (linear) - compare against a reference sprite in the same shot, not against the sheet.
+
 ## Folder layout
-- Source clip (big 12fps sheet, its json, preview gif) goes to `resources/<enemy>/source/` with an empty `.gdignore`, so Godot does not import a texture nobody uses.
+- Source GIFs and the 12fps sheet made from them (or a delivered sheet + preview gif) go to `resources/<enemy>/source/` with an empty `.gdignore`, so Godot does not import a texture nobody uses.
 - Generated sheet + json + `<enemy>_animations.json` (the animation spec) next to it in `resources/<enemy>/`. Commit all of them - the spec and source are needed to regenerate.
 - Example: `resources/wormboss/` (worm boss, `scenes/worm_boss.tscn`).
 
