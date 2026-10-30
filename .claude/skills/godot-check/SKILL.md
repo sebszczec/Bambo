@@ -19,6 +19,8 @@ timeout 180 "$GODOT" --headless --path . --import 2>&1 | grep -E "ERROR|Parse Er
 `--import` loads the project, reimports changed assets and compiles every script and autoload, so parse errors, missing `res://` paths and broken `.tscn` references show up as `ERROR` / `SCRIPT ERROR` lines. No output = clean. Takes ~1 min.
 
 Filtered noise (always present, harmless): "invalid UID ... using text path instead" (`.import` files are gitignored) and RID/ObjectDB/resource leak messages at exit.
+A brand new texture reports `ERROR: Failed loading resource: res://....png` on the run that first imports it - run `--import` again, only the second run counts.
+Folders with an empty `.gdignore` (e.g. `resources/wormboss/source/`) are skipped by Godot - used for source art that the game does not load.
 Known real warning: `scenes/bullet.tscn` references `res://scripts/Bullet.gd` (capital B) - breaks on case-sensitive export platforms until fixed.
 
 Single script:

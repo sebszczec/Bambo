@@ -1,0 +1,9 @@
+{
+  "image": "worm_spritesheet_24fps.png",
+  "frameWidth": 378,
+  "frameHeight": 161,
+  "columns": 10,
+  "rows": 26,
+  "frameCount": 253,
+  "fps": 24
+}

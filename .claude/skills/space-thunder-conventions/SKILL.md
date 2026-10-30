@@ -22,7 +22,7 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
 - `scripts/game_logic.gd` - run orchestration: owned weapons, spawning, kills, combo, xp drops, bosses, victory/endless.
 - `scripts/phase_guard.gd` - run clock: 10 one-minute stages (spawn delay, max alive, wave mix), swarms, elite, boss at `RUN_LENGTH`, then Endless.
 - `scripts/player.gd` - player ship; takes damage in `_on_life_box_area_entered`, picks up perks in `_on_life_box_area_exited` by group.
-- `scenes/` one `.tscn` per object, script of the same name in `scripts/`. `resources/` art/sfx, `shaders/` shaders.
+- `scenes/` one `.tscn` per object, script of the same name in `scripts/`. `resources/` art/sfx (source-only art in `resources/<x>/source/` with `.gdignore`), `shaders/` shaders.
 
 ## Collision & groups (core contract)
 - Physics layers: 1 Player, 2 Rock, 3 Bullet, 4 Enemy. Bullet masks use `Enums.MASKS`.
@@ -47,4 +47,4 @@ New scripts come with `*.gd.uid` files - commit them together. `.godot/` and `*.
 Edit `.tscn` by hand carefully: keep `[ext_resource]` ids unique, update `load_steps`, keep `uid=` values unique (or omit them for new resources).
 
 ## Related skills
-`add-enemy`, `add-weapon`, `add-upgrade`, `godot-check`.
+`add-enemy`, `add-weapon`, `add-upgrade`, `godot-check`, `sprite-animation` (sprite sheets -> smooth AnimatedSprite2D).

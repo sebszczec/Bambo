@@ -6,7 +6,7 @@ description: Step-by-step checklist for adding a new enemy or boss to Space Thun
 # Adding an enemy or boss
 
 Reference implementations: `scripts/enemy_1.gd` (simple chaser), `enemy_2.gd`/`enemy_3.gd` (shooters),
-`scripts/boss.gd` (boss spawning minions), `scripts/worm_boss.gd` (boss with attack cycle, enrage, own weapon, laser/mines).
+`scripts/boss.gd` (boss spawning minions), `scripts/worm_boss.gd` (boss with attack cycle, enrage, own weapon, laser/mines, sprite-sheet animations with planned switches - see `sprite-animation`).
 Read the closest one before writing a new enemy.
 
 ## 1. Register it
@@ -39,6 +39,7 @@ Enemy weapons: `WeaponFactory.get_weapon(type, true, false)`, `set_owner(get_tre
 Mirror `enemy_1.tscn`: `CollisionShape2D`, `Ship` (Node2D, holds Sprite2D/AnimatedSprite2D, rotated to face player), `LifeBar` (instance of `life_bar.tscn`),
 `HitBox` (Area2D, **groups=["Enemy"]**, layer Enemy) + collision shape, `Explosion` (`object_explosion.tscn`), `AudioStreamPlayer2D`, `Mark` (`mark.tscn`).
 Sprites use the Dissolve material (`shaders/Dissolve.tres`) for the spawn tween; `Juice.is_flashing` must be checked before touching shader params.
+Animated sprite sheets (frame grid + json, e.g. AI-generated clips): use the `sprite-animation` skill to split it into animations, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
 
 ## 4. Make it appear
 - Horde enemy: add `[Enums.ENEMIES.X, count, chance%]` entries to `_stages` waves in `scripts/phase_guard.gd`.

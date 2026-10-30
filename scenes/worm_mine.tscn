@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/worm_mine.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://resources/wormboss/worm_boss_alpha.png" id="2_sheet"]
+[ext_resource type="Texture2D" path="res://resources/wormboss/worm_mine.png" id="2_sheet"]
 [ext_resource type="Shader" uid="uid://djdajod804d6o" path="res://shaders/blink.gdshader" id="3_blink"]
 [ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/light_01.png" id="4_light"]
 [ext_resource type="AudioStream" uid="uid://bo2aogf8q25qe" path="res://resources/sfx/countdown-b.ogg" id="5_blink"]
@@ -15,7 +15,7 @@ shader_parameter/blink_intensity = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_orb"]
 atlas = ExtResource("2_sheet")
-region = Rect2(211, 786, 23, 23)
+region = Rect2(0, 0, 23, 23)
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
 blend_mode = 1
