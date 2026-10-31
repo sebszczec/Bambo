@@ -15,7 +15,7 @@ extends CharacterBody2D
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 
 @onready var ship = $Ship
-@onready var sprite = $Ship/Sprite2D
+@onready var sprite = $Ship/AnimatedSprite2D
 @onready var lifeBar = $LifeBar
 @onready var collisionShape = $CollisionShape2D
 @onready var hitBoxCollisionShape = $HitBox/CollisionShape2D
@@ -57,7 +57,8 @@ func _ready() -> void:
 	_weapon.register_internal_nodes(self)
 	
 	_deathTimer.one_shot = true
-	_deathTimer.wait_time = 2
+	# the fragments fade out in a second, sound and particles are pooled in Juice
+	_deathTimer.wait_time = 1.2
 	_deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(_deathTimer)
 	
@@ -66,6 +67,10 @@ func _ready() -> void:
 	_shootingTimer.connect("timeout", _on_shooting_timer_timeout)
 	add_child(_shootingTimer)
 	_shootingTimer.start()
+
+	# random start frame, hunters spawned together should not move in sync
+	sprite.play(&"Fly")
+	sprite.frame = randi() % sprite.sprite_frames.get_frame_count(&"Fly")
 	
 	var dissolveTween = get_tree().create_tween()
 	dissolveTween.tween_method(set_shader_dissolve_value, 0.0, 1.0, 1.0)
@@ -90,6 +95,9 @@ func _physics_process(delta: float) -> void:
 	_theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(_theta) * sign(_theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
+	# the ship is long, its capsules turn with it
+	collisionShape.rotation = ship.rotation
+	hitBoxCollisionShape.rotation = ship.rotation
 
 	if !_isDead:
 		move_and_collide(velocity * delta)
@@ -102,6 +110,8 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
+	collisionShape.rotation = ship.rotation
+	hitBoxCollisionShape.rotation = ship.rotation
 	
 # public
 func set_mark():
@@ -158,13 +168,20 @@ func dispose():
 		queue_free()
 
 func explode():
-	audio.play()
+	Juice.play_sound(audio)
+	# a dead ship only shows its explosion and does not shoot any more
+	set_physics_process(false)
+	_shootingTimer.stop()
+	_shoot = false
 	ship.visible = false
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)
 	lifeBar.visible = false
 	explosion.visible = true
-	explosion.rotation = ship.rotation
+	# the explosion breaks the frame that was shown into fragments
+	explosion.SpriteTexture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	explosion.rotation = ship.rotation + sprite.rotation
+	explosion.scale = sprite.scale
 	explosion.explode()
 	_deathTimer.start()
 	killed.emit(get_instance_id())

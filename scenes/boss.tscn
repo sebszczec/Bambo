@@ -317,6 +317,7 @@ scale = Vector2(0.01, 0.01)
 texture = ExtResource("65_l1el4")
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+collision_layer = 8
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox"]
 polygon = PackedVector2Array(30, 150, 45, 80, 105, 75, 130, 140, 220, 10, 215, -35, 160, 0, 195, -100, 190, -145, 110, -80, 20, -140, -20, -140, -110, -80, -190, -145, -195, -100, -160, 0, -215, -35, -220, 10, -130, 140, -105, 75, -45, 80, -30, 150)

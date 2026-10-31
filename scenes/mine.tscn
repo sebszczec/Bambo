@@ -74,6 +74,7 @@ animation = &"blink"
 frame_progress = 0.607552
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource("CircleShape2D_m55k0")

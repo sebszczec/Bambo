@@ -43,3 +43,6 @@ Preset "Windows Desktop" exports to `../../exports/Bambo.exe`:
 "$GODOT" --headless --path . --export-release "Windows Desktop"
 ```
 Only export when the user asks.
+
+## Performance
+Frame-time measurements (horde, nuke, magnet, before vs after a change): use the `perf-stress` skill.

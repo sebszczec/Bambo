@@ -677,6 +677,8 @@ centered = false
 offset = Vector2(-50, 0)
 
 [node name="Beam" type="Area2D" parent="Ship/RadarBeam"]
+collision_layer = 0
+monitorable = false
 position = Vector2(-119, 56)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship/RadarBeam/Beam"]
@@ -684,6 +686,7 @@ position = Vector2(119, -56)
 polygon = PackedVector2Array(0, 0, -39, 129, 0, 141, 39, 130)
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource("CapsuleShape2D_hit")

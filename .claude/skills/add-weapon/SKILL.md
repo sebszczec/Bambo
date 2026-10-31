@@ -26,6 +26,8 @@ Rules:
 - `start_cooldown()` already applies `PlayerStatus.get_delay_factor()` for player weapons - do not apply fire rate twice.
 - Every spawned bullet must connect `freeing` -> `_on_bullet_freeing` (done by `create_bullet`) so bullet counts stay right.
 - Bullet scenes: root `StaticBody2D` with `scripts/bullet.gd` (or subclass), `LifeTimer`, `HitBox` Area2D in group `"Bullet"` assigned to the exported `HitBox`, a `BulletEffect` node (used by `set_modulate_color` / `apply_rocket_look`). See `scenes/bullet.tscn`, `scenes/worm_bullet.tscn`.
+  Player bullets that hit enemies need `collision_mask = 9` on the HitBox (enemy hitboxes are on layer 8, see `space-thunder-conventions`); enemy-only bullets keep the default mask 1.
+  Hit/explosion particles come from `Juice.hit_effect` / `Juice.explosion_effect` - do not instantiate effect scenes per hit.
 - `bullet.Piercing = true` for weapons that should not be destroyed on hit.
 
 ## 3a. Player weapon - offer it on level up

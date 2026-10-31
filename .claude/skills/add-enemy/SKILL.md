@@ -24,6 +24,10 @@ Root node: `CharacterBody2D`.
 - `func setup_rotation(angle)` - called right after `add_child`.
 - `func set_mark()` - used by the Mark node / targeting.
 - `dispose()` that guards `is_queued_for_deletion()`; disable collision shapes with `set_deferred("disabled", true)` on death.
+- `explode()` (also called by `game_logic.kill_all_enemies` after setting the dead flag) must stay cheap, a nuke runs it for the whole horde in one frame:
+  `Juice.play_sound(audio)` instead of `audio.play()`, `set_physics_process(false)` and stop own timers (no shooting / radar after death),
+  `explosion.SpriteTexture` = shown frame, then `explosion.explode()`; free after ~1.2 s (`wait_time = 1.2`, fragments fade in 1 s, particles/sound live in Juice).
+  Bosses may call `explosion.init(Vector2(3, 3), 250)` first for a bigger burst.
 - Bullet hits: in the `HitBox` `area_entered` handler check `area.is_in_group("Bullet")`, `bullet.is_damaging_enemy()`, then
   `Juice.hit_effect`, `Juice.flash(sprite)`, damage via `PlayerStatus.get_damage_from_weapon(bullet.Type)`, show `FloatingText` when `showDamage and FloatingText.can_spawn(crit)`.
 - Find the player with `get_tree().get_first_node_in_group("player")`.
@@ -37,7 +41,7 @@ Enemy weapons: `WeaponFactory.get_weapon(type, true, false)`, `set_owner(get_tre
 
 ## 3. Scene structure (`scenes/<name>.tscn`)
 Mirror `enemy_1.tscn`: `CollisionShape2D`, `Ship` (Node2D, holds Sprite2D/AnimatedSprite2D, rotated to face player), `LifeBar` (instance of `life_bar.tscn`),
-`HitBox` (Area2D, **groups=["Enemy"]**, layer Enemy) + collision shape, `Explosion` (`object_explosion.tscn`), `AudioStreamPlayer2D`, `Mark` (`mark.tscn`).
+`HitBox` (Area2D, **groups=["Enemy"]**, `collision_layer = 8`, default mask 1) + collision shape, `Explosion` (`object_explosion.tscn`), `AudioStreamPlayer2D`, `Mark` (`mark.tscn`).
 Sprites use the Dissolve material (`shaders/Dissolve.tres`) for the spawn tween; `Juice.is_flashing` must be checked before touching shader params.
 Art: new ships follow `art_bible.md` (style, palette, size tiers, nose pointing right -> AnimatedSprite2D `rotation = 1.5708`). Animated art (Gemini GIFs or MP4 videos, frame grid + json): use the `sprite-animation` skill to build the sheet, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
 
@@ -48,3 +52,4 @@ Art: new ships follow `art_bible.md` (style, palette, size tiers, nose pointing 
 
 ## 5. Verify
 Run the `godot-check` skill, then play-test (F2/F3 cheats) - check killed/score/xp, boss bar, death cleanup, no errors in output.
+For a horde enemy also run `perf-stress` (dev console `spawn <name> 200` + `perk bomb` for a manual check) - collision pairs must stay in the low thousands.

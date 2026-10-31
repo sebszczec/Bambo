@@ -58,6 +58,9 @@ var zoomed = false
 var xpAudio = AudioStreamPlayer.new()
 var xpPitch = 1.0
 var xpPitchResetTime = 0
+# a magnet brings many gems in the same frame, they are counted once per frame
+var pendingXp = 0
+var pendingPickups = 0
 
 signal update_life(value: int)
 signal update_afterburner(value: int)
@@ -108,16 +111,28 @@ func collect_xp(value : int):
 	if isDead:
 		return
 
+	pendingXp += value
+	pendingPickups += 1
+
+# one sound and one xp update for all gems picked up in this frame
+func flushXp():
+	if pendingPickups == 0:
+		return
+
 	# quick pickups in a row raise the pitch
 	var now = Time.get_ticks_msec()
 	if now > xpPitchResetTime:
-		xpPitch = 1.0
+		xpPitch = 1.0 + 0.04 * (pendingPickups - 1)
 	else:
-		xpPitch = min(xpPitch + 0.04, 2.2)
+		xpPitch += 0.04 * pendingPickups
+	xpPitch = min(xpPitch, 2.2)
 	xpPitchResetTime = now + 400
 	xpAudio.pitch_scale = xpPitch
 	xpAudio.play()
 
+	var value = pendingXp
+	pendingXp = 0
+	pendingPickups = 0
 	PlayerStatus.add_xp(value)
 
 # public - camera shake, strength is added up and fades out
@@ -144,6 +159,7 @@ func regenerate(delta):
 
 
 func _physics_process(delta):
+	flushXp()
 	handleZoom()
 	calculateSatelitePosition(delta)
 	calculateAcceleration()

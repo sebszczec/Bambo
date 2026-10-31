@@ -3,7 +3,7 @@ extends Node
 const VICTORY_BONUS = 5000
 const ENDLESS_START_DELAY = 4.0
 const BOSS_EXTRA_ALIVE = 5
-const MAX_GEMS = 300
+const MAX_GEMS = 200
 const SPAWN_MIN_DISTANCE = 950.0
 const SPAWN_MAX_DISTANCE = 1100.0
 const SWARM_RADIUS = 750.0
@@ -408,11 +408,9 @@ func _add_combo():
 
 func drop_xp(pos : Vector2, value : int):
 	# too many gems on the floor - add the value to an existing one
-	if XpGemScript.alive_count >= MAX_GEMS:
-		var gems = get_tree().get_nodes_in_group("XpGem")
-		if gems.size() > 0:
-			gems.pick_random().add_value(value)
-			return
+	if XpGemScript.alive_count >= MAX_GEMS and XpGemScript.all.size() > 0:
+		XpGemScript.all.pick_random().add_value(value)
+		return
 
 	var gem = LevelSettings.get_xp_gem(value)
 	gem.position = pos + Vector2(randf_range(-8, 8), randf_range(-8, 8))

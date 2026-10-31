@@ -6,8 +6,12 @@ extends Node2D
 const MAX_SPEED = 1400.0
 const ACCELERATION = 2200.0
 const PICKUP_DISTANCE = 18.0
+# gems on the floor look for the player only every few physics frames
+const IDLE_CHECK_FRAMES = 4
 
 static var alive_count = 0
+# public - every gem on the floor, cheaper than searching the group
+static var all : Array = []
 
 @export var Value : int = 1
 
@@ -21,9 +25,26 @@ var _gold = preload("res://resources/kenney_space-shooter-redux/PNG/Power-ups/pi
 var _player = null
 var _attracted = false
 var _speed = 0.0
+var _registered = false
+
+# counted when created, not in _ready - a nuke drops all its gems
+# in one frame with a deferred add_child and they must hit the cap too
+func _init() -> void:
+	alive_count += 1
+	all.append(self)
+	_registered = true
+
+func _notification(what : int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_unregister()
+
+func _unregister():
+	if _registered:
+		_registered = false
+		alive_count -= 1
+		all.erase(self)
 
 func _ready() -> void:
-	alive_count += 1
 	add_to_group("XpGem")
 	_player = get_tree().get_first_node_in_group("player")
 	_update_look()
@@ -34,9 +55,6 @@ func _ready() -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "scale", target_scale, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
-func _exit_tree() -> void:
-	alive_count -= 1
-
 # public
 func attract():
 	_attracted = true
@@ -44,7 +62,9 @@ func attract():
 # public - used to merge gems when there are too many on the floor
 func add_value(value : int):
 	Value += value
-	_update_look()
+	# the gem may not be in the tree yet, _ready updates the look then
+	if is_node_ready():
+		_update_look()
 
 # public
 func is_attracted() -> bool:
@@ -70,6 +90,9 @@ func _physics_process(delta: float) -> void:
 
 	var target = _player.global_position
 	if !_attracted:
+		# staggered, so the gems do not all check in the same frame
+		if (Engine.get_physics_frames() + get_instance_id()) % IDLE_CHECK_FRAMES != 0:
+			return
 		if global_position.distance_squared_to(target) < PlayerStatus.PickupRadius * PlayerStatus.PickupRadius:
 			_attracted = true
 		return
@@ -79,4 +102,6 @@ func _physics_process(delta: float) -> void:
 
 	if global_position.distance_squared_to(target) < PICKUP_DISTANCE * PICKUP_DISTANCE:
 		_player.collect_xp(Value)
+		# no more merging into a collected gem
+		_unregister()
 		queue_free()

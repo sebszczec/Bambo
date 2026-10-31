@@ -1,0 +1,15 @@
+{
+  "image": "hunter_24fps.png",
+  "frameWidth": 256,
+  "frameHeight": 115,
+  "columns": 6,
+  "rows": 13,
+  "frameCount": 76,
+  "fps": 24,
+  "clips": {
+    "hunter_fly": [
+      0,
+      75
+    ]
+  }
+}

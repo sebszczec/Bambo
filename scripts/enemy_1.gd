@@ -58,7 +58,8 @@ func _ready():
 	Speed *= randf_range(0.85, 1.2)
 
 	deathTimer.one_shot = true
-	deathTimer.wait_time = 2
+	# the fragments fade out in a second, sound and particles are pooled in Juice
+	deathTimer.wait_time = 1.2
 	deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(deathTimer)
 
@@ -133,7 +134,10 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 			explode()
 
 func explode():
-	audio.play()
+	Juice.play_sound(audio)
+	# a dead ship only shows its explosion
+	set_physics_process(false)
+	resizeTimer.stop()
 	ship.visible = false
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionshape.set_deferred("disabled", true)

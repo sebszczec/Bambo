@@ -71,7 +71,8 @@ func _ready() -> void:
 	add_child(_strikeDurationTimer)
 	
 	_deathTimer.one_shot = true
-	_deathTimer.wait_time = 2
+	# the fragments fade out in a second, sound and particles are pooled in Juice
+	_deathTimer.wait_time = 1.2
 	_deathTimer.connect("timeout", _on_death_timer_timeout)
 	add_child(_deathTimer)
 	
@@ -197,7 +198,11 @@ func handleDamage(damage):
 	return true
 
 func explode():
-	audio.play()
+	Juice.play_sound(audio)
+	# a dead ship only shows its explosion
+	set_physics_process(false)
+	_prepareingStrikeTimer.stop()
+	_strikeDurationTimer.stop()
 	ship.visible = false
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)

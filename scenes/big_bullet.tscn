@@ -22,6 +22,7 @@ texture = ExtResource("2_yl7g1")
 wait_time = 0.5
 
 [node name="HitBox" type="Area2D" parent="." groups=["Bullet"]]
+collision_mask = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 scale = Vector2(1.1, 1.1)

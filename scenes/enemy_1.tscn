@@ -472,6 +472,7 @@ offset_top = -25.0
 offset_bottom = -19.0
 
 [node name="HitBox" type="Area2D" parent="." groups=["Enemy"]]
+collision_layer = 8
 
 [node name="HitBoxCollisionShape" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource("CircleShape2D_o5b0c")

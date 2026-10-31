@@ -9,13 +9,11 @@ const METEORS = [
 	preload("res://resources/meteors/Meteor_07.png"),
 	preload("res://resources/meteors/Meteor_10.png"),
 ]
-const ENEMIES = [
-	preload("res://resources/kenney_space-shooter-redux/PNG/Enemies/enemyGreen1.png"),
-]
 # animated enemy sprite sheets (see the json next to each png), drawn nose right
 const SHEETS = [
 	{ "texture" : preload("res://resources/basic_enemy1/scout_24fps.png"), "grid" : Vector2i(6, 10), "frames" : 59, "fps" : 24.0, "scale" : 1.0 },
 	{ "texture" : preload("res://resources/scanning_enemy/guard_24fps.png"), "grid" : Vector2i(5, 16), "frames" : 80, "fps" : 24.0, "scale" : 0.9 },
+	{ "texture" : preload("res://resources/basic_enemy2/hunter_24fps.png"), "grid" : Vector2i(6, 13), "frames" : 76, "fps" : 24.0, "scale" : 0.9 },
 ]
 const UFO = preload("res://resources/player_spritesheets/ufo/ufo_sample2_spritesheet.png")
 const LASER = preload("res://resources/kenney_space-shooter-redux/PNG/Lasers/laserBlue01.png")
@@ -85,23 +83,15 @@ func _spawn_chase():
 	var dir : Vector2 = path[1]
 	var velocity = dir * randf_range(260, 360)
 
-	var enemy
-	var pick = randi() % (SHEETS.size() + ENEMIES.size())
-	if pick < SHEETS.size():
-		var sheet = SHEETS[pick]
-		enemy = _add_mover(sheet["texture"], path[0], velocity, 0.85)
-		enemy["sprite"].hframes = sheet["grid"].x
-		enemy["sprite"].vframes = sheet["grid"].y
-		enemy["sprite"].rotation = dir.angle()
-		enemy["sprite"].scale = Vector2.ONE * sheet["scale"]
-		enemy["frame_time"] = randf() * sheet["frames"] / sheet["fps"]
-		enemy["frames"] = sheet["frames"]
-		enemy["fps"] = sheet["fps"]
-	else:
-		enemy = _add_mover(ENEMIES.pick_random(), path[0], velocity, 0.85)
-		# kenney ships face down
-		enemy["sprite"].rotation = dir.angle() - PI / 2
-		enemy["sprite"].scale = Vector2(0.8, 0.8)
+	var sheet = SHEETS.pick_random()
+	var enemy = _add_mover(sheet["texture"], path[0], velocity, 0.85)
+	enemy["sprite"].hframes = sheet["grid"].x
+	enemy["sprite"].vframes = sheet["grid"].y
+	enemy["sprite"].rotation = dir.angle()
+	enemy["sprite"].scale = Vector2.ONE * sheet["scale"]
+	enemy["frame_time"] = randf() * sheet["frames"] / sheet["fps"]
+	enemy["frames"] = sheet["frames"]
+	enemy["fps"] = sheet["fps"]
 
 	var ufo = _add_mover(UFO, path[0] - dir * CHASE_GAP, velocity, 0.95)
 	ufo["sprite"].hframes = 5

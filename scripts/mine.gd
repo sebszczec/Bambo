@@ -101,7 +101,7 @@ func _explode() -> void:
 	explosion.init()
 	explosion.visible = true
 	explosion.explode()
-	explosion_sound.play()
+	Juice.play_sound(explosion_sound)
 
 
 func _on_death_timer_timeout() -> void:
