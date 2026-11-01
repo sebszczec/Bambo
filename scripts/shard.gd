@@ -8,11 +8,8 @@ const MAX_SPEED = 1400.0
 const ACCELERATION = 2200.0
 const PICKUP_DISTANCE = 18.0
 const IDLE_CHECK_FRAMES = 4
-const SPIN_SPEED = 2.5
 
 @export var Value : int = 1
-
-@onready var sprite = $Sprite2D
 
 var _player = null
 var _attracted = false
@@ -34,8 +31,6 @@ func attract():
 func _physics_process(delta: float) -> void:
 	if _player == null or _player.isDead:
 		return
-
-	sprite.rotation += SPIN_SPEED * delta
 
 	var target = _player.global_position
 	if !_attracted:

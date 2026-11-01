@@ -14,12 +14,12 @@ signal timeout
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	textures[Enums.WEAPONS.SMALL] = null
-	textures[Enums.WEAPONS.BIG] = load("res://resources/perks/big_gun.png")
-	textures[Enums.WEAPONS.SMALL_WAVE] = load("res://resources/perks/fire_circle.png")
-	textures[Enums.WEAPONS.SMALL_HOMING] = load("res://resources/perks/rocket.png")
-	textures[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = load("res://resources/perks/rocket.png")
-	textures[Enums.WEAPONS.BOMB] = load("res://resources/perks/bomb.png")
-	textures[Enums.WEAPONS.FIREWORKS] = load("res://resources/perks/big_gun.png")
+	textures[Enums.WEAPONS.BIG] = load("res://resources/perks/icon_cannon.png")
+	textures[Enums.WEAPONS.SMALL_WAVE] = load("res://resources/perks/icon_nova.png")
+	textures[Enums.WEAPONS.SMALL_HOMING] = load("res://resources/perks/icon_missiles.png")
+	textures[Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY] = load("res://resources/perks/icon_missiles.png")
+	textures[Enums.WEAPONS.BOMB] = load("res://resources/perks/pickup_nuke.png")
+	textures[Enums.WEAPONS.FIREWORKS] = load("res://resources/perks/icon_fireworks.png")
 	changeState(defaultState)
 
 

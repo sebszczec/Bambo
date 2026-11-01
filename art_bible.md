@@ -1,10 +1,12 @@
-# Space Thunder — Art Bible (ships, enemies, bosses)
+# Space Thunder — Art Bible (ships, enemies, bosses, pickups, icons)
 
 > **How to use this file in Gemini:** paste the whole document at the start of the conversation
 > (or put it into the instructions of a Gem) and say: *"Follow this art bible for every image and
 > animation you make."* Then use the prompt templates in section 9.
 > The canonical reference for the style is the **Worm Boss** (section 11) — attach one of its
 > frames as a reference image whenever Gemini starts drifting.
+> **Pickups and upgrade icons** (magnet, nuke, life, the "pick 1 of 3" cards...) have their own
+> rules and prompts in **section 12**. Sections 1-3 and 7 apply to them too, the rest is for ships.
 
 ---
 
@@ -298,3 +300,193 @@ background color you used if it isn't green.
   - Its background was dark purple and hard to remove. Use **flat green** (section 7).
   - It had **no dedicated attack animations** (spread shot, laser and mines reuse the flying
     frames). Request `attack_*` / `charge` / `fire` clips for bosses.
+
+---
+
+## 12. Pickups and upgrade icons
+
+Two kinds of small art share one look:
+
+- **Floor pickups.** They exist in the world. Enemies drop them and the player flies over them
+  to take them: life, shield, magnet, nuke and the Xenite shard. They are tiny on screen and
+  must pop out of a battlefield full of enemies, bullets and XP gems.
+- **Upgrade icons.** They are UI. They appear on the cards of the level-up screen ("pick 1 of
+  3"), in the HUD weapon slots and later in the Hangar. They are bigger, but the player
+  compares three of them in a second, so each one must say what it does at a glance.
+
+Both are **player technology** (human supplies and ship systems). The only exception is the
+**Xenite shard**, a raw crystal of the alien hive. They use the same painted, outlined
+technique as the ships (section 2.3), but they are **not ships**, so sections 4–6 don't
+apply: no top-down view, no "front points right", no animation set.
+
+### 12.1 Shared style rules
+
+1. **One symbol per image.** Use a single bold emblem that reads as a black silhouette at 24 px: a
+   cross, a shield, a horseshoe magnet, a warhead. No scenes, no ships, no hands, no letters
+   or numbers. The game writes the text on the card.
+2. **Front view, upright, centered.** It is an icon, not a top-down sprite. A slight 3/4 tilt
+   for depth is fine. Floor pickups wobble ±15° in the game, so keep them upright and don't
+   rotate them.
+3. **Lit from the front**, soft. A thin bright rim on the top edge, darker bottom edge. There is no
+   cast shadow and no ground.
+4. **Dark outline** (`#12121F`, thick: about 4 % of the image width) around the silhouette, so
+   it separates from any background.
+5. **Glow stays inside the shape** (section 6.8). Bright emissive core and seams, with at most a
+   thin soft edge. The engine adds bloom; a baked halo makes a muddy square in the game.
+6. **Fill the canvas evenly.** The symbol takes about 80 % of a square canvas with an even
+   ~10 % margin. Make every icon of the set the same visual size, so no icon looks bigger or
+   more important on a card.
+7. **Background: flat `#00FF00`** (section 7). Nothing touches the edge. **No green in the
+   icon itself**, including regen. It would be cut out with the background.
+8. **Same set, same session.** Generate a whole group (e.g. all floor pickups, all stat
+   icons) in one Gemini conversation, and attach an already approved icon as a style reference
+   for the next ones. Line thickness, lighting and saturation must match across the set.
+
+### 12.2 Category colors
+
+Color tells the player the category before they read anything. Keep the main color on the
+emblem's emissive parts and use the metal colors from section 3 for the body.
+
+| Category | Main color (emissive) | Used for |
+|---|---|---|
+| **Survival** | rose `#FF5C7A` → `#FFB3C1` | life pickup, hull plating, regen (nanobots), repair kit |
+| **Defense** | electric blue `#3D8BFF` → `#A8CCFF` | shield pickup, shield capacitor, armor |
+| **Offense** | player yellow `#FFE36B` → `#FFF7D0`, hot orange `#FF9A3C` | damage, precision, lethality, overclock, multishot |
+| **Utility** | silver‑white `#E8ECF5` with a yellow core `#FFE36B` | thrusters (speed), tractor beam / magnet |
+| **Weapons** | player yellow‑white, with the projectile color of that weapon | blaster, cannon, nova, missiles, fireworks, orbit |
+| **Danger / nuke** | hazard orange `#FF7A2E`, black and yellow hazard stripes | nuke pickup only |
+| **Xenite (alien)** | violet crystal `#8E5CFF` → `#D98CFF`, a thin cyan heart `#6BDBEB` | Xenite shard, Xenite scanner |
+
+Avoid **enemy cyan** as the main color of any player item (it is the hive's color), and avoid
+**pure red** (damage numbers). Survival is rose, not red.
+
+### 12.3 Floor pickups (in the world)
+
+**In game:** about **28–36 px** on screen, wobbling, on a near‑black starfield with bloom.
+**Deliver:** a square key image (1024 px+). Claude Code cuts it out and saves it as a 96×96 PNG in
+`resources/perks/`. The game scales it to 0.3.
+
+All floor pickups except the Xenite shard share one **base shape**: a small **rounded
+hexagonal supply token** (a thick metal rim, steel `#9AA3B5`, dark inner face) with the emblem
+glowing in its center. The shared token teaches the player that this shape is something to grab.
+The rim gets a thin ring in the category color.
+
+| Pickup | File | Emblem in the token | Color |
+|---|---|---|---|
+| Life | `perks/pickup_life.png` | a rounded repair cross made of plates, a small heart‑shaped core | survival rose |
+| Shield | `perks/pickup_shield.png` | a kite‑shaped energy shield with hexagonal cells | defense blue |
+| **Magnet** | `perks/pickup_magnet.png` | a chunky horseshoe magnet, steel body, glowing yellow‑white pole tips, 2–3 short curved field lines **inside** the token | utility silver + yellow |
+| **Nuke** (bomb) | `perks/pickup_nuke.png` | a round warhead seen from the front with a three‑blade radiation symbol, hazard stripes on the token rim, a glowing orange core | danger orange |
+| Xenite shard | `perks/xenite.png` | **no token.** A cluster of 2–3 sharp violet crystal spikes grown out of a dark hive‑armor chip, with a thin cyan glow inside | xenite violet |
+
+**The nuke must be the most striking pickup:** it has the strongest contrast, the hazard pattern and the
+biggest glow core. It clears the whole screen, and the player should spot it from far away. The
+magnet comes second.
+
+**Optional: idle shimmer clip.** It is not required, since the game already wobbles and blinks
+pickups. If you want one, make a 1–1.5 s seamless loop GIF (12 fps) or MP4: the glow pulses
+and a glint sweeps across the metal. No movement, no rotation, no size change, first frame =
+key image (section 6 rules 2–5).
+
+### 12.4 Upgrade icons (cards, HUD, Hangar)
+
+**In game:** the card icon is **110 px** high on a dark navy card (`#141A33`, `#262D59` when
+selected, border `#4D66B3`), so dark navy parts of an icon need the outline and a light rim to
+stand out. Weapon icons also appear in the HUD at **44 px**, so a weapon icon must still read at
+that size. **Deliver:** a square key image (1024 px+). Claude Code saves a 256×256 PNG with
+transparency in `resources/perks/`.
+
+Card icons have **no token and no background plate**, because the card is the frame. The emblem
+floats freely. Stat icons show the ship *system* that gets better; weapon icons show the
+*weapon or its shot*.
+
+| Upgrade (card title) | id | File | Emblem idea | Color |
+|---|---|---|---|---|
+| Damage | `damage` | `perks/icon_damage.png` | an energy blade / cannon shell with an up‑chevron | offense |
+| Precision | `crit_chance` | `perks/icon_precision.png` | a targeting reticle with a glowing center dot | offense |
+| Lethality | `crit_mult` | `perks/icon_lethality.png` | a cracked armor plate struck by a bright spark star | offense orange |
+| Thrusters | `speed` | `perks/icon_thrusters.png` | an engine nozzle with a white‑yellow plasma flame and speed lines | utility |
+| Overclock | `fire_rate` | `perks/icon_overclock.png` | a glowing reactor chip with a lightning bolt | offense |
+| Multishot | `projectile` | `perks/icon_multishot.png` | three bullets fanning out from one point | offense |
+| Hull plating | `max_life` | `perks/icon_hull.png` | layered hull plates with a rose cross / heart core | survival |
+| Nanobots | `regen` | `perks/icon_nanobots.png` | a swarm of tiny repair drones around a rose cross | survival |
+| Armor | `armor` | `perks/icon_armor.png` | a thick riveted armor plate, steel with a blue seam | defense |
+| Shield capacitor | `shield` | `perks/icon_shield.png` | a battery cell with a hex shield emblem | defense |
+| Tractor beam | `magnet` | `perks/icon_tractor.png` | the horseshoe magnet from 12.3 with a pull arrow (same design, no token) | utility |
+| Repair kit (all maxed) | `heal` | `perks/icon_repair.png` | a toolbox / med canister with a rose cross | survival |
+| Blaster | `w_blaster` | `perks/icon_blaster.png` | twin yellow‑white bolts | weapons |
+| Heavy cannon | `w_cannon` | `perks/icon_cannon.png` | a fat cannon shell / barrel | weapons |
+| Nova | `w_nova` | `perks/icon_nova.png` | a ring of bullets around a bright center | weapons |
+| Missiles | `w_missiles` | `perks/icon_missiles.png` | a homing rocket with a curved exhaust trail | weapons |
+| Fireworks | `w_fireworks` | `perks/icon_fireworks.png` | a shell bursting into a star of shrapnel | weapons + orange |
+| Orbit | `w_orbit` | `perks/icon_orbit.png` | two or three blades circling a center point | weapons |
+
+**Hangar upgrades** (permanent, bought with Xenite) can reuse the matching stat icon:
+
+- hull → Hull plating
+- shield → Shield capacitor
+- damage → Damage
+- fire_rate → Overclock
+- speed → Thrusters
+- armor → Armor
+- regen → Nanobots
+- crit → Precision
+- magnet → Tractor beam
+
+Only **Xenite scanner** (`salvage`) has its own icon (`perks/icon_xenite_scanner.png`): a scanner
+dish locked onto a violet crystal, in xenite violet plus silver.
+
+The Hangar rows show these icons (`icon` in `singletons/meta_progress.gd`). To redo an icon, generate
+it again and keep the file name; the sheets used for the first set are in `resources/perks/source/`.
+
+### 12.5 Prompt templates
+
+**Floor pickup:**
+
+```
+Using the Space Thunder art bible (section 12): create a FLOOR PICKUP icon "<NAME>".
+Base: small rounded hexagonal supply token, thick steel rim (#9AA3B5) with a thin <COLOR> ring,
+dark inner face (#1F1F30). In its center: <EMBLEM from table 12.3>, glowing <COLOR> core.
+Front view, upright, centered, symbol fills 80% of a square canvas, 10% margin.
+Painted semi-realistic 2D game icon, thick dark outline #12121F, soft front light, no cast shadow.
+Glow stays inside the shape, no halo. No text, no numbers, no green in the icon.
+Flat pure #00FF00 background. Must read clearly when shrunk to 30 px.
+```
+
+**Upgrade icon:**
+
+```
+Using the Space Thunder art bible (section 12): create an UPGRADE ICON "<CARD TITLE>".
+Emblem: <EMBLEM from table 12.4>. Category color: <COLOR from 12.2>, metal parts in steel
+#9AA3B5 / dark hull #2D2E3E. No token, no background plate, the emblem floats alone.
+Front view (slight 3/4 tilt OK), upright, centered, fills 80% of a square canvas, 10% margin.
+Painted semi-realistic 2D game icon, thick dark outline #12121F, soft front light, no cast shadow.
+Glow stays inside the shape, no halo. No text, no numbers, no green in the icon.
+Flat pure #00FF00 background. Must read clearly at 110 px and still at 44 px.
+Match the style of the attached approved icon.
+```
+
+Make 3–4 variants and shrink them to the in‑game size (30 px for pickups, 110 px and 44 px for
+icons). Pick the one that reads best. Save it as `<name>_key.png`.
+
+### 12.6 Delivery to Claude Code
+
+Put the approved images in `resources/perks/source/` (Claude Code adds a `.gdignore` there so
+the sources are not loaded by the game) and say, e.g.:
+*"Cut out the icons in resources/perks/source/ (green background) and use them: magnet_key.png
+for the magnet pickup and the Tractor beam card, nuke_key.png for the bomb pickup."*
+Claude Code then:
+
+- removes the background;
+- trims the image to the same margin as the rest of the set;
+- scales it (96 px pickups, 256 px icons) and saves it to `resources/perks/`;
+- points the perk scene or the upgrade entry in `singletons/upgrades.gd` at the new file.
+
+### 12.7 Checklist for pickups and icons
+
+- [ ] One bold symbol, readable at in‑game size (30 px pickup, 110 / 44 px icon).
+- [ ] Category color from 12.2. No green, no enemy cyan, no pure red.
+- [ ] Floor pickups: hex token (except the Xenite shard); the nuke is the most eye‑catching.
+- [ ] Upgrade icons: no token or plate; same visual size as the rest of the set.
+- [ ] Thick dark outline, glow inside the shape, no halo, no text.
+- [ ] Flat `#00FF00` background, ~10 % margin, nothing touches the edge.

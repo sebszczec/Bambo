@@ -7,18 +7,20 @@ extends Node
 const SALVAGE_PER_MINUTE = 2
 const VICTORY_SHARDS = 30
 
+const ICONS = "res://resources/perks/"
+
 # cost of the next rank = base_cost * (rank + 1)
 const UPGRADES = [
-	{ "id" : "hull", "name" : "Reinforced Hull", "desc" : "Max life +10", "per_rank" : 10.0, "max_rank" : 5, "base_cost" : 15 },
-	{ "id" : "shield", "name" : "Shield Capacitor", "desc" : "Max shield +10", "per_rank" : 10.0, "max_rank" : 5, "base_cost" : 15 },
-	{ "id" : "damage", "name" : "Plasma Coils", "desc" : "Damage +5%", "per_rank" : 5.0, "max_rank" : 5, "base_cost" : 20 },
-	{ "id" : "fire_rate", "name" : "Cooling Vents", "desc" : "Fire rate +4%", "per_rank" : 4.0, "max_rank" : 5, "base_cost" : 20 },
-	{ "id" : "speed", "name" : "Ion Thrusters", "desc" : "Speed +4%", "per_rank" : 4.0, "max_rank" : 4, "base_cost" : 15 },
-	{ "id" : "armor", "name" : "Ablative Plating", "desc" : "Armor +1", "per_rank" : 1.0, "max_rank" : 3, "base_cost" : 30 },
-	{ "id" : "regen", "name" : "Repair Nanites", "desc" : "Regen +0.4 life/s", "per_rank" : 0.4, "max_rank" : 3, "base_cost" : 30 },
-	{ "id" : "crit", "name" : "Targeting AI", "desc" : "Critical chance +2%", "per_rank" : 2.0, "max_rank" : 4, "base_cost" : 20 },
-	{ "id" : "magnet", "name" : "Tractor Beam", "desc" : "Pickup radius +20", "per_rank" : 20.0, "max_rank" : 3, "base_cost" : 10 },
-	{ "id" : "salvage", "name" : "Xenite Scanner", "desc" : "Shard drop chance +15%", "per_rank" : 15.0, "max_rank" : 3, "base_cost" : 25 },
+	{ "id" : "hull", "icon" : ICONS + "icon_hull.png", "name" : "Reinforced Hull", "desc" : "Max life +10", "per_rank" : 10.0, "max_rank" : 5, "base_cost" : 15 },
+	{ "id" : "shield", "icon" : ICONS + "icon_shield.png", "name" : "Shield Capacitor", "desc" : "Max shield +10", "per_rank" : 10.0, "max_rank" : 5, "base_cost" : 15 },
+	{ "id" : "damage", "icon" : ICONS + "icon_damage.png", "name" : "Plasma Coils", "desc" : "Damage +5%", "per_rank" : 5.0, "max_rank" : 5, "base_cost" : 20 },
+	{ "id" : "fire_rate", "icon" : ICONS + "icon_overclock.png", "name" : "Cooling Vents", "desc" : "Fire rate +4%", "per_rank" : 4.0, "max_rank" : 5, "base_cost" : 20 },
+	{ "id" : "speed", "icon" : ICONS + "icon_thrusters.png", "name" : "Ion Thrusters", "desc" : "Speed +4%", "per_rank" : 4.0, "max_rank" : 4, "base_cost" : 15 },
+	{ "id" : "armor", "icon" : ICONS + "icon_armor.png", "name" : "Ablative Plating", "desc" : "Armor +1", "per_rank" : 1.0, "max_rank" : 3, "base_cost" : 30 },
+	{ "id" : "regen", "icon" : ICONS + "icon_nanobots.png", "name" : "Repair Nanites", "desc" : "Regen +0.4 life/s", "per_rank" : 0.4, "max_rank" : 3, "base_cost" : 30 },
+	{ "id" : "crit", "icon" : ICONS + "icon_precision.png", "name" : "Targeting AI", "desc" : "Critical chance +2%", "per_rank" : 2.0, "max_rank" : 4, "base_cost" : 20 },
+	{ "id" : "magnet", "icon" : ICONS + "icon_tractor.png", "name" : "Tractor Beam", "desc" : "Pickup radius +20", "per_rank" : 20.0, "max_rank" : 3, "base_cost" : 10 },
+	{ "id" : "salvage", "icon" : ICONS + "icon_xenite_scanner.png", "name" : "Xenite Scanner", "desc" : "Shard drop chance +15%", "per_rank" : 15.0, "max_rank" : 3, "base_cost" : 25 },
 ]
 
 signal changed(level : int)

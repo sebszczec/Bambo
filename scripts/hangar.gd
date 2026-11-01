@@ -5,7 +5,8 @@ extends Control
 
 const SHARD_COLOR = Color(0.85, 0.55, 1.0)
 const PIP_SIZE = Vector2(22, 22)
-const PIP_EMPTY_COLOR = Color(0.15, 0.18, 0.35)
+const ICON_SIZE = Vector2(48, 48)
+const PIP_EMPTY_COLOR = Color(0.22, 0.27, 0.5)
 const FADE_TIME = 0.6
 
 @onready var warp = $Warp
@@ -70,7 +71,7 @@ func _ready() -> void:
 	column.add_child(panel)
 
 	var grid = GridContainer.new()
-	grid.columns = 4
+	grid.columns = 5
 	grid.add_theme_constant_override("h_separation", 30)
 	grid.add_theme_constant_override("v_separation", 8)
 	panel.add_child(grid)
@@ -109,6 +110,11 @@ func _process(_delta: float) -> void:
 		_on_back_pressed()
 
 func _create_row(grid : GridContainer, upgrade : Dictionary) -> Dictionary:
+	var icon = TextureRect.new()
+	icon.texture = load(upgrade["icon"])
+	icon.custom_minimum_size = ICON_SIZE
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var name_label = _create_label(24, Color.WHITE)
 	name_label.text = upgrade["name"]
 	var desc_label = _create_label(20, MenuTheme.TEXT_COLOR)
@@ -129,7 +135,7 @@ func _create_row(grid : GridContainer, upgrade : Dictionary) -> Dictionary:
 	button.connect("pressed", _on_buy_pressed.bind(upgrade["id"]))
 	_connect_focus(button)
 
-	for control in [name_label, desc_label, pips, button]:
+	for control in [icon, name_label, desc_label, pips, button]:
 		grid.add_child(control)
 
 	return { "id" : upgrade["id"], "pips" : pips, "button" : button }
