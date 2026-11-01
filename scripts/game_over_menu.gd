@@ -15,10 +15,13 @@ var nameEntry : NameEntry
 var highScoreTable : HighScoreTable
 var shardLabel : Label
 var hangarButton : Button
+var nextButton : Button
 
 var _score = 0
 var _victory = false
 var _summary = ""
+# level unlocked by this win, -1 when there is none
+var _next_level = -1
 
 func _ready() -> void:
 	visible = false
@@ -52,6 +55,15 @@ func _ready() -> void:
 	container.add_child(hangarButton)
 	container.move_child(hangarButton, backButton.get_index())
 
+	nextButton = Button.new()
+	nextButton.text = "Next level"
+	nextButton.visible = false
+	nextButton.connect("pressed", _on_next_button_pressed)
+	nextButton.connect("focus_entered", _on_button_focus_changed)
+	nextButton.connect("mouse_entered", nextButton.grab_focus)
+	container.add_child(nextButton)
+	container.move_child(nextButton, retryButton.get_index())
+
 func setPause(value):
 	isPaused = value
 	get_tree().paused = isPaused
@@ -61,9 +73,10 @@ func setPause(value):
 		_focus_first_button()
 
 # public - called by game logic when the player is dead or the level is won
-func show_result(score : int, phase_name : String, victory : bool = false, shards : Dictionary = {}):
+func show_result(score : int, phase_name : String, victory : bool = false, shards : Dictionary = {}, next_level : int = -1):
 	_score = score
 	_victory = victory
+	_next_level = next_level
 	_summary = phase_name
 	scoreLabel.text = "Score: " + str(score)
 	_show_shards(shards, victory)
@@ -114,12 +127,15 @@ func _show_table(highlight_rank : int):
 
 # after a death the only way on is the hangar, retry or main menu are picked there
 func _set_buttons_visible(value : bool):
+	nextButton.visible = value and _victory and _next_level >= 0
 	retryButton.visible = value and _victory
 	hangarButton.visible = value
 	backButton.visible = value and _victory
 
 func _focus_first_button():
-	if retryButton.visible:
+	if nextButton.visible:
+		nextButton.grab_focus()
+	elif retryButton.visible:
 		retryButton.grab_focus()
 	else:
 		hangarButton.grab_focus()
@@ -127,6 +143,12 @@ func _focus_first_button():
 
 func _on_retry_button_pressed() -> void:
 	setPause(false)
+	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
+
+
+func _on_next_button_pressed() -> void:
+	setPause(false)
+	Levels.select(_next_level)
 	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
 
 

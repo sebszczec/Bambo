@@ -108,7 +108,7 @@ Each level 2 enemy takes over the role of a level 1 enemy, so the game logic sta
 | Enemy | Replaces (role) | Tier | Size in game (long side) | Shape | Detail level |
 |---|---|---|---|---|---|
 | **Pebble Mite** | Scout (swarm) | swarm | 32–40 px | a round pebble-shelled tick: one smooth stone dome, 6 short legs, 1 big cyan eye at the front | 2–3 big forms, 1–2 glow dots, thick outline |
-| **Boulder Beetle** | Guard (tank) | fighter | 64–72 px | wide, heavy boulder carapace split in two wing-case halves, short thick legs, a blunt plow-like head; a cyan glow seam along the split | heavy plates up front, few glow lines |
+| **Boulder Beetle** | Guard (kamikaze tank: crawls in, overloads and blows up) | fighter | 64–72 px | wide, heavy boulder carapace split in two wing-case halves, short thick legs, a blunt plow-like head; a cyan glow seam along the split | heavy plates up front, few glow lines |
 | **Shard Wasp** | Hunter (chaser) | fighter | 56–68 px | long, narrow wasp: sharp flint-shard wings (thin translucent stone slabs edged in cyan), segmented stone abdomen with a stinger, forward mandibles, two vents at the back | clear head, wings, stinger; few glow lines |
 | Elite variants | elite | elite | 96–140 px | larger version of a basic bug with extra rock spikes, more cracks with hive tissue, more glow, ore accents | segmented armor, visible weapons |
 | **Quarry Mantis** | mid boss (5:00) | boss | 400–450 px | a giant mantis built of rock slabs: two huge stone scythe arms folded at the front, a triangular head with cyan compound eyes, a long segmented abdomen, hive tissue in every joint | full detail, many segments, claws, mouth |

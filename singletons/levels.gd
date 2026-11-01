@@ -86,7 +86,10 @@ var _levels : Array = [
 		"swarm_per_stage" : 2,
 		"boss_life_factor" : 0.8,
 		"victory_bonus" : 5000,
-		"replace" : { Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE },
+		"replace" : {
+			Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE,
+			Enums.ENEMIES.GUARD : Enums.ENEMIES.BOULDER_BEETLE,
+		},
 		"background" : {
 			"base" : "res://resources/background/level2/bg.jpg",
 			# the painted rocks are darker than the planets, the scene dimming hides them

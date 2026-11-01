@@ -480,11 +480,15 @@ func level_complete():
 	world.find_child("PauseMenu").lock()
 	# the swarm breaks up with its flagship gone (no score after run_over)
 	kill_all_enemies()
+	# the first clear unlocks the next level, the result screen offers it first
+	var next = Levels.current + 1
+	var first_clear = !Levels.is_completed(Levels.current)
 	Levels.mark_completed(Levels.current)
-	get_tree().create_timer(LEVEL_END_DELAY, false).connect("timeout", _show_level_result)
+	var next_level = next if first_clear and Levels.is_unlocked(next) else -1
+	get_tree().create_timer(LEVEL_END_DELAY, false).connect("timeout", _show_level_result.bind(next_level))
 
-func _show_level_result():
-	gameOverMenu.show_result(score.get_score(), get_run_summary(), true, run_shards)
+func _show_level_result(next_level : int):
+	gameOverMenu.show_result(score.get_score(), get_run_summary(), true, run_shards, next_level)
 
 func get_run_summary() -> String:
 	return "%s   %s   Lv %d   %d kills" % [Levels.get_current()["name"], phase_guard.get_time_text(), PlayerStatus.Level, kills]

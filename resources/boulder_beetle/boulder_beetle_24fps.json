@@ -1,0 +1,14 @@
+{
+  "image": "boulder_beetle_24fps.png",
+  "frameWidth": 150,
+  "frameHeight": 135,
+  "columns": 10,
+  "rows": 12,
+  "frameCount": 119,
+  "fps": 24,
+  "source": {
+    "video": "source/boulder_beetle.mp4",
+    "frames": "walk 35..93 (loop seam 1.8, no bridge), charge 134..200 every 2nd + 202..221 (24 fps, key auto, --keep 340,100,920,620 --effects 0.02 --width 150)",
+    "bridge": "walk 43 -> charge 134 frames 113..115, walk 70 -> charge 134 frames 116..118"
+  }
+}
