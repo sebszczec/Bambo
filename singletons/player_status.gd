@@ -121,6 +121,18 @@ func get_damage_from_weapon(weapon : Enums.WEAPONS):
 func get_damage():
 	return get_damage_from_weapon(CurrentWeapon)
 
+# the nuke wipes the horde but only takes a slice of a boss's life
+const BOMB_BOSS_LIFE_PART = 0.1
+
+func get_boss_damage_from_weapon(weapon : Enums.WEAPONS, max_life):
+	if weapon != Enums.WEAPONS.BOMB:
+		return get_damage_from_weapon(weapon)
+
+	var damage = Damage.new()
+	damage.Value = ceili(max_life * BOMB_BOSS_LIFE_PART)
+	damage.Critical = false
+	return damage
+
 class Damage:
 	var Value : int
 	var Critical : bool
