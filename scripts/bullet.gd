@@ -30,7 +30,9 @@ func _physics_process(_delta):
 
 	rotation = PI / 2 + atan2(velocity.y, velocity.x)
 	velocity = velocity.normalized() * Speed
-	var _collision = move_and_collide(velocity)
+	# no move_and_collide - hits are found by the HitBox areas, a physical stop on
+	# a body bigger than its hit box (boss capsule) left bullets stuck on its hull
+	global_position += velocity
 
 func set_modulate_color(color : Color):
 	bolid.self_modulate = color
