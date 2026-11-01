@@ -1,54 +1,47 @@
 extends Node2D
 
-# Boulder Beetle self destruct - a shock wave racing out to the blast radius,
-# drawn with _draw (one ring and a flash disc), additive so the bloom makes it glow.
-# Lives on the beetle, which stays alive until the wave has faded.
+# Boulder Beetle self destruct - layered blast: a refracting shock wave
+# (shaders/shockwave.gdshader), a soft flash, sparks, the shell bursting into
+# its own plates and legs (beetle_shards.png atlas) and a frozen smoke cloud.
+# Lives on the beetle, which stays alive until the smoke has faded.
 
-# hdr colors, cyan core of the hive glow with an amber edge
-const RING_COLOR = Color(1.6, 1.1, 0.7)
-const CORE_COLOR = Color(0.8, 2.4, 2.8)
-const POINTS = 64
+const WAVE_TIME = 0.45
+const FLASH_TIME = 0.25
+# hdr, the bloom makes it glow
+const FLASH_COLOR = Color(1.6, 2.6, 2.8)
 
-var _radius = 190.0
-var _time = 0.0
-var _duration = 0.45
+@onready var shockwave = $Shockwave
+@onready var flash = $Flash
+@onready var sparks = $Sparks
+@onready var debris = $Debris
+@onready var smoke = $Smoke
 
 func _ready() -> void:
 	visible = false
-	set_process(false)
-	var additive = CanvasItemMaterial.new()
-	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	material = additive
 
-# public
-func fire(radius : float, duration : float):
-	_radius = radius
-	_duration = duration
-	_time = 0.0
+# public - returns how long the effect lasts
+func fire(radius : float) -> float:
 	visible = true
-	set_process(true)
-	queue_redraw()
+	var wave = shockwave.material as ShaderMaterial
+	wave.set_shader_parameter("radius", radius)
+	wave.set_shader_parameter("progress", 0.0)
+	shockwave.visible = true
 
-func _process(delta: float) -> void:
-	_time += delta
-	if _time >= _duration:
-		visible = false
-		set_process(false)
-		return
-	queue_redraw()
+	for particles in [sparks, debris, smoke]:
+		particles.restart()
+		particles.emitting = true
 
-func _draw() -> void:
-	var t = clampf(_time / _duration, 0.0, 1.0)
-	# fast start, slows down at the edge
-	var grow = 1.0 - pow(1.0 - t, 3.0)
-	var r = lerpf(0.2, 1.0, grow) * _radius
-	var fade = 1.0 - t
+	flash.modulate = FLASH_COLOR
+	var flash_size = radius * 2.0 / flash.texture.get_width()
+	flash.scale = Vector2.ONE * flash_size * 0.2
 
-	# the flash at the center is gone in the first third
-	var core = clampf(1.0 - t * 3.0, 0.0, 1.0)
-	if core > 0.0:
-		draw_circle(Vector2.ZERO, r * 0.7, Color(CORE_COLOR, 0.18 * core))
+	var tween = create_tween().set_parallel()
+	tween.tween_method(_set_progress, 0.0, 1.0, WAVE_TIME).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(flash, "scale", Vector2.ONE * flash_size * 0.9, 0.08)
+	tween.tween_property(flash, "modulate:a", 0.0, FLASH_TIME).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(func(): shockwave.visible = false)
 
-	draw_circle(Vector2.ZERO, r, Color(CORE_COLOR, 0.06 * fade))
-	draw_arc(Vector2.ZERO, r, 0.0, TAU, POINTS, Color(RING_COLOR, fade), lerpf(14.0, 3.0, t))
-	draw_arc(Vector2.ZERO, r * 0.82, 0.0, TAU, POINTS, Color(CORE_COLOR, 0.5 * fade), lerpf(6.0, 1.5, t))
+	return maxf(smoke.lifetime, debris.lifetime) + 0.1
+
+func _set_progress(value : float):
+	(shockwave.material as ShaderMaterial).set_shader_parameter("progress", value)

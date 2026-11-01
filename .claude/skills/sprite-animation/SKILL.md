@@ -35,6 +35,12 @@ The user designs ships in **Google Gemini** following `art_level1.md / art_level
    - `object_explosion` fragments: set `explosion.SpriteTexture` to the current frame texture and add `sprite.rotation` to `explosion.rotation` (sheet drawn nose-right).
    - screenshots for checking (`get_viewport().get_texture().get_image()`) come out darker with `hdr_2d` (linear) - compare against a reference sprite in the same shot, not against the sheet.
 
+## Debris from the key pose
+`python -I .claude/skills/sprite-animation/scripts/cut_shards.py <key_pose> <atlas.png> <preview.png>` cuts a green-key
+key pose into its plates and legs (watershed along the painted outlines and cyan seams, jagged cuts through the big
+plates, cyan vein on every broken edge) and packs a 4x4 atlas of 128 px cells for a particle debris burst.
+Example: `resources/boulder_beetle/beetle_shards.png` from `source/boulder_beetle_parts.jfif`.
+
 ## Folder layout
 - Source GIFs and the 12fps sheet made from them (or a delivered sheet + preview gif) go to `resources/<enemy>/source/` with an empty `.gdignore`, so Godot does not import a texture nobody uses.
 - Generated sheet + json + `<enemy>_animations.json` (the animation spec) next to it in `resources/<enemy>/`. Commit all of them - the spec and source are needed to regenerate.

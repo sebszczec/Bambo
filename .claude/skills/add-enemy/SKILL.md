@@ -60,6 +60,10 @@ Effects built from `resources/kenney_particle_pack` (white textures, tint with a
 - trails: a `GPUParticles2D` inside `Ship` at the tail, before the sprite (draws behind), world-space particles (default),
   small `amount`, `fixed_fps = 30`, color ramp fading in and out; toggle `emitting` only when the state changes
   (`FrostTrail` in `scenes/pebble_mite.tscn`, `smoke_07`).
+- big bursts: a layered scene instead of `object_explosion` (its square tiles of a glowing frame look like polygons under
+  bloom) - `scenes/beetle_blast.tscn`: screen-texture refraction ring (`shaders/shockwave.gdshader`), additive flash,
+  aligned spark streaks, debris from a part atlas (`CanvasItemMaterial.particles_animation` + `anim_offset_max = 1`,
+  atlas cut from the key pose with `sprite-animation/scripts/cut_shards.py`) and a frost smoke cloud.
 
 Art: new ships follow the art bible of their level (`art_level1.md`, `art_level2.md`) (style, palette, size tiers, nose pointing right -> AnimatedSprite2D `rotation = 1.5708`). Animated art (Gemini GIFs or MP4 videos, frame grid + json): use the `sprite-animation` skill to build the sheet, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
 

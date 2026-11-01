@@ -4,7 +4,8 @@ extends CharacterBody2D
 # with a 360 degree scanner around it; when the player enters the scan it brakes, overloads
 # and blows up, destroying everything in the blast - the player, other enemies and rocks.
 # Walk -> Charge (ChargeA / ChargeB, chosen by the walk frame it leaves) -> blast.
-# Shooting it down first only shatters the shell, no blast.
+# Shooting it down first only shatters the shell, no blast. Once the charge has started
+# it cannot be stopped: bullets do nothing and the player has to run.
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 
@@ -127,11 +128,12 @@ func skip_frame():
 	set_physics_process(true)
 
 func _physics_process(delta):
-	if isDead:
-		return
 	# the shape query of the blast has to run in the physics step
+	# (checked first, a nuke sets isDead before it asks a charging beetle to blow)
 	if _blast_pending:
 		_blow_up()
+		return
+	if isDead:
 		return
 
 	var to_player = player.global_position - global_position
@@ -193,16 +195,18 @@ func _blow_up():
 
 	Juice.play_sound(blastAudio)
 	Juice.shake(10.0)
-	blast.fire(ScanRange, 0.45)
-	shock.fire(ScanRange * 0.9, 0.4)
+	Juice.hitstop(0.06)
+	# the shell bursts into its own plates inside the blast, no explosion fragments
+	ship.visible = false
+	deathTimer.wait_time = blast.fire(ScanRange)
+	deathTimer.start()
+	shock.fire(ScanRange * 0.6, 0.2)
 
 	if global_position.distance_to(player.global_position) <= ScanRange and player.has_method("take_damage"):
 		player.take_damage(BlastDamage)
 	_blast_surroundings()
 
 	killed.emit(get_instance_id())
-	explosion.init(Vector2(2, 2), 150)
-	_shatter()
 
 # kills every enemy and breaks every rock in the blast, bosses only shrug it off
 func _blast_surroundings():
@@ -250,7 +254,8 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 		Juice.hit_effect(self, bullet.get_global_position())
 
-		if isDead:
+		# the overloaded shell shrugs bullets off
+		if isDead or _state == STATE.CHARGE:
 			return
 
 		velocity += bullet.global_position.direction_to(global_position) * Knockback
@@ -262,6 +267,10 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 # public - shot down (or nuked) before it blew, the shell just breaks
 func explode():
+	# a nuke or another blast cannot stop the charge either, it only blows now
+	if _state == STATE.CHARGE:
+		_blast_pending = true
+		return
 	Juice.play_sound(audio)
 	_stop()
 	scan.visible = false

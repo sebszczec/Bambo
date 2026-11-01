@@ -11,7 +11,7 @@
 [ext_resource type="AudioStream" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="7_blast"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="8_mark"]
 [ext_resource type="Script" path="res://scripts/mite_shock.gd" id="9_shock"]
-[ext_resource type="Script" path="res://scripts/beetle_blast.gd" id="9_blast"]
+[ext_resource type="PackedScene" path="res://scenes/beetle_blast.tscn" id="9_blast"]
 [ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/smoke_07.png" id="10_smoke"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
@@ -1134,8 +1134,7 @@ collision_layer = 8
 [node name="HitBoxCollisionShape" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource("CircleShape2D_hit")
 
-[node name="Blast" type="Node2D" parent="."]
-script = ExtResource("9_blast")
+[node name="Blast" parent="." instance=ExtResource("9_blast")]
 
 [node name="Shock" type="Node2D" parent="."]
 script = ExtResource("9_shock")
