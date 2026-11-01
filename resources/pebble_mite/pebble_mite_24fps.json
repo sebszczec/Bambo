@@ -1,0 +1,14 @@
+{
+  "image": "pebble_mite_24fps.png",
+  "frameWidth": 100,
+  "frameHeight": 83,
+  "columns": 9,
+  "rows": 11,
+  "frameCount": 91,
+  "fps": 24,
+  "source": {
+    "video": "source/pebble_mite.mp4",
+    "frames": "19..68 walk, 69..84 charge, 205..213 discharge, 215..229 death (24 fps)",
+    "bridge": "walk 68->19, 1 frame"
+  }
+}

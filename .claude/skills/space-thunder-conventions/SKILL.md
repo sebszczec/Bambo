@@ -18,9 +18,11 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
   - `PlayerStatus` - run stats (damage, crit, speed, fire rate, projectiles, armor, regen...), xp/level, `reset()` per run, `get_damage_from_weapon()`.
   - `Upgrades` - level-up pool ("pick 1 of 3"), stat and weapon entries.
   - `Juice` - hitstop, shake, flash and shared effect pools (ring buffers under a `JuicePool` node in the current scene): `hit_effect(target, pos)`, `explosion_effect(pos, scale, color, amount)`, `play_sound(audio_player_2d)` (plays a copy of the node's stream on one of 6 shared players, max one per 40 ms).
-  - `ConfigHandler` (settings file), `InputManager` (cursor/input).
+  - `Levels` - level ladder: story, waves, bosses, rewards, per-level background and enemy swaps, unlocking (`add-level` skill).
+  - `ConfigHandler` (settings file + save slots: completed levels, last level), `InputManager` (cursor/input).
 - `scripts/game_logic.gd` - run orchestration: owned weapons, spawning, kills, combo, xp drops, bosses, victory/endless.
-- `scripts/phase_guard.gd` - run clock: 10 one-minute stages (spawn delay, max alive, wave mix), swarms, elite, boss at `RUN_LENGTH`, then Endless.
+- `scripts/phase_guard.gd` - run clock: 10 one-minute stages (spawn delay, max alive, wave mix) read from the current level, swarms, elite, bosses, then Endless.
+- `scripts/world.gd` - applies the level's parallax background; `scripts/level_select.gd` - mission ladder and briefing.
 - `scripts/player.gd` - player ship; takes damage in `_on_life_box_area_entered`, picks up perks in `_on_life_box_area_exited` by group.
 - `scenes/` one `.tscn` per object, script of the same name in `scripts/`. `resources/` art/sfx (source-only art in `resources/<x>/source/` with `.gdignore`), `shaders/` shaders.
 
@@ -32,6 +34,8 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
   - player `LifeBox` and player bullet HitBoxes (`bullet.tscn`, `big_bullet.tscn`): `collision_mask = 9` (default layer 1 + Enemy).
   - areas that only scan (radar `Beam`, worm laser `HurtBox`): `collision_layer = 0`, `monitorable = false`.
   - everything else (perks, rocks, enemy bullets, bomb) stays on layer 1 / mask 1.
+- Bodies: enemy and boss `CharacterBody2D` use `collision_layer = 8`, `collision_mask = 2` (rocks only). The player body
+  (layer 1, mask 2) does not collide with enemies; an enemy masking layer 1 gets pushed along by the player and looks glued to it.
 - Player finds enemies via `get_tree().get_first_node_in_group("player")` (lowercase group on the player node).
 - Enemy damage to player: player reads `enemy.Damage`, `enemy.IsDamageOverTime`, `enemy.DamageTickTime` from `area.get_parent()`.
 - Bullet damage to enemy: `PlayerStatus.get_damage_from_weapon(bullet.Type)`; to player: `DamageValues.get_damage(bullet.Type)`.
@@ -58,5 +62,5 @@ New scripts come with `*.gd.uid` files - commit them together. `.godot/` and `*.
 Edit `.tscn` by hand carefully: keep `[ext_resource]` ids unique, update `load_steps`, keep `uid=` values unique (or omit them for new resources).
 
 ## Related skills
-`add-enemy`, `add-weapon`, `add-upgrade`, `godot-check`, `perf-stress` (frame times for horde / nuke / magnet, before vs after), `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
-Visual style of all ships: `art_bible.md` in the repo root (used as the Gemini brief).
+`add-enemy`, `add-level`, `add-weapon`, `add-upgrade`, `godot-check`, `perf-stress` (frame times for horde / nuke / magnet, before vs after), `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
+Visual style per level: `art_level1.md` (level 1, player, pickups, icons) and `art_level2.md` (level 2 rock bugs) in the repo root, used as the Gemini brief.

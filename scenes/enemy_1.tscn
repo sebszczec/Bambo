@@ -449,7 +449,7 @@ animations = [{
 
 [node name="Enemy_1" type="CharacterBody2D"]
 collision_layer = 8
-collision_mask = 3
+collision_mask = 2
 script = ExtResource("1_ww31q")
 ResizeSpeed = 0.1
 

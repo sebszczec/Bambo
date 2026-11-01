@@ -2700,7 +2700,7 @@ metadata/exit_Move = {&"Spread": 53, &"LaserCharge": 29, &"Mines": 5, &"Teleport
 
 [node name="WormBoss" type="CharacterBody2D"]
 collision_layer = 8
-collision_mask = 3
+collision_mask = 2
 script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

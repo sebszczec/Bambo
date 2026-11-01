@@ -258,7 +258,7 @@ func _on_phase_timeout(value):
 		for i in range(step.count):
 			if enemy_count >= phase_guard.get_max_alive():
 				return
-			spawn_enemy(step.enemy, get_spawn_position())
+			spawn_enemy(_level_enemy(step.enemy), get_spawn_position())
 
 func _on_swarm_requested(count : int):
 	phaseBanner.show_text("SWARM INCOMING!", Color.RED)
@@ -266,7 +266,7 @@ func _on_swarm_requested(count : int):
 	var start_angle = randf() * TAU
 	for i in range(count):
 		var offset = Vector2(SWARM_RADIUS, 0).rotated(start_angle + i * TAU / count)
-		spawn_enemy(Enums.ENEMIES.SCOUT, _clamp_to_level(player.global_position + offset))
+		spawn_enemy(_level_enemy(Enums.ENEMIES.SCOUT), _clamp_to_level(player.global_position + offset))
 
 func _on_elite_requested():
 	phaseBanner.show_text("ELITE INCOMING", Color.MAGENTA)
@@ -326,7 +326,11 @@ func _kill_enemy(enemy) -> bool:
 func _on_boss_spawn_requested(type : Enums.ENEMIES, pos : Vector2):
 	if enemy_count >= phase_guard.get_max_alive() + BOSS_EXTRA_ALIVE:
 		return
-	spawn_enemy(type, pos)
+	spawn_enemy(_level_enemy(type), pos)
+
+# levels share waves, a level can swap an enemy for its own (level 2: scout -> pebble mite)
+func _level_enemy(type : Enums.ENEMIES) -> Enums.ENEMIES:
+	return Levels.get_current().get("replace", {}).get(type, type)
 
 func _on_boss_health_changed(value : int, max_value : int):
 	bossBar.max_value = max_value

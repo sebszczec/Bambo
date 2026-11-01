@@ -37,6 +37,24 @@ Launch in the background so the session is not blocked, then ask the user to pla
 Run with `run_in_background`. Start a run directly from the world scene with `"$GODOT" --path . res://scenes/world.tscn`.
 Debug cheats (debug builds only): F1 level up, F2 skip 60 s, F3 skip to boss, F4 spawn worm boss.
 
+## Scripted run (see a change working without a human player)
+A `SceneTree` script drives the real game, takes screenshots and prints state. Write it as `res://_<name>.gd` in the
+repo root (it must be inside the project) and delete it together with its `.gd.uid` afterwards:
+```bash
+"$GODOT" --path . -s res://_test.gd 2>&1 | grep -v -e leaked -e "in use at exit"; rm -f _test.gd _test.gd.uid
+```
+- Autoloads are not identifiers in a `-s` script (`Identifier not found: Levels`) - use `get_root().get_node("Levels")`,
+  and plain ints for enum values (e.g. `5` for `Enums.ENEMIES.PEBBLE_MITE`). Inside the running scene they work normally.
+- `_initialize()`: set state (`Levels.current`), `change_scene_to_file("res://scenes/world.tscn")`. Do the work in
+  `_process(delta)` (return `false`), find `current_scene.get_node("GameLogic")` / `"Player"`, `quit()` when done.
+- Quiet test arena: `game.get_node("PhaseGuard").set_process(false)`, `.phase_timer.stop()`, `game.kill_all_enemies()`;
+  `player.godMode = true` to survive, `player.set_physics_process(false)` to keep it still; spawn with
+  `game.spawn_enemy(type, pos)`.
+- Screenshot: `get_root().get_texture().get_image().save_png(path)`; crop around an object with
+  `img.get_region(Rect2i(...))` using `node.get_global_transform_with_canvas().origin`. Save into the scratchpad, pass the
+  path through an env var. Screenshots come out darker than the game (HDR 2D).
+- Log state per frame (animation:frame, distances, `player.life` / `player.shield`) to check behaviour numerically.
+
 ## Exporting
 Preset "Windows Desktop" exports to `../../exports/Bambo.exe`:
 ```bash

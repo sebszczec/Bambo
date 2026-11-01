@@ -2,7 +2,7 @@ extends Node
 
 # Level ladder: every level is a survival run with its own stages, bosses and story.
 # Only available levels carry gameplay data, the others are shown as under development.
-# A level is won when its final boss is killed.
+# A level is won when its final boss is killed, and that unlocks the next level.
 
 const MAX_LEVELS = 10
 
@@ -43,6 +43,7 @@ const _LEVEL1_BOSSES = [
 
 # optional "background" = { base, brightness, far, mid, near }, layer entry = [texture, position, scale],
 # brightness = layer modulate per layer (optional)
+# optional "replace" = { enemy : enemy } swaps enemies of the shared waves, swarms and boss minions
 # without it the level keeps the planets of world.tscn
 var _levels : Array = [
 	{
@@ -85,6 +86,7 @@ var _levels : Array = [
 		"swarm_per_stage" : 2,
 		"boss_life_factor" : 0.8,
 		"victory_bonus" : 5000,
+		"replace" : { Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE },
 		"background" : {
 			"base" : "res://resources/background/level2/bg.jpg",
 			# the painted rocks are darker than the planets, the scene dimming hides them
@@ -128,13 +130,17 @@ func get_count() -> int:
 
 # public
 func select(index : int):
-	if is_available(index):
+	if is_unlocked(index):
 		current = index
 		ConfigHandler.save_last_level(index)
 
 # public
 func is_available(index : int) -> bool:
 	return index >= 0 and index < get_count() and _levels[index].get("available", false)
+
+# public - level n opens when level n-1 is cleared
+func is_unlocked(index : int) -> bool:
+	return is_available(index) and (index == 0 or is_completed(index - 1))
 
 # public
 func is_completed(index : int) -> bool:

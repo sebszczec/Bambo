@@ -10,6 +10,7 @@ var MaxMeteorCount : int = 12
 
 var _points_dict : Dictionary = {
 	"Enemy 1" : 10,
+	"Pebble Mite" : 10,
 	"Enemy 2" : 30,
 	"Enemy 3" : 30,
 	"Boss" : 10000,
@@ -19,6 +20,7 @@ var _points_dict : Dictionary = {
 # xp given by the gem dropped from an enemy
 var _xp_dict : Dictionary = {
 	"Enemy 1" : 1,
+	"Pebble Mite" : 1,
 	"Enemy 2" : 5,
 	"Enemy 3" : 5,
 	"Boss" : 100,
@@ -28,6 +30,7 @@ var _xp_dict : Dictionary = {
 # Xenite shards dropped by an enemy: [chance in %, value]
 var _shard_drops : Dictionary = {
 	"Enemy 1" : [4, 1],
+	"Pebble Mite" : [4, 1],
 	"Enemy 2" : [12, 1],
 	"Enemy 3" : [12, 1],
 	"Boss" : [100, 25],
@@ -75,6 +78,7 @@ var _enemy_scenes : Dictionary = {
 	Enums.ENEMIES.HUNTER : preload("res://scenes/enemy_3.tscn"),
 	Enums.ENEMIES.BOSS : preload("res://scenes/boss.tscn"),
 	Enums.ENEMIES.WORM_BOSS : preload("res://scenes/worm_boss.tscn"),
+	Enums.ENEMIES.PEBBLE_MITE : preload("res://scenes/pebble_mite.tscn"),
 }
 
 var _mine_scene = preload("res://scenes/mine.tscn")

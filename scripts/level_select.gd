@@ -1,7 +1,8 @@
 extends Control
 
 # Level ladder: one button per level on the left, briefing of the focused level
-# on the right. Levels without gameplay data are shown as under development.
+# on the right. Levels without gameplay data are shown as under development,
+# levels whose previous level is not cleared yet are locked.
 
 const LOCKED_COLOR = Color(0.4, 0.45, 0.6)
 const CLEARED_COLOR = Color(0.4, 1.0, 0.5)
@@ -79,7 +80,7 @@ func _create_ladder() -> Control:
 		button.text = _button_text(i)
 		button.custom_minimum_size = Vector2(0, 58)
 		# locked levels stay focusable so their briefing can be read
-		if !Levels.is_available(i):
+		if !Levels.is_unlocked(i):
 			for state in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color"]:
 				button.add_theme_color_override(state, LOCKED_COLOR)
 		elif Levels.is_completed(i):
@@ -96,6 +97,8 @@ func _button_text(index : int) -> String:
 	var number = "%02d   " % (index + 1)
 	if !Levels.is_available(index):
 		return number + "UNDER DEVELOPMENT"
+	if !Levels.is_unlocked(index):
+		return number + Levels.get_level(index)["name"].to_upper() + "   LOCKED"
 	var text = number + Levels.get_level(index)["name"].to_upper()
 	if Levels.is_completed(index):
 		text += "   CLEARED"
@@ -167,6 +170,15 @@ func _show_level(index : int):
 		_hangar_button.disabled = true
 		return
 
+	if !Levels.is_unlocked(index):
+		_tagline_label.text = level.get("tagline", "")
+		_story_label.text = "Sector locked. Clear Level %d - %s to open it." % [index, Levels.get_level(index - 1)["name"].to_upper()]
+		_objective_label.text = ""
+		_status_label.text = ""
+		_launch_button.disabled = true
+		_hangar_button.disabled = true
+		return
+
 	_tagline_label.text = level.get("tagline", "")
 	_story_label.text = "\n\n".join(level.get("story", []))
 	_objective_label.text = "Objective: " + level.get("objective", "")
@@ -182,11 +194,11 @@ func _on_level_focused(index : int):
 	_on_button_focus_changed()
 
 func _on_level_pressed(index : int):
-	if Levels.is_available(index):
+	if Levels.is_unlocked(index):
 		_on_launch_pressed()
 
 func _on_launch_pressed():
-	if _launching or !Levels.is_available(_selected):
+	if _launching or !Levels.is_unlocked(_selected):
 		return
 
 	_launching = true
@@ -197,7 +209,7 @@ func _on_launch_pressed():
 	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/count_down.tscn"))
 
 func _on_hangar_pressed():
-	if _launching or !Levels.is_available(_selected):
+	if _launching or !Levels.is_unlocked(_selected):
 		return
 
 	_launching = true

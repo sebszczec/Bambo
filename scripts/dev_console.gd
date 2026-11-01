@@ -24,6 +24,7 @@ const ENEMY_NAMES = {
 	"hunter" : Enums.ENEMIES.HUNTER,
 	"boss" : Enums.ENEMIES.BOSS,
 	"worm" : Enums.ENEMIES.WORM_BOSS,
+	"mite" : Enums.ENEMIES.PEBBLE_MITE,
 }
 
 const PERK_NAMES = {

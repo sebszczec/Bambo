@@ -1,4 +1,8 @@
-# Space Thunder — Art Bible (ships, enemies, bosses, pickups, icons)
+# Space Thunder — Art Bible, Level 1 "First Contact" (ships, enemies, bosses, pickups, icons)
+
+> **Status: done.** All level 1 art (player, Scout, Guard, Hunter, Hive Beetle boss, Worm Boss, pickups,
+> upgrade icons) is in the game. Level 2 has its own brief: `art_level2.md`. The pickups and upgrade
+> icons (section 12) are shared by every level.
 
 > **How to use this file in Gemini:** paste the whole document at the start of the conversation
 > (or put it into the instructions of a Gem) and say: *"Follow this art bible for every image and

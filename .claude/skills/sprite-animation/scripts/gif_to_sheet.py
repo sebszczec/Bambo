@@ -10,9 +10,9 @@
 # e.g. a video that settles in for a moment. Video compression smears the key color
 # into the edges: --shrink 1 eats 1 px of the alpha edge if a green fringe is left.
 #
-# One clip per animation (art_bible.md), all of one ship go into one sheet - the frame
+# One clip per animation (art_level1.md, art_level2.md), all of one ship go into one sheet - the frame
 # range of every clip is printed and stored in the json ("clips") for the animation spec.
-# The background must be a flat chroma color (art_bible.md asks for #00FF00).
+# The background must be a flat chroma color (the art bibles ask for #00FF00).
 # Alpha comes from the color distance to the key (soft edge between tol and tol+soft),
 # key spill is removed. All frames of all clips get the same crop (union of the visible
 # pixels) so the ship keeps its size and pivot in every animation.
