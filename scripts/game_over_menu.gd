@@ -1,6 +1,7 @@
 extends Control
 
 @onready var container = $GridContainer
+@onready var titleLabel = $GridContainer/Label
 @onready var retryButton = $GridContainer/RetryButton
 @onready var backButton = $GridContainer/QuitButton
 @onready var scoreLabel = $GridContainer/ScoreLabel
@@ -38,12 +39,18 @@ func setPause(value):
 	if isPaused and retryButton.visible:
 		retryButton.grab_focus()
 
-# public - called by game logic when the player is dead
-func show_result(score : int, phase_name : String):
+# public - called by game logic when the player is dead or the level is won
+func show_result(score : int, phase_name : String, victory : bool = false):
 	_score = score
 	_summary = phase_name
 	scoreLabel.text = "Score: " + str(score)
-	phaseLabel.text = "Survived: " + phase_name
+	if victory:
+		titleLabel.text = "Level complete"
+		titleLabel.add_theme_color_override("font_color", Color.GOLD)
+		phaseLabel.text = phase_name
+		retryButton.text = "Play again"
+	else:
+		phaseLabel.text = "Survived: " + phase_name
 
 	if ConfigHandler.is_high_score(score):
 		var is_best = score > ConfigHandler.get_high_score()
@@ -80,7 +87,7 @@ func _on_retry_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	setPause(false)
-	get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/level_select.tscn")
 
 
 func _on_button_focus_changed() -> void:

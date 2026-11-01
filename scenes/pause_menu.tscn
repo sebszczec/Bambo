@@ -57,7 +57,7 @@ text = "Restart"
 [node name="MenuButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Main menu"
+text = "Level select"
 
 [node name="QuitButton" type="Button" parent="GridContainer"]
 layout_mode = 2

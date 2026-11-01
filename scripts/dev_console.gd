@@ -303,7 +303,7 @@ func _help() -> String:
 		"  give <upgrade> [n]     takes an upgrade n times (up to its max level), see upgrades",
 		"  upgrades               the upgrade names and their levels",
 		"  stat [name] [value]    PlayerStatus values: list, show or set",
-		"  skip <seconds>         jumps the run clock (600 = boss)    endless   starts endless mode",
+		"  skip <seconds>         jumps the run clock (300 beetle, 600 worm)    endless   starts endless mode",
 		"  perk <%s>   drops that pickup on you" % "|".join(PERK_NAMES.keys()),
 		"  clear",
 	]

@@ -1,7 +1,6 @@
 extends Node
 
-const VICTORY_BONUS = 5000
-const ENDLESS_START_DELAY = 4.0
+const LEVEL_END_DELAY = 4.0
 const BOSS_EXTRA_ALIVE = 5
 const MAX_GEMS = 200
 const SPAWN_MIN_DISTANCE = 950.0
@@ -45,8 +44,6 @@ var owned_weapons : Array = []
 var active_enemies : Dictionary = {}
 var elites : Dictionary = {}
 var boss = null
-# number of bosses requested by the phase logic, decides which one comes next
-var boss_count = 0
 var run_over = false
 var kills = 0
 var combo = 0
@@ -119,6 +116,7 @@ func _ready() -> void:
 	phase_guard.connect("difficulty_changed", _on_difficulty_changed)
 	phase_guard.connect("time_changed", _on_time_changed)
 	phase_guard.start_phase(Enums.PHASE.Survival)
+	phaseBanner.show_text(Levels.get_title(), Color.CYAN)
 
 	meteor_spawn_timer.start()
 
@@ -203,7 +201,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.keycode == KEY_F2:
 		phase_guard.skip_time(60)
 	elif event.keycode == KEY_F3:
-		phase_guard.skip_time(phase_guard.RUN_LENGTH)
+		phase_guard.skip_time(phase_guard.run_length)
 	elif event.keycode == KEY_F4 and boss == null:
 		spawn_boss(Enums.ENEMIES.WORM_BOSS)
 
@@ -222,7 +220,7 @@ func _on_max_shield_changed(value : float):
 
 func _on_time_changed(_seconds : int):
 	hud.set_time(phase_guard.get_time_text())
-	if phase_guard.current_phase == Enums.PHASE.Survival and phase_guard.elapsed >= phase_guard.RUN_LENGTH - 60:
+	if phase_guard.current_phase == Enums.PHASE.Survival and phase_guard.elapsed >= phase_guard.run_length - 60:
 		hud.set_time_color(Color.RED)
 	else:
 		hud.set_time_color(Color.WHITE)
@@ -273,22 +271,18 @@ func _on_elite_requested():
 	elite.modulate = Color(1.6, 0.6, 1.6)
 	elites[elite.get_instance_id()] = true
 
-func _on_boss_requested():
-	# the first boss is always the skull beetle, endless bosses take turns
-	if boss_count % 2 == 1:
-		spawn_boss(Enums.ENEMIES.WORM_BOSS)
-	else:
-		spawn_boss(Enums.ENEMIES.BOSS)
-	boss_count += 1
+func _on_boss_requested(type : Enums.ENEMIES, _is_final : bool):
+	spawn_boss(type)
 
 # public - also used by the dev console
 func spawn_boss(type : Enums.ENEMIES):
 	if type == Enums.ENEMIES.WORM_BOSS:
-		phaseBanner.show_text("WORM INCOMING", Color.MEDIUM_PURPLE)
+		phaseBanner.show_text("THE DEVOURER RISES", Color.MEDIUM_PURPLE)
 	else:
-		phaseBanner.show_text("BOSS INCOMING", Color.RED)
+		phaseBanner.show_text("HIVE CARRIER DETECTED", Color.RED)
 	Juice.shake(10.0)
-	boss = spawn_enemy(type, get_spawn_position())
+	# easier levels get weaker bosses
+	boss = spawn_enemy(type, get_spawn_position(), Levels.get_current().get("boss_life_factor", 1.0))
 	boss.connect("spawn_requested", _on_boss_spawn_requested)
 	boss.connect("health_changed", _on_boss_health_changed)
 	if boss.has_signal("enraged"):
@@ -452,33 +446,45 @@ func _on_boss_killed():
 	phase_guard.on_boss_killed()
 	Juice.hitstop(0.25, 0.02)
 	Juice.shake(14.0)
-	levelUpMenu.queue_chest()
 
-	if phase_guard.current_phase == Enums.PHASE.Boss:
-		victory()
+	if phase_guard.is_final_boss_phase():
+		level_complete()
 	else:
 		phaseBanner.show_text("BOSS DEFEATED", Color.GOLD)
+		levelUpMenu.queue_chest()
 
-func victory():
-	score.add_score(VICTORY_BONUS)
-	phaseBanner.show_text("SECTOR CLEARED  +" + str(VICTORY_BONUS), Color.GOLD)
-	get_tree().create_timer(ENDLESS_START_DELAY, false).connect("timeout", _start_endless)
+# the final boss is dead - the level is won
+func level_complete():
+	var level = Levels.get_current()
+	var bonus = level.get("victory_bonus", 0)
+	score.add_score(bonus)
+	phaseBanner.show_text("%s  +%d" % [level.get("win_text", "SECTOR CLEARED"), bonus], Color.GOLD)
+	_end_run()
+	world.find_child("PauseMenu").lock()
+	# the swarm breaks up with its flagship gone (no score after run_over)
+	kill_all_enemies()
+	Levels.mark_completed(Levels.current)
+	get_tree().create_timer(LEVEL_END_DELAY, false).connect("timeout", _show_level_result)
 
-func _start_endless():
-	if run_over:
-		return
-	phase_guard.start_endless()
+func _show_level_result():
+	gameOverMenu.show_result(score.get_score(), get_run_summary(), true)
 
 func get_run_summary() -> String:
-	return "%s   Lv %d   %d kills" % [phase_guard.get_time_text(), PlayerStatus.Level, kills]
+	return "%s   %s   Lv %d   %d kills" % [Levels.get_current()["name"], phase_guard.get_time_text(), PlayerStatus.Level, kills]
 
-func _on_player_killed():
+func _end_run():
 	run_over = true
 	phase_guard.stop_phase(phase_guard.current_phase)
 	meteor_spawn_timer.stop()
 	for w in owned_weapons:
 		if w.has_method("clear"):
 			w.clear()
+
+func _on_player_killed():
+	# died after the level was won - the result screen comes from level_complete
+	if run_over:
+		return
+	_end_run()
 
 	var final_score = score.get_score()
 	var summary = get_run_summary()

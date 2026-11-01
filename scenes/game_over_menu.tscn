@@ -70,7 +70,7 @@ text = "Retry"
 [node name="QuitButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Back to menu"
+text = "Level select"
 
 [node name="Sfx" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_sfx")

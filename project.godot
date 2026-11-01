@@ -32,6 +32,7 @@ DamageValues="*res://singletons/damage_values.gd"
 PlayerStatus="*res://singletons/player_status.gd"
 Juice="*res://singletons/juice.gd"
 Upgrades="*res://singletons/upgrades.gd"
+Levels="*res://singletons/levels.gd"
 
 [display]
 

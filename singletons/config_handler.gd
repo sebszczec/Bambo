@@ -32,6 +32,7 @@ var _defaults : Dictionary = {
 	},
 	"Progress" : {
 		"high_scores" : [],
+		"completed_levels" : [],
 	},
 }
 
@@ -150,3 +151,15 @@ func add_high_score(player_name : String, score : int, summary : String) -> int:
 	config.save(SETTINGS_FILE_PATH)
 
 	return table.find(entry)
+
+# public - level indexes (0 based) the player has won
+func get_completed_levels() -> Array:
+	return config.get_value("Progress", "completed_levels", [])
+
+func add_completed_level(index : int):
+	var levels = get_completed_levels().duplicate()
+	if levels.has(index):
+		return
+	levels.append(index)
+	config.set_value("Progress", "completed_levels", levels)
+	config.save(SETTINGS_FILE_PATH)
