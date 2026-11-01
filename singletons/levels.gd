@@ -7,6 +7,8 @@ extends Node
 const MAX_LEVELS = 10
 
 var current : int = 0
+# hangar opened from the game over screen: it offers retry or main menu instead of launch / back
+var hangar_after_death = false
 
 # stage entry = { delay, max_alive, wave }, wave entry = [enemy, count, chance in %]
 # boss entry = { at (seconds), type, final }

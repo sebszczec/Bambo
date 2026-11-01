@@ -92,6 +92,9 @@ func _ready() -> void:
 	_launch_button.text = "Launch"
 	_launch_button.add_theme_font_size_override("font_size", 32)
 	_launch_button.connect("pressed", _on_launch_pressed)
+	if Levels.hangar_after_death:
+		_back_button.text = "Main menu"
+		_launch_button.text = "Retry"
 	for button in [_back_button, _launch_button]:
 		_connect_focus(button)
 		buttons.add_child(button)
@@ -180,12 +183,13 @@ func _on_launch_pressed():
 	_leave("res://scenes/count_down.tscn")
 
 func _on_back_pressed():
-	_leave("res://scenes/level_select.tscn")
+	_leave("res://scenes/start_menu.tscn" if Levels.hangar_after_death else "res://scenes/level_select.tscn")
 
 func _leave(scene : String):
 	if _leaving:
 		return
 	_leaving = true
+	Levels.hangar_after_death = false
 	var tween = create_tween()
 	tween.tween_property(_ui, "modulate:a", 0.0, FADE_TIME * 0.5)
 	tween.tween_callback(func(): get_tree().change_scene_to_file(scene))

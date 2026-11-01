@@ -17,6 +17,7 @@ var shardLabel : Label
 var hangarButton : Button
 
 var _score = 0
+var _victory = false
 var _summary = ""
 
 func _ready() -> void:
@@ -56,12 +57,13 @@ func setPause(value):
 	get_tree().paused = isPaused
 	visible = isPaused
 
-	if isPaused and retryButton.visible:
-		retryButton.grab_focus()
+	if isPaused and hangarButton.visible:
+		_focus_first_button()
 
 # public - called by game logic when the player is dead or the level is won
 func show_result(score : int, phase_name : String, victory : bool = false, shards : Dictionary = {}):
 	_score = score
+	_victory = victory
 	_summary = phase_name
 	scoreLabel.text = "Score: " + str(score)
 	_show_shards(shards, victory)
@@ -103,17 +105,24 @@ func _on_name_entered(player_name : String):
 	var rank = ConfigHandler.add_high_score(player_name, _score, _summary)
 	nameEntry.visible = false
 	_show_table(rank)
-	retryButton.grab_focus()
+	_focus_first_button()
 
 func _show_table(highlight_rank : int):
 	highScoreTable.refresh(highlight_rank)
 	highScoreTable.visible = true
 	_set_buttons_visible(true)
 
+# after a death the only way on is the hangar, retry or main menu are picked there
 func _set_buttons_visible(value : bool):
-	retryButton.visible = value
+	retryButton.visible = value and _victory
 	hangarButton.visible = value
-	backButton.visible = value
+	backButton.visible = value and _victory
+
+func _focus_first_button():
+	if retryButton.visible:
+		retryButton.grab_focus()
+	else:
+		hangarButton.grab_focus()
 
 
 func _on_retry_button_pressed() -> void:
@@ -123,6 +132,7 @@ func _on_retry_button_pressed() -> void:
 
 func _on_hangar_button_pressed() -> void:
 	setPause(false)
+	Levels.hangar_after_death = !_victory
 	get_tree().change_scene_to_file("res://scenes/hangar.tscn")
 
 
