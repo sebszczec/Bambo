@@ -12,6 +12,38 @@ var hangar_after_death = false
 
 # stage entry = { delay, max_alive, wave }, wave entry = [enemy, count, chance in %]
 # boss entry = { at (seconds), type, final }
+# level 2 reuses the level 1 waves and bosses until it gets its own
+const _LEVEL1_STAGES = [
+	{ "delay" : 1.1, "max_alive" : 25,
+		"wave" : [[Enums.ENEMIES.SCOUT, 3, 100]] },
+	{ "delay" : 1.0, "max_alive" : 35,
+		"wave" : [[Enums.ENEMIES.SCOUT, 3, 100], [Enums.ENEMIES.GUARD, 1, 15]] },
+	{ "delay" : 0.9, "max_alive" : 45,
+		"wave" : [[Enums.ENEMIES.SCOUT, 4, 100], [Enums.ENEMIES.GUARD, 1, 25]] },
+	{ "delay" : 0.8, "max_alive" : 55,
+		"wave" : [[Enums.ENEMIES.SCOUT, 4, 100], [Enums.ENEMIES.GUARD, 1, 30], [Enums.ENEMIES.HUNTER, 1, 10]] },
+	{ "delay" : 0.75, "max_alive" : 60,
+		"wave" : [[Enums.ENEMIES.SCOUT, 4, 100], [Enums.ENEMIES.GUARD, 1, 35], [Enums.ENEMIES.HUNTER, 1, 15]] },
+	{ "delay" : 0.7, "max_alive" : 70,
+		"wave" : [[Enums.ENEMIES.SCOUT, 5, 100], [Enums.ENEMIES.GUARD, 1, 40], [Enums.ENEMIES.HUNTER, 1, 20]] },
+	{ "delay" : 0.65, "max_alive" : 80,
+		"wave" : [[Enums.ENEMIES.SCOUT, 5, 100], [Enums.ENEMIES.GUARD, 1, 45], [Enums.ENEMIES.HUNTER, 1, 25]] },
+	{ "delay" : 0.6, "max_alive" : 90,
+		"wave" : [[Enums.ENEMIES.SCOUT, 5, 100], [Enums.ENEMIES.GUARD, 2, 50], [Enums.ENEMIES.HUNTER, 1, 30]] },
+	{ "delay" : 0.55, "max_alive" : 100,
+		"wave" : [[Enums.ENEMIES.SCOUT, 6, 100], [Enums.ENEMIES.GUARD, 2, 55], [Enums.ENEMIES.HUNTER, 1, 35]] },
+	{ "delay" : 0.5, "max_alive" : 110,
+		"wave" : [[Enums.ENEMIES.SCOUT, 6, 100], [Enums.ENEMIES.GUARD, 2, 60], [Enums.ENEMIES.HUNTER, 1, 40]] },
+]
+
+const _LEVEL1_BOSSES = [
+	{ "at" : 300.0, "type" : Enums.ENEMIES.BOSS, "final" : false },
+	{ "at" : 600.0, "type" : Enums.ENEMIES.WORM_BOSS, "final" : true },
+]
+
+# optional "background" = { base, brightness, far, mid, near }, layer entry = [texture, position, scale],
+# brightness = layer modulate per layer (optional)
+# without it the level keeps the planets of world.tscn
 var _levels : Array = [
 	{
 		"name" : "First Contact",
@@ -25,32 +57,8 @@ var _levels : Array = [
 		"objective" : "Survive the invasion and destroy both alien flagships.",
 		"win_text" : "FIRST CONTACT REPELLED",
 		"available" : true,
-		"stages" : [
-			{ "delay" : 1.1, "max_alive" : 25,
-				"wave" : [[Enums.ENEMIES.SCOUT, 3, 100]] },
-			{ "delay" : 1.0, "max_alive" : 35,
-				"wave" : [[Enums.ENEMIES.SCOUT, 3, 100], [Enums.ENEMIES.GUARD, 1, 15]] },
-			{ "delay" : 0.9, "max_alive" : 45,
-				"wave" : [[Enums.ENEMIES.SCOUT, 4, 100], [Enums.ENEMIES.GUARD, 1, 25]] },
-			{ "delay" : 0.8, "max_alive" : 55,
-				"wave" : [[Enums.ENEMIES.SCOUT, 4, 100], [Enums.ENEMIES.GUARD, 1, 30], [Enums.ENEMIES.HUNTER, 1, 10]] },
-			{ "delay" : 0.75, "max_alive" : 60,
-				"wave" : [[Enums.ENEMIES.SCOUT, 4, 100], [Enums.ENEMIES.GUARD, 1, 35], [Enums.ENEMIES.HUNTER, 1, 15]] },
-			{ "delay" : 0.7, "max_alive" : 70,
-				"wave" : [[Enums.ENEMIES.SCOUT, 5, 100], [Enums.ENEMIES.GUARD, 1, 40], [Enums.ENEMIES.HUNTER, 1, 20]] },
-			{ "delay" : 0.65, "max_alive" : 80,
-				"wave" : [[Enums.ENEMIES.SCOUT, 5, 100], [Enums.ENEMIES.GUARD, 1, 45], [Enums.ENEMIES.HUNTER, 1, 25]] },
-			{ "delay" : 0.6, "max_alive" : 90,
-				"wave" : [[Enums.ENEMIES.SCOUT, 5, 100], [Enums.ENEMIES.GUARD, 2, 50], [Enums.ENEMIES.HUNTER, 1, 30]] },
-			{ "delay" : 0.55, "max_alive" : 100,
-				"wave" : [[Enums.ENEMIES.SCOUT, 6, 100], [Enums.ENEMIES.GUARD, 2, 55], [Enums.ENEMIES.HUNTER, 1, 35]] },
-			{ "delay" : 0.5, "max_alive" : 110,
-				"wave" : [[Enums.ENEMIES.SCOUT, 6, 100], [Enums.ENEMIES.GUARD, 2, 60], [Enums.ENEMIES.HUNTER, 1, 40]] },
-		],
-		"bosses" : [
-			{ "at" : 300.0, "type" : Enums.ENEMIES.BOSS, "final" : false },
-			{ "at" : 600.0, "type" : Enums.ENEMIES.WORM_BOSS, "final" : true },
-		],
+		"stages" : _LEVEL1_STAGES,
+		"bosses" : _LEVEL1_BOSSES,
 		"elite_at" : 450.0,
 		"swarm_every" : 120.0,
 		"swarm_base" : 15,
@@ -58,7 +66,44 @@ var _levels : Array = [
 		"boss_life_factor" : 0.8,
 		"victory_bonus" : 5000,
 	},
-	{ "name" : "Asteroid Siege", "available" : false },
+	{
+		"name" : "Asteroid Siege",
+		"tagline" : "The rocks are alive now.",
+		"story" : [
+			"The swarm did not retreat. It dug in. Three weeks after First Contact, the mining colonies of the Hilda asteroid belt stopped answering, and survey drones came back with images of black, root-like growths spreading across the rocks, pulsing with cold blue light.",
+			"The hive is turning the belt into a fortress. Every asteroid it touches becomes a nest, and every nest pours out more drones. If the growth reaches the refinery stations, the colonies lose their only fuel supply.",
+			"Your orders: fly into the belt, break the siege and kill whatever is commanding it from inside the rock. Watch the debris, pilot - out here even the scenery can hit back.",
+		],
+		"objective" : "Break the hive siege of the asteroid belt and destroy both alien flagships.",
+		"win_text" : "ASTEROID SIEGE BROKEN",
+		"available" : true,
+		"stages" : _LEVEL1_STAGES,
+		"bosses" : _LEVEL1_BOSSES,
+		"elite_at" : 450.0,
+		"swarm_every" : 120.0,
+		"swarm_base" : 15,
+		"swarm_per_stage" : 2,
+		"boss_life_factor" : 0.8,
+		"victory_bonus" : 5000,
+		"background" : {
+			"base" : "res://resources/background/level2/bg.jpg",
+			# the painted rocks are darker than the planets, the scene dimming hides them
+			"brightness" : { "far" : 0.5, "mid" : 0.65, "near" : 0.75 },
+			"far" : [
+				["res://resources/background/level2/asteroid_small_1.png", Vector2(230, 190), 0.18],
+				["res://resources/background/level2/asteroid_small_2.png", Vector2(1010, 470), 0.14],
+				["res://resources/background/level2/asteroid_small_3.png", Vector2(1500, 860), 0.16],
+				["res://resources/background/level2/asteroid_small_4.png", Vector2(1640, 140), 0.12],
+			],
+			"mid" : [
+				["res://resources/background/level2/asteroid_small_4.png", Vector2(320, 470), 0.5],
+				["res://resources/background/level2/asteroid_medium.png", Vector2(1900, 1100), 0.45],
+			],
+			"near" : [
+				["res://resources/background/level2/asteroid_huge.png", Vector2(900, 350), 0.9],
+			],
+		},
+	},
 	{ "name" : "The Red Nebula", "available" : false },
 	{ "name" : "Hive Outpost", "available" : false },
 	{ "name" : "Silent Moons", "available" : false },
