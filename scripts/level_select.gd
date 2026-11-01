@@ -24,6 +24,7 @@ var _status_label : Label
 
 func _ready() -> void:
 	get_tree().paused = false
+	MenuMusic.play_menu()
 	theme = MenuTheme.create()
 
 	_ui = Control.new()

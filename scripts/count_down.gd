@@ -10,6 +10,7 @@ var timer = Timer.new()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().paused = false
+	MenuMusic.stop_menu()
 	PlayerStatus.reset()
 	# permanent upgrades bought in the hangar for this level
 	MetaProgress.apply(Levels.current)

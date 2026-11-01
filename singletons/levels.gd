@@ -83,6 +83,7 @@ func get_count() -> int:
 func select(index : int):
 	if is_available(index):
 		current = index
+		ConfigHandler.save_last_level(index)
 
 # public
 func is_available(index : int) -> bool:

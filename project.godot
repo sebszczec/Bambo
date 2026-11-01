@@ -34,6 +34,7 @@ Juice="*res://singletons/juice.gd"
 Upgrades="*res://singletons/upgrades.gd"
 Levels="*res://singletons/levels.gd"
 MetaProgress="*res://singletons/meta_progress.gd"
+MenuMusic="*res://singletons/menu_music.gd"
 
 [display]
 

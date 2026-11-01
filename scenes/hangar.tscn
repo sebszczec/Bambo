@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/hangar.gd" id="1_hangar"]
 [ext_resource type="PackedScene" uid="uid://rjw2vhq4jhs8" path="res://scenes/warp.tscn" id="2_warp"]
-[ext_resource type="AudioStream" uid="uid://d0j0wehwugqub" path="res://resources/music/Orbital Colossus.mp3" id="3_music"]
 [ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="4_sfx"]
 
 [sub_resource type="Environment" id="Environment_glow"]
@@ -24,10 +23,6 @@ grow_vertical = 2
 script = ExtResource("1_hangar")
 
 [node name="Warp" parent="." instance=ExtResource("2_warp")]
-
-[node name="Music" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("3_music")
-autoplay = true
 
 [node name="Sfx" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_sfx")
