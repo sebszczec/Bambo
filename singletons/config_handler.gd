@@ -33,6 +33,8 @@ var _defaults : Dictionary = {
 	"Progress" : {
 		"high_scores" : [],
 		"completed_levels" : [],
+		# per level meta progression, see MetaProgress
+		"meta" : {},
 	},
 }
 
@@ -162,4 +164,15 @@ func add_completed_level(index : int):
 		return
 	levels.append(index)
 	config.set_value("Progress", "completed_levels", levels)
+	config.save(SETTINGS_FILE_PATH)
+
+# public - meta progression of one level { shards, deaths, runs, upgrades }
+func get_level_meta(index : int) -> Dictionary:
+	var meta = config.get_value("Progress", "meta", {})
+	return meta.get(str(index), {}).duplicate(true)
+
+func save_level_meta(index : int, data : Dictionary):
+	var meta = config.get_value("Progress", "meta", {}).duplicate(true)
+	meta[str(index)] = data
+	config.set_value("Progress", "meta", meta)
 	config.save(SETTINGS_FILE_PATH)

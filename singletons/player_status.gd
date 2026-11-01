@@ -13,6 +13,9 @@ var Armor : float = 0
 var Regen : float = 0
 var PickupRadius : float = 120
 
+# Xenite collected in this run, banked by MetaProgress when the run ends
+var Shards : int = 0
+
 var Level : int = 1
 var Xp : int = 0
 var XpToNext : int = 0
@@ -37,6 +40,7 @@ signal max_life_changed (value : float)
 signal max_shield_changed (value : float)
 signal xp_changed (value : int, max_value : int)
 signal leveled_up (level : int)
+signal shards_changed (value : int)
 
 # called at the start of every run, so perks do not leak between runs
 func reset():
@@ -52,6 +56,7 @@ func reset():
 	Armor = 0
 	Regen = 0
 	PickupRadius = DEFAULT_PICKUP_RADIUS
+	Shards = 0
 	Level = 1
 	Xp = 0
 	XpToNext = get_xp_for_level(Level)
@@ -74,6 +79,10 @@ func add_xp(value : int):
 		leveled_up.emit(Level)
 
 	xp_changed.emit(Xp, XpToNext)
+
+func add_shards(value : int):
+	Shards += value
+	shards_changed.emit(Shards)
 
 func increase_critic_hit_multiplier(value: float):
 	CriticalHitMultiplier += value

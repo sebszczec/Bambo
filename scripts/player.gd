@@ -61,6 +61,7 @@ var xpPitchResetTime = 0
 # a magnet brings many gems in the same frame, they are counted once per frame
 var pendingXp = 0
 var pendingPickups = 0
+var pendingShards = 0
 
 signal update_life(value: int)
 signal update_afterburner(value: int)
@@ -114,8 +115,19 @@ func collect_xp(value : int):
 	pendingXp += value
 	pendingPickups += 1
 
+# public - called by xenite shards
+func collect_shard(value : int):
+	if isDead:
+		return
+
+	pendingShards += value
+
 # one sound and one xp update for all gems picked up in this frame
 func flushXp():
+	if pendingShards > 0:
+		PlayerStatus.add_shards(pendingShards)
+		pendingShards = 0
+
 	if pendingPickups == 0:
 		return
 
@@ -484,6 +496,7 @@ func handlePerk(area: Area2D):
 	if area.is_in_group("MagnetPerk"):
 		createFloatingText("Magnet!", Color.GOLD, 2)
 		get_tree().call_group("XpGem", "attract")
+		get_tree().call_group("Shard", "attract")
 		return
 
 	if area.is_in_group("SpeedUpPerk"):

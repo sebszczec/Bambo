@@ -8,9 +8,13 @@ extends Control
 @onready var phaseLabel = $GridContainer/PhaseLabel
 @onready var highScoreLabel = $GridContainer/HighScoreLabel
 
+const SHARD_COLOR = Color(0.85, 0.55, 1.0)
+
 var isPaused = false
 var nameEntry : NameEntry
 var highScoreTable : HighScoreTable
+var shardLabel : Label
+var hangarButton : Button
 
 var _score = 0
 var _summary = ""
@@ -31,6 +35,22 @@ func _ready() -> void:
 	container.add_child(highScoreTable)
 	container.move_child(highScoreTable, retryButton.get_index())
 
+	# xenite earned in this run and deaths on the level
+	shardLabel = Label.new()
+	shardLabel.horizontal_alignment = phaseLabel.horizontal_alignment
+	shardLabel.add_theme_font_size_override("font_size", 22)
+	shardLabel.add_theme_color_override("font_color", SHARD_COLOR)
+	container.add_child(shardLabel)
+	container.move_child(shardLabel, highScoreLabel.get_index())
+
+	hangarButton = Button.new()
+	hangarButton.text = "Hangar"
+	hangarButton.connect("pressed", _on_hangar_button_pressed)
+	hangarButton.connect("focus_entered", _on_button_focus_changed)
+	hangarButton.connect("mouse_entered", hangarButton.grab_focus)
+	container.add_child(hangarButton)
+	container.move_child(hangarButton, backButton.get_index())
+
 func setPause(value):
 	isPaused = value
 	get_tree().paused = isPaused
@@ -40,10 +60,11 @@ func setPause(value):
 		retryButton.grab_focus()
 
 # public - called by game logic when the player is dead or the level is won
-func show_result(score : int, phase_name : String, victory : bool = false):
+func show_result(score : int, phase_name : String, victory : bool = false, shards : Dictionary = {}):
 	_score = score
 	_summary = phase_name
 	scoreLabel.text = "Score: " + str(score)
+	_show_shards(shards, victory)
 	if victory:
 		titleLabel.text = "Level complete"
 		titleLabel.add_theme_color_override("font_color", Color.GOLD)
@@ -64,6 +85,20 @@ func show_result(score : int, phase_name : String, victory : bool = false):
 
 	setPause(true)
 
+func _show_shards(shards : Dictionary, victory : bool):
+	if shards.is_empty():
+		shardLabel.visible = false
+		return
+
+	var text = "Xenite +%d" % (shards["collected"] + shards["salvage"])
+	if shards["salvage"] > 0:
+		text += " (salvage +%d)" % shards["salvage"]
+	text += "   Bank: %d" % shards["bank"]
+	if !victory:
+		text += "
+Death #%d on this level - spend it in the Hangar" % shards["deaths"]
+	shardLabel.text = text
+
 func _on_name_entered(player_name : String):
 	var rank = ConfigHandler.add_high_score(player_name, _score, _summary)
 	nameEntry.visible = false
@@ -77,12 +112,18 @@ func _show_table(highlight_rank : int):
 
 func _set_buttons_visible(value : bool):
 	retryButton.visible = value
+	hangarButton.visible = value
 	backButton.visible = value
 
 
 func _on_retry_button_pressed() -> void:
 	setPause(false)
 	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
+
+
+func _on_hangar_button_pressed() -> void:
+	setPause(false)
+	get_tree().change_scene_to_file("res://scenes/hangar.tscn")
 
 
 func _on_quit_button_pressed() -> void:

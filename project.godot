@@ -33,6 +33,7 @@ PlayerStatus="*res://singletons/player_status.gd"
 Juice="*res://singletons/juice.gd"
 Upgrades="*res://singletons/upgrades.gd"
 Levels="*res://singletons/levels.gd"
+MetaProgress="*res://singletons/meta_progress.gd"
 
 [display]
 

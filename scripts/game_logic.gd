@@ -8,6 +8,7 @@ const SPAWN_MAX_DISTANCE = 1100.0
 const SWARM_RADIUS = 750.0
 const ELITE_LIFE_FACTOR = 12
 const ELITE_SCALE = 1.8
+const ELITE_SHARDS = 10
 const COMBO_TIMEOUT = 2.0
 const COMBO_STEPS = [10, 25, 50, 100]
 const COMBO_NAMES = ["KILLING SPREE!", "RAMPAGE!", "UNSTOPPABLE!", "GODLIKE!"]
@@ -48,6 +49,8 @@ var run_over = false
 var kills = 0
 var combo = 0
 var combo_time_left = 0.0
+# shard result of the finished run for the result screen
+var run_shards = {}
 
 @onready var phase_guard = $PhaseGuard
 @onready var meteor_spawn_timer = $MeteorSpawnTimer
@@ -98,6 +101,7 @@ func _ready() -> void:
 	PlayerStatus.connect("leveled_up", _on_leveled_up)
 	PlayerStatus.connect("max_life_changed", _on_max_life_changed)
 	PlayerStatus.connect("max_shield_changed", _on_max_shield_changed)
+	PlayerStatus.connect("shards_changed", hud.set_shards)
 	hud.set_xp(PlayerStatus.Xp, PlayerStatus.XpToNext)
 
 	lifeBar.max_value = PlayerStatus.MaxLife
@@ -410,6 +414,11 @@ func drop_xp(pos : Vector2, value : int):
 	gem.position = pos + Vector2(randf_range(-8, 8), randf_range(-8, 8))
 	call_deferred("add_child", gem)
 
+func drop_shard(pos : Vector2, value : int):
+	var shard = LevelSettings.get_shard(value)
+	shard.position = pos + Vector2(randf_range(-12, 12), randf_range(-12, 12))
+	call_deferred("add_child", shard)
+
 func _on_enemy_killed(id : int):
 	enemy_count = enemy_count - 1
 	informationBox.decreaseEnemyCount()
@@ -427,11 +436,15 @@ func _on_enemy_killed(id : int):
 	var enemy_name = enemy.get_enemy_name()
 	score.add_score(LevelSettings.get_points(enemy_name) * get_combo_multiplier())
 	drop_xp(enemy.position, LevelSettings.get_xp(enemy_name))
+	var shards = LevelSettings.get_shard_drop(enemy_name)
+	if shards > 0:
+		drop_shard(enemy.position, shards)
 	addPerk(enemy.position)
 
 	if elites.has(id):
 		elites.erase(id)
 		drop_xp(enemy.position, 50)
+		drop_shard(enemy.position, ELITE_SHARDS)
 		Juice.hitstop(0.08)
 		Juice.shake(8.0)
 		phaseBanner.show_text("SUPPLY CRATE!", Color.CYAN)
@@ -459,7 +472,7 @@ func level_complete():
 	var bonus = level.get("victory_bonus", 0)
 	score.add_score(bonus)
 	phaseBanner.show_text("%s  +%d" % [level.get("win_text", "SECTOR CLEARED"), bonus], Color.GOLD)
-	_end_run()
+	_end_run(false)
 	world.find_child("PauseMenu").lock()
 	# the swarm breaks up with its flagship gone (no score after run_over)
 	kill_all_enemies()
@@ -467,13 +480,14 @@ func level_complete():
 	get_tree().create_timer(LEVEL_END_DELAY, false).connect("timeout", _show_level_result)
 
 func _show_level_result():
-	gameOverMenu.show_result(score.get_score(), get_run_summary(), true)
+	gameOverMenu.show_result(score.get_score(), get_run_summary(), true, run_shards)
 
 func get_run_summary() -> String:
 	return "%s   %s   Lv %d   %d kills" % [Levels.get_current()["name"], phase_guard.get_time_text(), PlayerStatus.Level, kills]
 
-func _end_run():
+func _end_run(died : bool):
 	run_over = true
+	_bank_shards(died)
 	phase_guard.stop_phase(phase_guard.current_phase)
 	meteor_spawn_timer.stop()
 	for w in owned_weapons:
@@ -484,11 +498,22 @@ func _on_player_killed():
 	# died after the level was won - the result screen comes from level_complete
 	if run_over:
 		return
-	_end_run()
+	_end_run(true)
 
 	var final_score = score.get_score()
 	var summary = get_run_summary()
-	gameOverMenu.show_result(final_score, summary)
+	gameOverMenu.show_result(final_score, summary, false, run_shards)
+
+# every run counts - collected shards plus salvage go to the level's bank, won or lost
+func _bank_shards(died : bool):
+	var salvage = MetaProgress.get_salvage(phase_guard.elapsed, !died)
+	var level = Levels.current
+	run_shards = {
+		"collected" : PlayerStatus.Shards,
+		"salvage" : salvage,
+		"bank" : MetaProgress.finish_run(level, PlayerStatus.Shards + salvage, died),
+		"deaths" : MetaProgress.get_deaths(level),
+	}
 
 
 func _on_player_damage_taken(value):

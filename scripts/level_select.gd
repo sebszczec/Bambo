@@ -15,6 +15,7 @@ var _launching = false
 var _ui : Control
 var _launch_button : Button
 var _back_button : Button
+var _hangar_button : Button
 var _name_label : Label
 var _tagline_label : Label
 var _story_label : Label
@@ -131,11 +132,14 @@ func _create_briefing() -> Control:
 	_back_button = Button.new()
 	_back_button.text = "Back"
 	_back_button.connect("pressed", _on_back_pressed)
+	_hangar_button = Button.new()
+	_hangar_button.text = "Hangar"
+	_hangar_button.connect("pressed", _on_hangar_pressed)
 	_launch_button = Button.new()
 	_launch_button.text = "Launch"
 	_launch_button.add_theme_font_size_override("font_size", 32)
 	_launch_button.connect("pressed", _on_launch_pressed)
-	for button in [_back_button, _launch_button]:
+	for button in [_back_button, _hangar_button, _launch_button]:
 		button.connect("focus_entered", _on_button_focus_changed)
 		button.connect("mouse_entered", button.grab_focus)
 		buttons.add_child(button)
@@ -159,13 +163,17 @@ func _show_level(index : int):
 		_objective_label.text = ""
 		_status_label.text = ""
 		_launch_button.disabled = true
+		_hangar_button.disabled = true
 		return
 
 	_tagline_label.text = level.get("tagline", "")
 	_story_label.text = "\n\n".join(level.get("story", []))
 	_objective_label.text = "Objective: " + level.get("objective", "")
-	_status_label.text = "Status: CLEARED" if Levels.is_completed(index) else ""
+	_status_label.text = "Status: CLEARED
+" if Levels.is_completed(index) else ""
+	_status_label.text += "Xenite: %d   Deaths: %d" % [MetaProgress.get_shards(index), MetaProgress.get_deaths(index)]
 	_launch_button.disabled = false
+	_hangar_button.disabled = false
 
 func _on_level_focused(index : int):
 	_selected = index
@@ -186,6 +194,16 @@ func _on_launch_pressed():
 	tween.tween_property(_ui, "modulate:a", 0.0, LAUNCH_TIME)
 	tween.tween_property(warp, "Brightness", 0.0, LAUNCH_TIME)
 	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/count_down.tscn"))
+
+func _on_hangar_pressed():
+	if _launching or !Levels.is_available(_selected):
+		return
+
+	_launching = true
+	Levels.select(_selected)
+	var tween = create_tween()
+	tween.tween_property(_ui, "modulate:a", 0.0, LAUNCH_TIME * 0.5)
+	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/hangar.tscn"))
 
 func _on_back_pressed():
 	get_tree().change_scene_to_file("res://scenes/start_menu.tscn")

@@ -11,6 +11,8 @@ var timer = Timer.new()
 func _ready() -> void:
 	get_tree().paused = false
 	PlayerStatus.reset()
+	# permanent upgrades bought in the hangar for this level
+	MetaProgress.apply(Levels.current)
 	timer.connect("timeout", _on_timer_timeout)
 	add_child(timer)
 	prepareTimer()

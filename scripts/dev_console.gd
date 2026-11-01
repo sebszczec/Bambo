@@ -16,7 +16,7 @@ const C_ERR = "ff5a4a"
 const C_OK = "9fd67a"
 
 const COMMANDS = ["help", "clear", "spawn", "boss", "hurtboss", "killall", "god", "heal",
-	"xp", "levelup", "chest", "give", "upgrades", "stat", "skip", "endless", "perk"]
+	"xp", "levelup", "chest", "give", "upgrades", "stat", "skip", "endless", "perk", "shards"]
 
 const ENEMY_NAMES = {
 	"scout" : Enums.ENEMIES.SCOUT,
@@ -288,6 +288,11 @@ func run(line : String) -> String:
 			return _ok("endless mode started")
 		"perk":
 			return _perk(args[0].to_lower() if args.size() > 0 else "")
+		"shards":
+			if args.is_empty() or !args[0].is_valid_int():
+				return _err("shards <n>")
+			MetaProgress.add_shards(Levels.current, args[0].to_int())
+			return _ok("xenite bank: %d" % MetaProgress.get_shards(Levels.current))
 	return _err("unknown command '%s' (try help)" % _esc(words[0]))
 
 func _help() -> String:
@@ -305,6 +310,7 @@ func _help() -> String:
 		"  stat [name] [value]    PlayerStatus values: list, show or set",
 		"  skip <seconds>         jumps the run clock (300 beetle, 600 worm)    endless   starts endless mode",
 		"  perk <%s>   drops that pickup on you" % "|".join(PERK_NAMES.keys()),
+		"  shards <n>             adds n xenite to this level's hangar bank",
 		"  clear",
 	]
 	return "\n".join(lines)

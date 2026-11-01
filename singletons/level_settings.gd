@@ -25,6 +25,15 @@ var _xp_dict : Dictionary = {
 	"Worm" : 150,
 }
 
+# Xenite shards dropped by an enemy: [chance in %, value]
+var _shard_drops : Dictionary = {
+	"Enemy 1" : [4, 1],
+	"Enemy 2" : [12, 1],
+	"Enemy 3" : [12, 1],
+	"Boss" : [100, 25],
+	"Worm" : [100, 40],
+}
+
 # chances are in 1/1000, stats and weapons come from level ups,
 # only small floor pickups drop from enemies
 var _perk_chances : Dictionary = {
@@ -51,6 +60,7 @@ var _perk_scenes : Dictionary = {
 }
 
 var _xp_gem_scene = preload("res://scenes/xp_gem.tscn")
+var _shard_scene = preload("res://scenes/shard.tscn")
 
 var _meteor_scenes = [
 	preload("res://scenes/rock.tscn"),
@@ -98,6 +108,18 @@ func get_xp_gem(value : int):
 	var gem = _xp_gem_scene.instantiate()
 	gem.Value = value
 	return gem
+
+# returns the shard value to drop, 0 when nothing drops
+func get_shard_drop(enemy: String) -> int:
+	var drop = _shard_drops.get(enemy, [0, 0])
+	if randf_range(0.0, 100.0) < drop[0] * MetaProgress.get_shard_chance_factor():
+		return drop[1]
+	return 0
+
+func get_shard(value : int):
+	var shard = _shard_scene.instantiate()
+	shard.Value = value
+	return shard
 
 func get_enemy(enemy : Enums.ENEMIES):
 	return _enemy_scenes[enemy].instantiate()

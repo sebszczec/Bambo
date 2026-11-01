@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/shard.gd" id="1_shard"]
+[ext_resource type="Texture2D" path="res://resources/kenney_space-shooter-redux/PNG/Power-ups/star_silver.png" id="2_shard"]
+
+[node name="Shard" type="Node2D"]
+modulate = Color(1.8, 0.8, 2.4, 1)
+script = ExtResource("1_shard")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_shard")

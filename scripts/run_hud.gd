@@ -1,13 +1,15 @@
 extends CanvasLayer
 
-# Run HUD: experience bar, level, survival timer, kills, combo and owned weapons.
+# Run HUD: experience bar, level, survival timer, kills, xenite shards, combo and owned weapons.
 
 const XP_BAR_HEIGHT = 18
+const SHARD_COLOR = Color(0.85, 0.55, 1.0)
 
 var _xp_bar : ProgressBar
 var _level_label : Label
 var _time_label : Label
 var _kills_label : Label
+var _shards_label : Label
 var _combo_label : Label
 var _weapons_box : HBoxContainer
 var _font = null
@@ -44,12 +46,20 @@ func _ready() -> void:
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_kills_label)
 
+	_shards_label = _create_label(22, SHARD_COLOR)
+	_shards_label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_shards_label.offset_left = -300
+	_shards_label.offset_right = -16
+	_shards_label.offset_top = XP_BAR_HEIGHT + 68
+	_shards_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	add_child(_shards_label)
+
 	_combo_label = _create_label(44, Color.ORANGE)
 	_combo_label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	_combo_label.offset_left = -420
 	_combo_label.offset_right = -16
-	_combo_label.offset_top = XP_BAR_HEIGHT + 72
-	_combo_label.offset_bottom = XP_BAR_HEIGHT + 140
+	_combo_label.offset_top = XP_BAR_HEIGHT + 100
+	_combo_label.offset_bottom = XP_BAR_HEIGHT + 168
 	_combo_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_combo_label.pivot_offset = Vector2(404, 34)
 	add_child(_combo_label)
@@ -70,6 +80,7 @@ func _ready() -> void:
 
 	set_level(1)
 	set_kills(0)
+	set_shards(0)
 	set_combo(0, 1)
 	set_time("00:00")
 
@@ -106,6 +117,10 @@ func set_time_color(color : Color):
 # public
 func set_kills(value : int):
 	_kills_label.text = "KILLS " + str(value)
+
+# public
+func set_shards(value : int):
+	_shards_label.text = "XENITE " + str(value)
 
 # public
 func set_combo(count : int, multiplier : int):
