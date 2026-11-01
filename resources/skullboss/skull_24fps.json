@@ -1,0 +1,10 @@
+{
+  "image": "skull_24fps.png",
+  "frameWidth": 360,
+  "frameHeight": 274,
+  "columns": 11,
+  "rows": 15,
+  "frameCount": 163,
+  "fps": 24,
+  "source": "source/skull_fly.mp4 (gif_to_sheet --fps 0 --key auto --width 360), frames 221..239,0..20 | 21..90 | 172..220, then interpolate.py --factor 1 --bridge 39:110:1 --bridge 109:19:1 --bridge 39:0:2"
+}

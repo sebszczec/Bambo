@@ -33,27 +33,36 @@ var _death_timer = Timer.new()
 var _world = null
 var _weapon = null
 
+# idle time between attacks
 var _state_timer = Timer.new()
 var _state_timeout = 4
 
-var _shooting_timer = Timer.new()
-var _shooting_timeot = 1
 var _shot_count = 0
 var _max_shots = 6
 
-var _spawn_timer = Timer.new()
-var _spawn_timeout = 0.5
 var _spawn_count = 0
 var _max_spawn = 5
-var _spawn_distance = 150
+var _spawn_distance = 240
 var _max_life = 0
+
+# frames of resources/skullboss/skull_animations.json
+# Idle frame that ShellOpen and Summon continue from (both start with it)
+const IDLE_EXIT = 39
+# Idle frame that follows the last ShellClose frame
+const IDLE_AFTER_CLOSE = 19
+# ShellHold frame with the shell fully open, ShellClose starts with it
+const HOLD_SHOT_FRAME = 7
+# Summon frames with raised antennae, one scout each
+const SUMMON_SPAWN_FRAMES = [10, 15, 20, 25, 30]
 
 signal killed
 signal spawn_requested(enemy : Enums.ENEMIES, spawn_position : Vector2)
 signal health_changed(value : int, max_value : int)
 
-enum STATE {SHOOT, SPAWN}
-var _current_state = STATE.SHOOT
+enum STATE {NONE, SHOOT, SPAWN}
+var _next_attack = STATE.SHOOT
+# attack waiting for the idle loop to reach IDLE_EXIT
+var _pending_attack = STATE.NONE
 
 # public
 func get_enemy_name():
@@ -62,6 +71,8 @@ func get_enemy_name():
 # public
 func setup_rotation(angle):
 	ship.rotate(angle)
+	collisionShape.rotation = ship.rotation
+	hitBoxCollisionShape.rotation = ship.rotation
 	
 # public
 func set_mark():
@@ -88,23 +99,16 @@ func _ready() -> void:
 	_death_timer.connect("timeout", _on_death_timer_timeout)
 	add_child(_death_timer)
 	
-	_state_timer.one_shot = false
+	_state_timer.one_shot = true
 	_state_timer.wait_time = _state_timeout
 	_state_timer.connect("timeout", _on_state_timer_timout)
 	add_child(_state_timer)
 	_state_timer.start()
-	
-	_shooting_timer.one_shot = false
-	_shooting_timer.wait_time = _shooting_timeot
-	_shooting_timer.connect("timeout", _on_shooting_timer_timeout)
-	add_child(_shooting_timer)
-	
-	_spawn_timer.one_shot = false
-	_spawn_timer.wait_time = _spawn_timeout
-	_spawn_timer.connect("timeout", _on_spawn_timer_timeout)
-	add_child(_spawn_timer)
-	
-	mainBody.play("Idle")
+
+	# shots and spawns are timed by the animation frames
+	mainBody.connect("frame_changed", _on_frame_changed)
+	mainBody.connect("animation_finished", _on_animation_finished)
+	mainBody.play(&"Idle")
 
 func _physics_process(delta: float) -> void:
 	if _is_dead:
@@ -118,43 +122,74 @@ func _physics_process(delta: float) -> void:
 	var theta = wrapf(atan2(direction.y, direction.x) - ship.rotation - _halfPI, -PI, PI)
 	var diff = clamp(RotationSpeed * delta, 0, abs(theta) * sign(theta))
 	ship.rotation = move_toward(ship.rotation, ship.rotation + diff, 0.1)
-	collisionShape.rotation = move_toward(collisionShape.rotation, collisionShape.rotation + diff, 0.1)
-	hitBoxCollisionShape.rotation = move_toward(hitBoxCollisionShape.rotation, hitBoxCollisionShape.rotation + diff, 0.1)
+	# the beetle is long, its shapes turn with it
+	collisionShape.rotation = ship.rotation
+	hitBoxCollisionShape.rotation = ship.rotation
 
 	move_and_collide(velocity * delta)
 
 func _on_state_timer_timout():
-	if _current_state == STATE.SHOOT:
-		_shooting_timer.start()
-		_current_state = STATE.SPAWN
-	elif _current_state == STATE.SPAWN:
-		_spawn_timer.start()
-		_current_state = STATE.SHOOT
-	
-	_state_timer.stop()
-	
-func _on_shooting_timer_timeout():
-	_shot_count += 1
-	if _shot_count == _max_shots:
+	# the attack starts when the idle loop reaches the frame it continues from
+	_pending_attack = _next_attack
+
+func _on_frame_changed():
+	if _is_dead:
+		return
+
+	var frame = mainBody.frame
+	match mainBody.animation:
+		&"Idle":
+			if frame == IDLE_EXIT and _pending_attack != STATE.NONE:
+				_start_attack()
+		&"ShellHold":
+			if frame == HOLD_SHOT_FRAME:
+				_shoot()
+		&"Summon":
+			if frame in SUMMON_SPAWN_FRAMES:
+				_spawn_scout()
+
+func _on_animation_finished():
+	if _is_dead:
+		return
+
+	match mainBody.animation:
+		&"ShellOpen":
+			mainBody.play(&"ShellHold")
+		&"ShellClose":
+			_back_to_idle(IDLE_AFTER_CLOSE)
+		&"Summon":
+			_back_to_idle(0)
+
+func _start_attack():
+	if _pending_attack == STATE.SHOOT:
 		_shot_count = 0
-		_shooting_timer.stop()
-		_state_timer.start()
-		
+		mainBody.play(&"ShellOpen")
+		_next_attack = STATE.SPAWN
+	else:
+		_spawn_count = 0
+		mainBody.play(&"Summon")
+		_next_attack = STATE.SHOOT
+	_pending_attack = STATE.NONE
+
+func _back_to_idle(frame : int):
+	mainBody.play(&"Idle")
+	mainBody.set_frame_and_progress(frame, 0.0)
+	_state_timer.start()
+
+func _shoot():
+	# fireworks leave the glowing core, one side per open shell cycle
+	_shot_count += 1
 	if _shot_count % 2 == 0:
 		_weapon.shoot(_world, aim2.get_global_position(), aim2.get_global_position() - aim2_2.get_global_position())
 	else:
 		_weapon.shoot(_world, aim1.get_global_position(), aim1.get_global_position() - aim1_1.get_global_position())
 
-func _on_spawn_timer_timeout():
+	# ShellClose starts with this frame, the shell closes without a jump
+	if _shot_count >= _max_shots:
+		mainBody.play(&"ShellClose")
+
+func _spawn_scout():
 	_spawn_count += 1
-	if _spawn_count == _max_spawn:
-		_spawn_count = 0
-		_spawn_timer.stop()
-		_state_timer.start()
-
-	if _is_dead:
-		return
-
 	# spawn scouts around the boss, game logic creates and tracks them
 	var angle = ship.rotation + _spawn_count * TAU / _max_spawn
 	var offset = Vector2(_spawn_distance, 0).rotated(angle)
@@ -188,8 +223,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 
 func explode():
 	_state_timer.stop()
-	_shooting_timer.stop()
-	_spawn_timer.stop()
+	mainBody.stop()
 	audio.play()
 	collisionShape.set_deferred("disabled", true)
 	hitBoxCollisionShape.set_deferred("disabled", true)
@@ -198,7 +232,8 @@ func explode():
 	explosion.position = mainBody.position
 	explosion.SpriteTexture = mainBody.get_sprite_frames().get_frame_texture(mainBody.animation, mainBody.get_frame())
 	explosion.scale = mainBody.scale
-	explosion.rotation = ship.rotation
+	# the sheet is drawn head right
+	explosion.rotation = ship.rotation + mainBody.rotation
 	explosion.init(Vector2(3.0, 3.0), 250)
 	explosion.visible = true
 	explosion.explode()

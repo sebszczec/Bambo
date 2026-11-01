@@ -274,7 +274,7 @@ func _on_elite_requested():
 	elites[elite.get_instance_id()] = true
 
 func _on_boss_requested():
-	# the first boss is always the mothership, endless bosses take turns
+	# the first boss is always the skull beetle, endless bosses take turns
 	if boss_count % 2 == 1:
 		spawn_boss(Enums.ENEMIES.WORM_BOSS)
 	else:
