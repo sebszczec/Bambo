@@ -125,6 +125,23 @@ func _wait(seconds : float):
 	_timer.start(seconds)
 	await _timer.timeout
 
+# public - other bosses reuse the laser in their own colors (hdr, alpha of the gradients is kept)
+# the gradients are shared by every instance of the scene, so they are copied first
+func set_colors(beam_color : Color, core_color : Color, warning_color : Color):
+	warning.default_color = warning_color
+	beam.default_color = Color(beam_color, beam.default_color.a)
+	beam.gradient = _recolor(beam.gradient, beam_color)
+	core.default_color = Color(core_color, core.default_color.a)
+	core.gradient = _recolor(core.gradient, core_color)
+	muzzle.modulate = Color(core_color, muzzle.modulate.a)
+	sparks.color_ramp = _recolor(sparks.color_ramp, core_color)
+
+func _recolor(gradient : Gradient, color : Color) -> Gradient:
+	var copy = gradient.duplicate() as Gradient
+	for i in range(copy.get_point_count()):
+		copy.set_color(i, Color(color, copy.get_color(i).a))
+	return copy
+
 # public - cuts the beam at once (boss died)
 func stop():
 	_sequence += 1

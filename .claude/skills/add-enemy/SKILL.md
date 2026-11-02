@@ -9,7 +9,7 @@ Reference implementations: `scripts/enemy_1.gd` (simple chaser), `enemy_2.gd`/`e
 `scripts/pebble_mite.gd` (level 2 swarm enemy: state machine Walk -> Charge -> Discharge -> Recover driven by animation frames, area shock attack, particle trail),
 `scripts/boulder_beetle.gd` (level 2 kamikaze: 360 degree scan (`shaders/radar_sweep.gdshader`) triggers a charge, the blast kills enemies and breaks rocks in a radius with a physics shape query run in `_physics_process`, bosses and mines skipped),
 `scripts/shard_wasp.gd` (level 2 chaser: orbits the player, aim line telegraph, locked-path lunge tested as a swept segment, leaves `scripts/shard_wake.gd` - a lingering wall of wing shards added to the world that cuts the player on entry only),
-`scripts/boss.gd` (boss spawning minions), `scripts/worm_boss.gd` (boss with attack cycle, enrage, own weapon, laser/mines, sprite-sheet animations with planned switches - see `sprite-animation`).
+`scripts/boss.gd` (boss spawning minions), `scripts/quarry_mantis.gd` (level 2 mid boss: lunge with a wedge telegraph that is the real hit zone, rock spit with a custom bullet scene on `WORM_SPIT`, the worm laser recolored with `set_colors`, rockfall hazards `scripts/mantis_rock.gd`, enrage calls minions, death burst = `beetle_blast.tscn` with its own debris atlas), `scripts/worm_boss.gd` (boss with attack cycle, enrage, own weapon, laser/mines, sprite-sheet animations with planned switches - see `sprite-animation`).
 Read the closest one before writing a new enemy.
 
 ## 1. Register it
@@ -75,7 +75,7 @@ Art: new ships follow the art bible of their level (`art_level1.md`, `art_level2
 - Dev console: add a name to `ENEMY_NAMES` in `scripts/dev_console.gd` (`spawn <name> <count>`).
 - Boss: add `{ "at" : seconds, "type" : Enums.ENEMIES.X, "final" : bool }` to a level's `bosses`; `phase_guard` emits
   `boss_requested`, `game_logic.spawn_boss(type)` spawns it - add its banner text there.
-- Debug: in debug builds F1 = level up, F2 = +60s, F3 = jump to boss, F4 = spawn worm boss (add a key for the new boss while testing if useful).
+- Debug: in debug builds F1 = level up, F2 = +60s, F3 = jump to boss, F4 = spawn worm boss, F5 = spawn quarry mantis (add a key for the new boss while testing if useful).
 
 ## 5. Verify
 Run the `godot-check` skill, then a scripted run (`godot-check`, "Scripted run": spawn the enemy next to a still player, log

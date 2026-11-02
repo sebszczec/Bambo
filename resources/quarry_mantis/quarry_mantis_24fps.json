@@ -1,0 +1,10 @@
+{
+  "image": "quarry_mantis_24fps.png",
+  "frameWidth": 400,
+  "frameHeight": 221,
+  "columns": 10,
+  "rows": 20,
+  "frameCount": 195,
+  "fps": 24,
+  "source": "source/quarry_mantis.mp4 (gif_to_sheet --key auto --fps 0 --width 400 --trim quarry_mantis=0:7.92 -> frames 0..189: idle 0..38, walk 39..73, slash 74..104, spit 105..131, beam 132..165, death 166..189), then interpolate.py --factor 1 --bridge 73:105:2 --bridge 165:0:3"
+}

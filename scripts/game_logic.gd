@@ -208,6 +208,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		phase_guard.skip_time(phase_guard.run_length)
 	elif event.keycode == KEY_F4 and boss == null:
 		spawn_boss(Enums.ENEMIES.WORM_BOSS)
+	elif event.keycode == KEY_F5 and boss == null:
+		spawn_boss(Enums.ENEMIES.QUARRY_MANTIS)
 
 func _on_xp_changed(value : int, max_value : int):
 	hud.set_xp(value, max_value)
@@ -276,12 +278,15 @@ func _on_elite_requested():
 	elites[elite.get_instance_id()] = true
 
 func _on_boss_requested(type : Enums.ENEMIES, _is_final : bool):
-	spawn_boss(type)
+	# levels share the boss list, a level can swap a boss for its own (level 2: hive carrier -> quarry mantis)
+	spawn_boss(_level_enemy(type))
 
 # public - also used by the dev console
 func spawn_boss(type : Enums.ENEMIES):
 	if type == Enums.ENEMIES.WORM_BOSS:
 		phaseBanner.show_text("THE DEVOURER RISES", Color.MEDIUM_PURPLE)
+	elif type == Enums.ENEMIES.QUARRY_MANTIS:
+		phaseBanner.show_text("THE QUARRY MANTIS AWAKENS", Color(0.4, 0.85, 0.95))
 	else:
 		phaseBanner.show_text("HIVE CARRIER DETECTED", Color.RED)
 	Juice.shake(10.0)
@@ -337,7 +342,7 @@ func _on_boss_health_changed(value : int, max_value : int):
 	bossBar.value = value
 
 func _on_boss_enraged():
-	phaseBanner.show_text("WORM ENRAGED", Color.ORANGE_RED)
+	phaseBanner.show_text("%s ENRAGED" % boss.get_enemy_name().to_upper(), Color.ORANGE_RED)
 	Juice.shake(8.0)
 
 func spawn_enemy(type : Enums.ENEMIES, pos : Vector2, life_factor : float = 1.0):

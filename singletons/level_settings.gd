@@ -17,6 +17,7 @@ var _points_dict : Dictionary = {
 	"Enemy 3" : 30,
 	"Boss" : 10000,
 	"Worm" : 15000,
+	"Quarry Mantis" : 12500,
 }
 
 # xp given by the gem dropped from an enemy
@@ -29,6 +30,7 @@ var _xp_dict : Dictionary = {
 	"Enemy 3" : 5,
 	"Boss" : 100,
 	"Worm" : 150,
+	"Quarry Mantis" : 120,
 }
 
 # Xenite shards dropped by an enemy: [chance in %, value]
@@ -41,6 +43,7 @@ var _shard_drops : Dictionary = {
 	"Enemy 3" : [12, 1],
 	"Boss" : [100, 25],
 	"Worm" : [100, 40],
+	"Quarry Mantis" : [100, 30],
 }
 
 # chances are in 1/1000, stats and weapons come from level ups,
@@ -87,6 +90,7 @@ var _enemy_scenes : Dictionary = {
 	Enums.ENEMIES.PEBBLE_MITE : preload("res://scenes/pebble_mite.tscn"),
 	Enums.ENEMIES.BOULDER_BEETLE : preload("res://scenes/boulder_beetle.tscn"),
 	Enums.ENEMIES.SHARD_WASP : preload("res://scenes/shard_wasp.tscn"),
+	Enums.ENEMIES.QUARRY_MANTIS : preload("res://scenes/quarry_mantis.tscn"),
 }
 
 var _mine_scene = preload("res://scenes/mine.tscn")

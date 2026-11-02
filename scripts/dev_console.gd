@@ -27,6 +27,7 @@ const ENEMY_NAMES = {
 	"mite" : Enums.ENEMIES.PEBBLE_MITE,
 	"beetle" : Enums.ENEMIES.BOULDER_BEETLE,
 	"wasp" : Enums.ENEMIES.SHARD_WASP,
+	"mantis" : Enums.ENEMIES.QUARRY_MANTIS,
 }
 
 const PERK_NAMES = {
@@ -322,7 +323,7 @@ func _spawn(enemy_name : String, count : int) -> String:
 	if !ENEMY_NAMES.has(enemy_name):
 		return _err("spawn %s [n]" % "|".join(ENEMY_NAMES.keys()))
 	var type = ENEMY_NAMES[enemy_name]
-	if type == Enums.ENEMIES.BOSS or type == Enums.ENEMIES.WORM_BOSS:
+	if type in [Enums.ENEMIES.BOSS, Enums.ENEMIES.WORM_BOSS, Enums.ENEMIES.QUARRY_MANTIS]:
 		if game.boss != null:
 			return _err("a boss is already here (killall or hurtboss 100 first)")
 		game.spawn_boss(type)

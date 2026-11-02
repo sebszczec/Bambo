@@ -333,3 +333,9 @@ color you used if it isn't green.
   (painted detail, outline, glow amount, top-down readability, head on the right).
 - **Lessons from level 1** (`art_level1.md` section 11): separate clips that start and end on the
   key pose, a flat green background, and dedicated `attack_*` / `charge` / `fire` clips for bosses.
+- **Lessons from the Quarry Mantis** (`resources/quarry_mantis/source/`): one 8 s video with all actions in
+  order (idle, walk, slash, spit, beam charge, death), each returning to the key pose, works well for a
+  boss when Gemini only gives long videos. Video backgrounds come out as a dull green (`#29D027`), which
+  Claude Code handles. For debris, an **exploded view** of the key pose (every piece apart on green) is
+  cut into the debris atlas directly. Gemini still tints thin translucent parts (the wings) a little
+  green, so ask for "blue-cyan, not teal" wings.

@@ -43,7 +43,7 @@ const _LEVEL1_BOSSES = [
 
 # optional "background" = { base, brightness, far, mid, near }, layer entry = [texture, position, scale],
 # brightness = layer modulate per layer (optional)
-# optional "replace" = { enemy : enemy } swaps enemies of the shared waves, swarms and boss minions
+# optional "replace" = { enemy : enemy } swaps enemies of the shared waves, swarms, bosses and boss minions
 # without it the level keeps the planets of world.tscn
 # optional "music" = in-level track (looped), without it the level keeps the track of world.tscn
 var _levels : Array = [
@@ -92,6 +92,7 @@ var _levels : Array = [
 			Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE,
 			Enums.ENEMIES.GUARD : Enums.ENEMIES.BOULDER_BEETLE,
 			Enums.ENEMIES.HUNTER : Enums.ENEMIES.SHARD_WASP,
+			Enums.ENEMIES.BOSS : Enums.ENEMIES.QUARRY_MANTIS,
 		},
 		"background" : {
 			"base" : "res://resources/background/level2/bg.jpg",
