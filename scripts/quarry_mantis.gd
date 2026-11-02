@@ -10,7 +10,7 @@ extends CharacterBody2D
 # a sweeping beam, and it calls a pack of hunters (shard wasps in level 2).
 # Faces the player with its +Y side, the sheet draws the mantis head-right so the
 # sprite is turned by 90 degrees. Animations come from one Gemini take (see
-# resources/quarry_mantis/quarry_mantis_animations.json), the chase uses the
+# resources/levels/level2/enemies/quarry_mantis/quarry_mantis_animations.json), the chase uses the
 # planned move -> attack switches of the worm boss.
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
@@ -141,7 +141,7 @@ func _ready() -> void:
 	_spit.set_owner(_world)
 	_spit.register_internal_nodes(self)
 
-	blast.get_node("Debris").texture = preload("res://resources/quarry_mantis/mantis_shards.png")
+	blast.get_node("Debris").texture = preload("res://resources/levels/level2/enemies/quarry_mantis/mantis_shards.png")
 	_build_slash_warning()
 
 	_ai_timer.one_shot = true

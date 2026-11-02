@@ -45,7 +45,7 @@ var _max_spawn = 5
 var _spawn_distance = 240
 var _max_life = 0
 
-# frames of resources/skullboss/skull_animations.json
+# frames of resources/levels/level1/enemies/hive_beetle/skull_animations.json
 # Idle frame that ShellOpen and Summon continue from (both start with it)
 const IDLE_EXIT = 39
 # Idle frame that follows the last ShellClose frame

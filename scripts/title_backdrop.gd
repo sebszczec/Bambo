@@ -4,19 +4,19 @@ extends Node2D
 
 const SCREEN = Vector2(1920, 1080)
 const METEORS = [
-	preload("res://resources/meteors/Meteor_02.png"),
-	preload("res://resources/meteors/Meteor_05.png"),
-	preload("res://resources/meteors/Meteor_07.png"),
-	preload("res://resources/meteors/Meteor_10.png"),
+	preload("res://resources/shared/space/meteors/Meteor_02.png"),
+	preload("res://resources/shared/space/meteors/Meteor_05.png"),
+	preload("res://resources/shared/space/meteors/Meteor_07.png"),
+	preload("res://resources/shared/space/meteors/Meteor_10.png"),
 ]
 # animated enemy sprite sheets (see the json next to each png), drawn nose right
 const SHEETS = [
-	{ "texture" : preload("res://resources/basic_enemy1/scout_24fps.png"), "grid" : Vector2i(6, 10), "frames" : 59, "fps" : 24.0, "scale" : 1.0 },
-	{ "texture" : preload("res://resources/scanning_enemy/guard_24fps.png"), "grid" : Vector2i(5, 16), "frames" : 80, "fps" : 24.0, "scale" : 0.9 },
-	{ "texture" : preload("res://resources/basic_enemy2/hunter_24fps.png"), "grid" : Vector2i(6, 13), "frames" : 76, "fps" : 24.0, "scale" : 0.9 },
+	{ "texture" : preload("res://resources/levels/level1/enemies/scout/scout_24fps.png"), "grid" : Vector2i(6, 10), "frames" : 59, "fps" : 24.0, "scale" : 1.0 },
+	{ "texture" : preload("res://resources/levels/level1/enemies/guard/guard_24fps.png"), "grid" : Vector2i(5, 16), "frames" : 80, "fps" : 24.0, "scale" : 0.9 },
+	{ "texture" : preload("res://resources/levels/level1/enemies/hunter/hunter_24fps.png"), "grid" : Vector2i(6, 13), "frames" : 76, "fps" : 24.0, "scale" : 0.9 },
 ]
-const UFO = preload("res://resources/player_spritesheets/ufo/ufo_sample2_spritesheet.png")
-const LASER = preload("res://resources/kenney_space-shooter-redux/PNG/Lasers/laserBlue01.png")
+const UFO = preload("res://resources/shared/player/ufo/ufo_sample2_spritesheet.png")
+const LASER = preload("res://resources/vendor/kenney/space_shooter_redux/PNG/Lasers/laserBlue01.png")
 
 const SPAWN_INTERVAL = Vector2(2.0, 4.0)
 const CHASE_GAP = 260.0

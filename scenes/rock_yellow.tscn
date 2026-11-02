@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://gr4nucka3crs"]
 
 [ext_resource type="Script" uid="uid://ke83ef84vcp2" path="res://scripts/rock_yellow.gd" id="1_m5qfm"]
-[ext_resource type="Texture2D" uid="uid://bttea3o6f2x7s" path="res://resources/meteors/Meteor_10.png" id="2_0wond"]
+[ext_resource type="Texture2D" uid="uid://bttea3o6f2x7s" path="res://resources/shared/space/meteors/Meteor_10.png" id="2_0wond"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="3_cpaea"]
-[ext_resource type="AudioStream" uid="uid://b4aljvf8bjh6m" path="res://resources/sfx/crack.mp3" id="4_nphuy"]
+[ext_resource type="AudioStream" uid="uid://b4aljvf8bjh6m" path="res://resources/shared/audio/sfx/crack.mp3" id="4_nphuy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_83c4h"]
 radius = 28.0
@@ -35,7 +35,7 @@ shape = SubResource("CapsuleShape2D_cihpx")
 
 [node name="Explosion" parent="." instance=ExtResource("3_cpaea")]
 visible = false
-PathToSprite = "res://resources/meteors/Meteor_07.png"
+PathToSprite = "res://resources/shared/space/meteors/Meteor_07.png"
 
 [node name="DeathTimer" type="Timer" parent="."]
 wait_time = 2.0

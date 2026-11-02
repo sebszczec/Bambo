@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/xp_gem.gd" id="1_xpgem"]
-[ext_resource type="Texture2D" path="res://resources/kenney_space-shooter-redux/PNG/Power-ups/pill_blue.png" id="2_xpgem"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/space_shooter_redux/PNG/Power-ups/pill_blue.png" id="2_xpgem"]
 
 [node name="XpGem" type="Node2D"]
 modulate = Color(1.6, 1.6, 1.6, 1)

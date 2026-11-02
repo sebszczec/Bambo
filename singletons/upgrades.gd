@@ -4,7 +4,7 @@ extends Node
 # Stat upgrades change PlayerStatus, weapon upgrades are handed to game logic.
 
 const MAX_WEAPONS = 5
-const PERKS = "res://resources/perks/"
+const PERKS = "res://resources/shared/pickups/"
 
 # game logic registers itself at the start of every run
 var game = null

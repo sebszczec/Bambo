@@ -5,13 +5,13 @@ extends Node2D
 # so a swarm of mites that never got close costs nothing.
 
 const BOLTS = [
-	preload("res://resources/kenney_particle_pack/spark_05.png"),
-	preload("res://resources/kenney_particle_pack/spark_06.png"),
+	preload("res://resources/vendor/kenney/particles/spark_05.png"),
+	preload("res://resources/vendor/kenney/particles/spark_06.png"),
 ]
 const BURSTS = [
-	preload("res://resources/kenney_particle_pack/spark_01.png"),
-	preload("res://resources/kenney_particle_pack/spark_02.png"),
-	preload("res://resources/kenney_particle_pack/spark_04.png"),
+	preload("res://resources/vendor/kenney/particles/spark_01.png"),
+	preload("res://resources/vendor/kenney/particles/spark_02.png"),
+	preload("res://resources/vendor/kenney/particles/spark_04.png"),
 ]
 const RING_BOLTS = 14
 const SPOKES = 5

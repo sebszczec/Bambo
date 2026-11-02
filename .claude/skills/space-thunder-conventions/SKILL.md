@@ -24,7 +24,7 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
 - `scripts/phase_guard.gd` - run clock: 10 one-minute stages (spawn delay, max alive, wave mix) read from the current level, swarms, elite, bosses, then Endless.
 - `scripts/world.gd` - applies the level's parallax background; `scripts/level_select.gd` - mission ladder and briefing.
 - `scripts/player.gd` - player ship; takes damage in `_on_life_box_area_entered`, picks up perks in `_on_life_box_area_exited` by group.
-- `scenes/` one `.tscn` per object, script of the same name in `scripts/`. `resources/` art/sfx (source-only art in `resources/<x>/source/` with `.gdignore`), `shaders/` shaders.
+- `scenes/` one `.tscn` per object, script of the same name in `scripts/`. `resources/` art/sfx, grouped as `levels/level1/`, `levels/level2/` (background, music, `enemies/<name>/`), `shared/` (player, pickups, audio, fx, space, branding), `vendor/kenney/` (third-party packs) and `unused/`. Source-only art sits in a `source/` folder with `.gdignore`, `shaders/` shaders.
 
 ## Collision & groups (core contract)
 - Physics layers: 1 Player, 2 Rock, 3 Bullet, 4 Enemy (bit values 1, 2, 4, 8). Bullet *body* masks use `Enums.MASKS` and double as "who it damages" flags (`is_damaging_enemy()`).

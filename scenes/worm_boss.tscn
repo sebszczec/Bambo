@@ -1,12 +1,12 @@
 [gd_scene load_steps=265 format=3]
 
 [ext_resource type="Script" path="res://scripts/worm_boss.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://resources/wormboss/worm_spritesheet_24fps.png" id="2_sheet"]
+[ext_resource type="Texture2D" path="res://resources/levels/level1/enemies/worm_boss/worm_spritesheet_24fps.png" id="2_sheet"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_lifebar"]
 [ext_resource type="PackedScene" path="res://scenes/worm_laser.tscn" id="4_laser"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/light_01.png" id="5_light"]
-[ext_resource type="AudioStream" uid="uid://ca05pfy0doh4d" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="6_explosion"]
-[ext_resource type="AudioStream" path="res://resources/kenney_space-shooter-redux/Bonus/sfx_twoTone.ogg" id="7_teleport"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/light_01.png" id="5_light"]
+[ext_resource type="AudioStream" uid="uid://ca05pfy0doh4d" path="res://resources/shared/audio/explosions/explosion-fx-343683.mp3" id="6_explosion"]
+[ext_resource type="AudioStream" path="res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_twoTone.ogg" id="7_teleport"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="8_explosion"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="9_mark"]
 

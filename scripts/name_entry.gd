@@ -27,7 +27,7 @@ var _repeat_time = 0.0
 @onready var _sfx = get_node_or_null("../../Sfx")
 
 func _ready() -> void:
-	_font = load("res://resources/kenney_space-shooter-redux/Bonus/kenvector_future.ttf")
+	_font = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/kenvector_future.ttf")
 	alignment = BoxContainer.ALIGNMENT_CENTER
 	add_theme_constant_override("separation", 12)
 

@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://c0xwy2c0hqyel" path="res://scripts/player.gd" id="1_yf2p4"]
 [ext_resource type="PackedScene" uid="uid://dfw2m05fb74h0" path="res://scenes/barrier.tscn" id="2_fjrip"]
-[ext_resource type="Texture2D" uid="uid://dqex7t1ubevkm" path="res://resources/kenney_particle_pack/magic_03.png" id="3_raa0x"]
+[ext_resource type="Texture2D" uid="uid://dqex7t1ubevkm" path="res://resources/vendor/kenney/particles/magic_03.png" id="3_raa0x"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="4_ajyqe"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_3r7d3"]
-[ext_resource type="AudioStream" uid="uid://b0ml4jfyuo5y7" path="res://resources/explode_sounds/350970__cabled_mess__boom_c_09.wav" id="6_qsb60"]
-[ext_resource type="Texture2D" uid="uid://c5rognjfh6v07" path="res://resources/player_spritesheets/ufo/ufo_sample2_spritesheet.png" id="7_fjrip"]
+[ext_resource type="AudioStream" uid="uid://b0ml4jfyuo5y7" path="res://resources/shared/audio/explosions/350970__cabled_mess__boom_c_09.wav" id="6_qsb60"]
+[ext_resource type="Texture2D" uid="uid://c5rognjfh6v07" path="res://resources/shared/player/ufo/ufo_sample2_spritesheet.png" id="7_fjrip"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fjrip"]
 atlas = ExtResource("7_fjrip")

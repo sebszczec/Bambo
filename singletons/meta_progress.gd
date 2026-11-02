@@ -7,7 +7,7 @@ extends Node
 const SALVAGE_PER_MINUTE = 2
 const VICTORY_SHARDS = 30
 
-const ICONS = "res://resources/perks/"
+const ICONS = "res://resources/shared/pickups/"
 
 # cost of the next rank = base_cost * (rank + 1)
 const UPGRADES = [

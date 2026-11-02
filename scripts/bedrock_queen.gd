@@ -9,7 +9,7 @@ extends CharacterBody2D
 # Below half life it is enraged: faster, a second brood, a double crown and more rocks.
 # Faces the player with its +Y side. The sheet draws the queen head-left, so the sprite
 # is turned by -90 degrees. Animations come from one Gemini take (see
-# resources/bedrock_queen/bedrock_queen_animations.json), the idle is a ping-pong loop.
+# resources/levels/level2/enemies/bedrock_queen/bedrock_queen_animations.json), the idle is a ping-pong loop.
 
 var floatingTextScene = preload("res://scenes/floating_text.tscn")
 const MantisRock = preload("res://scripts/mantis_rock.gd")
@@ -125,7 +125,7 @@ func _ready() -> void:
 	_spit.set_owner(_world)
 	_spit.register_internal_nodes(self)
 
-	blast.get_node("Debris").texture = preload("res://resources/bedrock_queen/bedrock_queen_shards.png")
+	blast.get_node("Debris").texture = preload("res://resources/levels/level2/enemies/bedrock_queen/bedrock_queen_shards.png")
 
 	_ai_timer.one_shot = true
 	add_child(_ai_timer)

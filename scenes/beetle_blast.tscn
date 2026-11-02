@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://scripts/beetle_blast.gd" id="1_blast"]
 [ext_resource type="Shader" path="res://shaders/shockwave.gdshader" id="2_wave"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/smoke_07.png" id="3_smoke"]
-[ext_resource type="Texture2D" path="res://resources/boulder_beetle/beetle_shards.png" id="4_shards"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/trace_01.png" id="5_trace"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/circle_05.png" id="6_circle"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/smoke_07.png" id="3_smoke"]
+[ext_resource type="Texture2D" path="res://resources/levels/level2/enemies/boulder_beetle/beetle_shards.png" id="4_shards"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/trace_01.png" id="5_trace"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/circle_05.png" id="6_circle"]
 
 [sub_resource type="Gradient" id="Gradient_smoke"]
 offsets = PackedFloat32Array(0, 0.15, 1)

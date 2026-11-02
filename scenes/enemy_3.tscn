@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://b2lqpkaktdytd" path="res://scripts/enemy_3.gd" id="1_uk4cu"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_caiu3"]
-[ext_resource type="Texture2D" path="res://resources/basic_enemy2/hunter_24fps.png" id="2_ktyjv"]
+[ext_resource type="Texture2D" path="res://resources/levels/level1/enemies/hunter/hunter_24fps.png" id="2_ktyjv"]
 [ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="3_cwep3"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_dq3hu"]
-[ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_bcis6"]
-[ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/kenney_particle_pack/magic_04.png" id="7_5fo5i"]
+[ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/shared/audio/explosions/350971__cabled_mess__boom_c_07.wav" id="6_bcis6"]
+[ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/vendor/kenney/particles/magic_04.png" id="7_5fo5i"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="9_nfosb"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_nfosb"]

@@ -2,17 +2,17 @@
 
 [ext_resource type="Script" path="res://scripts/boulder_beetle.gd" id="1_beetle"]
 [ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="2_dissolve"]
-[ext_resource type="Texture2D" path="res://resources/boulder_beetle/boulder_beetle_24fps.png" id="2_beetle"]
+[ext_resource type="Texture2D" path="res://resources/levels/level2/enemies/boulder_beetle/boulder_beetle_24fps.png" id="2_beetle"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_lifebar"]
 [ext_resource type="Shader" path="res://shaders/radar_sweep.gdshader" id="4_sweep"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_explosion"]
-[ext_resource type="AudioStream" path="res://resources/sfx/rock_break.ogg" id="6_break"]
-[ext_resource type="AudioStream" path="res://resources/sfx/seismic_charge.mp3" id="7_charge"]
-[ext_resource type="AudioStream" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="7_blast"]
+[ext_resource type="AudioStream" path="res://resources/shared/audio/sfx/rock_break.ogg" id="6_break"]
+[ext_resource type="AudioStream" path="res://resources/shared/audio/sfx/seismic_charge.mp3" id="7_charge"]
+[ext_resource type="AudioStream" path="res://resources/shared/audio/explosions/explosion-fx-343683.mp3" id="7_blast"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="8_mark"]
 [ext_resource type="Script" path="res://scripts/mite_shock.gd" id="9_shock"]
 [ext_resource type="PackedScene" path="res://scenes/beetle_blast.tscn" id="9_blast"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/smoke_07.png" id="10_smoke"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/smoke_07.png" id="10_smoke"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 radius = 22.0

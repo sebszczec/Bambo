@@ -4,7 +4,7 @@
 #
 # Every separate piece is one part; a big cluster in the front half (pieces that touch) is split along the
 # painted outlines (watershed), the big rear piece (abdomen) into 3 jagged chunks. 16 biggest parts, big ones
-# share one scale, small chips are enlarged up to 1.8x so they still read. Used for resources/quarry_mantis/mantis_shards.png.
+# share one scale, small chips are enlarged up to 1.8x so they still read. Used for resources/levels/level2/enemies/quarry_mantis/mantis_shards.png.
 import sys, numpy as np, cv2
 from PIL import Image
 src, out, prev = sys.argv[1:4]

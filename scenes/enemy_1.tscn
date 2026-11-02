@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://debwj5r60hgpb" path="res://scripts/enemy_1.gd" id="1_ww31q"]
 [ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="2_6nrqq"]
-[ext_resource type="Texture2D" path="res://resources/basic_enemy1/scout_24fps.png" id="2_ywix3"]
+[ext_resource type="Texture2D" path="res://resources/levels/level1/enemies/scout/scout_24fps.png" id="2_ywix3"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_0fnij"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_qxt44"]
-[ext_resource type="AudioStream" uid="uid://cqpls1f4hrefp" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_vngkm"]
+[ext_resource type="AudioStream" uid="uid://cqpls1f4hrefp" path="res://resources/shared/audio/explosions/350971__cabled_mess__boom_c_07.wav" id="6_vngkm"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="8_oweuj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]

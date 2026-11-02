@@ -4,8 +4,8 @@ class_name TitleLogo
 # "SPACE THUNDER" title: glowing logo, lightning bolts striking the letters,
 # small electric arcs crawling over the text, screen flash, shake and rumble.
 
-const FONT_PATH = "res://resources/kenney_space-shooter-redux/Bonus/kenvector_future.ttf"
-const THUNDER_SOUND = preload("res://resources/explode_sounds/350976__cabled_mess__boom_c_01.wav")
+const FONT_PATH = "res://resources/vendor/kenney/space_shooter_redux/Bonus/kenvector_future.ttf"
+const THUNDER_SOUND = preload("res://resources/shared/audio/explosions/350976__cabled_mess__boom_c_01.wav")
 
 const SPACE_COLOR = Color(0.6, 1.4, 2.2)
 const THUNDER_COLOR = Color(1.15, 1.05, 0.5)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b3ftwkyidl5vh"]
 
 [ext_resource type="Script" uid="uid://cin6p3a564d2u" path="res://scripts/game_over_menu.gd" id="1_y0tgy"]
-[ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/sfx/Menu Selection Click.wav" id="2_sfx"]
+[ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/shared/audio/sfx/Menu Selection Click.wav" id="2_sfx"]
 
 [node name="GameOverMenu" type="Control"]
 process_mode = 3
