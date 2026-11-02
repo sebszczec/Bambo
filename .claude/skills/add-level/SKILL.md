@@ -52,7 +52,7 @@ and still play in every level.
 
 ## Background art from Gemini
 The user delivers a backdrop (opaque) plus single asteroids/props on green into `resources/levels/level<N>/background/source/`
-(add an empty `.gdignore` there). A folder with a space in the name may be locked by the editor - copy instead of rename.
+(add an empty `.gdignore` there). Level music goes in `resources/levels/level<N>/music/`. Folder naming and moves: see the `asset-layout` skill.
 1. Props: `python -I .claude/skills/add-level/scripts/cut_sprite.py "<src>" resources/levels/level<N>/background/<name>.png <width>`
    (keys any green by green dominance, so a dull green or a lighter square works too). Small 256 px, medium 512, huge 1024.
 2. Backdrop: crop to 16:9 and resize to 1920x1080 jpg (PIL, quality ~92).

@@ -62,5 +62,5 @@ New scripts come with `*.gd.uid` files - commit them together. `.godot/` and `*.
 Edit `.tscn` by hand carefully: keep `[ext_resource]` ids unique, update `load_steps`, keep `uid=` values unique (or omit them for new resources).
 
 ## Related skills
-`add-enemy`, `add-level`, `add-weapon`, `add-upgrade`, `godot-check`, `perf-stress` (frame times for horde / nuke / magnet, before vs after), `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
+`add-enemy`, `add-level`, `add-weapon`, `add-upgrade`, `asset-layout` (where art and sound live, moving files safely), `godot-check`, `perf-stress` (frame times for horde / nuke / magnet, before vs after), `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
 Visual style per level: `art_level1.md` (level 1, player, pickups, icons) and `art_level2.md` (level 2 rock bugs) in the repo root, used as the Gemini brief.

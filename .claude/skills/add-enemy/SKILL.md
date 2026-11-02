@@ -66,7 +66,7 @@ Effects built from `resources/vendor/kenney/particles` (white textures, tint wit
   aligned spark streaks, debris from a part atlas (`CanvasItemMaterial.particles_animation` + `anim_offset_max = 1`,
   atlas cut from the key pose with `sprite-animation/scripts/cut_shards.py`) and a frost smoke cloud.
 
-Art: new ships follow the art bible of their level (`art_level1.md`, `art_level2.md`) (style, palette, size tiers, nose pointing right -> AnimatedSprite2D `rotation = 1.5708`). Animated art (Gemini GIFs or MP4 videos, frame grid + json): use the `sprite-animation` skill to build the sheet, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
+Art location: `resources/levels/level<N>/enemies/<name>/` (sheet, json, `<name>_animations.json`, `source/` with `.gdignore`), see the `asset-layout` skill. Art: new ships follow the art bible of their level (`art_level1.md`, `art_level2.md`) (style, palette, size tiers, nose pointing right -> AnimatedSprite2D `rotation = 1.5708`). Animated art (Gemini GIFs or MP4 videos, frame grid + json): use the `sprite-animation` skill to build the sheet, interpolate to 24fps, bridge loop seams and generate the SpriteFrames.
 
 ## 4. Make it appear
 - Waves, swarms and bosses are level data in `singletons/levels.gd` (see `add-level`): add `[Enums.ENEMIES.X, count, chance%]`
