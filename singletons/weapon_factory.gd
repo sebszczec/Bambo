@@ -145,6 +145,10 @@ class Weapon:
 		var skin = Levels.get_current().get("weapon_skin", {}).get(type, {})
 		if !skin.has("bullet"):
 			return
+		# the heavy shell has its own star sprite, the skin replaces it
+		for child in bullet.get_children():
+			if child is Sprite2D:
+				child.visible = false
 		var slug = Sprite2D.new()
 		slug.texture = load(skin["bullet"])
 		# the bullet flies along its local -Y, the slug art points right
@@ -278,6 +282,14 @@ class BigBullet extends Weapon:
 		life_time = 0.8
 		spread = 0.2
 		extra_projectiles = int(level >= 2) + int(level >= 4) + int(level >= 6)
+
+	func create_bullet(start_position: Vector2, direction: Vector2):
+		var bullet = super.create_bullet(start_position, direction)
+		# the level can make the heavy shells pierce enemies (levels.gd "weapon_skin": pierce, pierce_level)
+		var skin = Levels.get_current().get("weapon_skin", {}).get(type, {})
+		if player_owned and skin.has("pierce") and level >= skin.get("pierce_level", 1):
+			bullet.PierceCount = skin["pierce"]
+		return bullet
 
 class SmallBulletWave extends SmallBullet:
 	var size = 30

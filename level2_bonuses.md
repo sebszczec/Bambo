@@ -105,7 +105,7 @@ The Rivet Gun is the main gun from the start. The others work on their own: they
 | Icon (file) | Weapon | Id | Projectile look | Impact | How it works | Damage per hit | Level-up effect |
 |---|---|---|---|---|---|---|---|
 | Three domed steel rivets fanning out from one point, amber tracer behind each (`icon_blaster.png`) | **Rivet Gun** (main gun) | `w_blaster` | short steel slugs with a thin amber tracer | grey chip spray | main gun, fires where the player aims, straight slugs that stop at the first enemy | 10–20 | fire delay 0.14 s × 0.88 per level; +1 slug at level 3 and again at level 5 |
-| Conical drill bit with spiral grooves, hot amber tip, steel body (`icon_cannon.png`) | **Drill Cannon** | `w_cannon` | spinning conical bit with a faint amber heat trail | dust burst, stronger screen shake | fires at the nearest enemy, bits stop at the first hit | 30–50 | delay 1.0 s × 0.85 per level; life 0.8 s; +1 bit at levels 2, 4 and 6 |
+| Conical drill bit with spiral grooves, hot amber tip, steel body (`icon_cannon.png`) | **Drill Cannon** | `w_cannon` | spinning conical bit with a faint amber heat trail | dust burst, stronger screen shake | fires at the nearest enemy; a bit stops at the first enemy it hits, except from level 4 on, when it pierces one enemy and stops at the second | 30–50 | delay 1.0 s × 0.85 per level; life 0.8 s; +1 bit at levels 2, 4 and 6; pierce one enemy from level 4 |
 | Stone disc split by radial cracks, amber light leaking from the cracks (`icon_nova.png`) | **Quake Charge** | `w_nova` | ring of angular rock shards with amber-lit edges, slowly spinning | small dust puffs | no target needed; a full ring of shards every pulse, around the ship | 25–40 | delay 2.2 s × 0.88 per level; ring size 12 + 4 × level (16 shards at level 1); shards live 1 s |
 | Slim finned lance with a molten white-orange head and a curved ember trail (`icon_missiles.png`) | **Thermite Lances** | `w_missiles` | lance with a white-hot head, embers cooling from orange to dark | orange flash and flying embers | launched at the nearest enemy; each lance goes straight once fired | 10–20 | delay 1.2 s × 0.85 per level; lances = level (1 at level 1, 6 at level 6), fan spread |
 | Stubby steel blasting canister with a fuse spark and two rock fragments flying off (`icon_fireworks.png`) | **Blast Charge** | `w_fireworks` | tumbling canister with a sparking fuse | boom and dust cloud, then burning fragments | one charge at the nearest enemy; after 0.7 s it bursts into a ring of fragments | charge and fragments 25–40 | delay 2.0 s × 0.88 per level; fragment count 12 + 4 × level |
@@ -120,7 +120,7 @@ projectile art and card text are the level 2 skin (see the code follow-up in the
 | Weapon | New card | Upgrade card |
 |---|---|---|
 | Rivet Gun | "Main gun" | "Faster and wider main gun" |
-| Drill Cannon | "Auto-aimed drill shells" | "Faster, more shells" |
+| Drill Cannon | "Auto-aimed drill shells" | "Faster, more shells. Lv 4: shells pierce one enemy" |
 | Quake Charge | "Ring of rock shards around you" | "More shards, faster pulse" |
 | Thermite Lances | "Self-guided burning lances" | "More lances, faster reload" |
 | Blast Charge | "Charge bursting into fragments" | "Bigger blasts" |

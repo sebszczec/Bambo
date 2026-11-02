@@ -127,6 +127,17 @@ var _levels : Array = [
 				"bullet" : "res://resources/levels/level2/weapons/rivet_gun/rivet_gun_slug.png",
 				"trail" : Color(1.6, 0.9, 0.4),
 			},
+			Enums.WEAPONS.BIG : {
+				"title" : "Drill Cannon",
+				"desc" : "Auto-aimed drill shells",
+				"desc_up" : "Faster, more shells. Lv 4: shells pierce one enemy",
+				"icon" : "res://resources/levels/level2/weapons/drill_cannon/drill_cannon_icon.png",
+				"bullet" : "res://resources/levels/level2/weapons/drill_cannon/drill_cannon_bit.png",
+				"trail" : Color(1.8, 1.0, 0.5),
+				# shells pass through one extra enemy from this weapon level on
+				"pierce" : 1,
+				"pierce_level" : 4,
+			},
 		},
 	},
 	{ "name" : "The Red Nebula", "available" : false },
