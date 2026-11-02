@@ -40,6 +40,8 @@ const ENRAGED_COLOR = Color(1.2, 1.0, 0.88)
 const SLASH_DASH_FRAME = 9
 const SLASH_HIT_FRAME = 15
 const SPIT_FRAMES = [19, 22, 25]
+# angle between two shards of a volley
+const SPIT_STEP = 0.2
 # the lunge: dash length = speed * time, then the scythes reach this far in front
 const DASH_SPEED = 1250.0
 const DASH_TIME = 0.2
@@ -359,22 +361,24 @@ func _slash_hit():
 func _attack_spit():
 	_turn_speed = RotationSpeed * 0.6
 	sprite.play(&"Spit")
-	var volleys = [7, 10] if !_enraged else [9, 13, 9]
+	# same step in every volley, odd and even counts interleave, so the second volley fills the gaps
+	var volleys = [7, 6] if !_enraged else [9, 8, 9]
+	var step = SPIT_STEP if !_enraged else SPIT_STEP * 0.85
 	for i in range(volleys.size()):
 		await _await_frame(&"Spit", SPIT_FRAMES[i])
 		if _is_dead or sprite.animation != &"Spit":
 			return
-		_fire_spread(volleys[i], 0.0 if i % 2 == 0 else 0.06)
+		_fire_spread(volleys[i], step)
 	if sprite.is_playing():
 		await sprite.animation_finished
 	_turn_speed = RotationSpeed
 
-func _fire_spread(count : int, offset : float):
+func _fire_spread(count : int, step : float):
 	_spit.count = count
-	_spit.spread = 1.3 / (count - 1)
+	_spit.spread = step
 	_spit.canShoot = true
-	_spit.shoot(_world, muzzle.global_position, _facing().rotated(offset))
-	_spawn_flash(muzzle.global_position, Color(0.5, 1.4, 1.8), 0.15, 0.2)
+	_spit.shoot(_world, muzzle.global_position, _facing())
+	_spawn_flash(muzzle.global_position, Color(0.5, 1.4, 1.8), 0.12, 0.15)
 	Juice.shake(1.5)
 
 func _attack_beam():

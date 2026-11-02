@@ -22,8 +22,17 @@ func setPause(value):
 	if isPaused:
 		resumeButton.grab_focus()
 
+func _is_level_up_open() -> bool:
+	for menu in get_tree().get_nodes_in_group("level_up_menu"):
+		if menu.is_open():
+			return true
+	return false
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
+		# the upgrade cards already pause the game and would unpause it on pick
+		if !isPaused and _is_level_up_open():
+			return
 		setPause(!isPaused)
 		get_viewport().set_input_as_handled()
 	elif isPaused and event.is_action_pressed("ui_cancel"):

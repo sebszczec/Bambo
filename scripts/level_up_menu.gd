@@ -26,6 +26,7 @@ signal closed
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 10
+	add_to_group("level_up_menu")
 	_build()
 	_set_visible(false)
 
