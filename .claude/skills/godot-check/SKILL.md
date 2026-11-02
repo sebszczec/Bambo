@@ -54,6 +54,14 @@ repo root (it must be inside the project) and delete it together with its `.gd.u
   `img.get_region(Rect2i(...))` using `node.get_global_transform_with_canvas().origin`. Save into the scratchpad, pass the
   path through an env var. Screenshots come out darker than the game (HDR 2D).
 - Log state per frame (animation:frame, distances, `player.life` / `player.shield`) to check behaviour numerically.
+- Drive the player: `get_root().get_node("InputManager").set_input_mode("gamepad")`, then each frame
+  `Input.action_press("move_right", strength)` / `"aim_*"` (keyboard mode aims at the real mouse cursor).
+- Level ups and boss / elite kills open `game.levelUpMenu`, which **pauses the tree** - set `PlayerStatus.XpToNext`
+  huge and replace `game.levelUpMenu` with a node whose `queue_chest()` / `queue_level_up()` do nothing (see
+  `trailer/scripts/shots.gd`).
+- Video instead of screenshots: add `--write-movie <file.avi> --fixed-fps 60 --resolution 1920x1080` (Movie Maker,
+  smooth however slow the render is). Hide `game.informationBox.get_node("CanvasLayer")`, its FPS counter shows the
+  recording rate. Full recipe: `trailer` skill.
 
 ## Exporting
 Preset "Windows Desktop" exports to `../../exports/Bambo.exe`:

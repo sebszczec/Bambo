@@ -67,5 +67,6 @@ Background props must stay dimmer, softer and outline-free compared to enemies, 
 - Scripted run of a level (see `godot-check`, "Scripted run"): set `get_root().get_node("Levels").current = <i>` in
   `_initialize`, `change_scene_to_file("res://scenes/world.tscn")`, screenshot after ~3 s and again after moving the
   player (`player.global_position += Vector2(1500, 900)`) to check parallax seams. Compare against level 1 in the same way.
+- Trailer footage of the new level: add `lN_*` shots to `trailer/scripts/shots.gd` (see the `trailer` skill).
 - Unlocking: print `Levels.is_available(i)` / `is_unlocked(i)` from a scripted run and screenshot `res://scenes/level_select.tscn`
   with a locked level focused (`current_scene._level_buttons[i].grab_focus()`).
