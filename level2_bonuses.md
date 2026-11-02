@@ -83,17 +83,48 @@ card from three. A weapon card shows the weapon icon and "NEW!", and later "Lv 2
 The ship has **5 weapon slots**, and the Blaster is always one of them, so only four other weapons fit in
 one run. Each weapon is rebuilt at the start of every run.
 
-The Blaster is the main gun from the start. The others work on their own: they fire at the nearest enemy
-(Heavy cannon, Missiles, Fireworks), fire in all directions (Nova), or orbit the ship (Orbit).
+The level 2 arsenal is **mining equipment turned into weapons**. The Thunder is fighting in a belt where
+the hive's bugs wear stone shells, so the guns are tools a belt miner would carry: rivets, drill bits,
+blasting charges, thermite lances, tethered boulders. Each one replaces a level 1 weapon one-to-one.
+Damage ranges, cooldowns, level scaling and the 5-slot limit are the same as in level 1, so the balance
+does not change. Only the look, the names and the impact change.
 
-| Icon (file) | Weapon | Id | How it looks | How it works | Damage per hit | Level-up effect |
-|---|---|---|---|---|---|---|
-| Twin yellow-white bolts (`icon_blaster.png`) | Blaster | `w_blaster` | thin, fast, yellow-white bolts | main gun, fires where the player aims, straight bolts that stop at the first enemy | 10–20 | fire delay 0.14 s × 0.88 per level; +1 bolt at level 3 and again at level 5 |
-| Fat cannon shell (`icon_cannon.png`) | Heavy cannon | `w_cannon` | big, heavy shells | fires at the nearest enemy, shells stop at the first hit | 30–50 | delay 1.0 s × 0.85 per level; life 0.8 s; +1 shell at levels 2, 4 and 6 |
-| Ring of bullets around a bright centre (`icon_nova.png`) | Nova | `w_nova` | a ring of small bullets flying outward from the ship | no target needed; a full ring of bullets every pulse, hits everything around the ship | 25–40 | delay 2.2 s × 0.88 per level; ring size 12 + 4 × level (16 bullets at level 1); bullets live 1 s |
-| Homing rocket with a curved exhaust (`icon_missiles.png`) | Missiles | `w_missiles` | warm orange-yellow rockets with a bigger glow | launched at the nearest enemy; each rocket goes straight once fired | 10–20 | delay 1.2 s × 0.85 per level; rockets = level (1 at level 1, 6 at level 6), fan spread |
-| Shell bursting into a star of shrapnel (`icon_fireworks.png`) | Fireworks | `w_fireworks` | a shell that flies, then bursts in an orange-white star | one shell at the nearest enemy; after 0.7 s it bursts into a ring of shrapnel | shell and shrapnel 25–40 | delay 2.0 s × 0.88 per level; shrapnel count 12 + 4 × level |
-| Two or three blades circling a centre point (`icon_orbit.png`) | Orbit | `w_orbit` | cyan-white blades circling the ship | no fire delay; blades circle the ship and pass through enemies | 15–25 per blade hit | blades = 1 + level + Multishot; orbit radius 80 + 6 × level; spin 2.6 + 0.4 × level rad/s |
+**Pillars of the level 2 arsenal:**
+
+1. **Tools, not lasers.** Every weapon is a piece of mining kit. No energy zaps.
+2. **Warm against cool.** Shots are ore amber (`#FF9A3C` → `#FFD08A`), steel (`#9AA3B5`) and white-hot tips.
+   Cyan stays the hive's colour. The ship's yellow-white stays the core glow. No green, no pure red.
+3. **Impacts throw stone.** A hit sprays grey rock chips and a small dust puff instead of a cyan spark.
+4. **Heavy sound.** Clank, thump, rock crack. Sound design follows the same rule.
+5. **One object per icon**, readable at 44 px (HUD) and 110 px (card), as in `art_level1.md` 12.1.
+
+The Rivet Gun is the main gun from the start. The others work on their own: they fire at the nearest enemy
+(Drill Cannon, Thermite Lances, Blast Charge), fire in all directions (Quake Charge), or orbit the ship
+(Tether Rocks).
+
+| Icon (file) | Weapon | Id | Projectile look | Impact | How it works | Damage per hit | Level-up effect |
+|---|---|---|---|---|---|---|---|
+| Three domed steel rivets fanning out from one point, amber tracer behind each (`icon_blaster.png`) | **Rivet Gun** (main gun) | `w_blaster` | short steel slugs with a thin amber tracer | grey chip spray | main gun, fires where the player aims, straight slugs that stop at the first enemy | 10–20 | fire delay 0.14 s × 0.88 per level; +1 slug at level 3 and again at level 5 |
+| Conical drill bit with spiral grooves, hot amber tip, steel body (`icon_cannon.png`) | **Drill Cannon** | `w_cannon` | spinning conical bit with a faint amber heat trail | dust burst, stronger screen shake | fires at the nearest enemy, bits stop at the first hit | 30–50 | delay 1.0 s × 0.85 per level; life 0.8 s; +1 bit at levels 2, 4 and 6 |
+| Stone disc split by radial cracks, amber light leaking from the cracks (`icon_nova.png`) | **Quake Charge** | `w_nova` | ring of angular rock shards with amber-lit edges, slowly spinning | small dust puffs | no target needed; a full ring of shards every pulse, around the ship | 25–40 | delay 2.2 s × 0.88 per level; ring size 12 + 4 × level (16 shards at level 1); shards live 1 s |
+| Slim finned lance with a molten white-orange head and a curved ember trail (`icon_missiles.png`) | **Thermite Lances** | `w_missiles` | lance with a white-hot head, embers cooling from orange to dark | orange flash and flying embers | launched at the nearest enemy; each lance goes straight once fired | 10–20 | delay 1.2 s × 0.85 per level; lances = level (1 at level 1, 6 at level 6), fan spread |
+| Stubby steel blasting canister with a fuse spark and two rock fragments flying off (`icon_fireworks.png`) | **Blast Charge** | `w_fireworks` | tumbling canister with a sparking fuse | boom and dust cloud, then burning fragments | one charge at the nearest enemy; after 0.7 s it bursts into a ring of fragments | charge and fragments 25–40 | delay 2.0 s × 0.88 per level; fragment count 12 + 4 × level |
+| Chipped asteroid chunk on a glowing tether ring around a centre point (`icon_orbit.png`) | **Tether Rocks** | `w_orbit` | grey cratered stones at 2× scale, amber light in their cracks | knock off stone chips | no fire delay; rocks circle the ship and pass through enemies | 15–25 per rock hit | rocks = 1 + level + Multishot; orbit radius 80 + 6 × level; spin 2.6 + 0.4 × level rad/s |
+
+**Names are the only data change for the code.** The ids (`w_blaster`, `w_cannon`, ...) and the
+`Enums.WEAPONS` values stay the same, so the weapon logic and balance need no edits. The names, icons,
+projectile art and card text are the level 2 skin (see the code follow-up in the plan).
+
+**Level-up card text for level 2:**
+
+| Weapon | New card | Upgrade card |
+|---|---|---|
+| Rivet Gun | "Main gun" | "Faster and wider main gun" |
+| Drill Cannon | "Auto-aimed drill shells" | "Faster, more shells" |
+| Quake Charge | "Ring of rock shards around you" | "More shards, faster pulse" |
+| Thermite Lances | "Self-guided burning lances" | "More lances, faster reload" |
+| Blast Charge | "Charge bursting into fragments" | "Bigger blasts" |
+| Tether Rocks | "Boulders circling your ship" | "More rocks, faster spin" |
 
 ### 5.1 Stat cards (XP only, same icon style)
 
@@ -125,6 +156,7 @@ critical hit (chance = Critical chance, default 10 %): damage × (Critical multi
 
 - Plasma Coils (Hangar, max) makes BaseDamage 125, so every hit is ×1.25.
 - Damage (XP card) adds +15 % to BaseDamage per level.
+- Level 2 weapons use the same damage ranges as level 1 (section 5), so the formula is unchanged.
 - Targeting AI and Precision raise the critical chance; Lethality raises the critical multiplier (200 % → 230 %).
 - Critical hits show a different floating number, so the player can see them.
 
@@ -152,5 +184,6 @@ critical hit (chance = Critical chance, default 10 %): damage × (Critical multi
 
 - [ ] Crystal (shard) reads as violet crystal spikes with a cyan glow; no token or plate.
 - [ ] Hangar icons use the category colour (survival rose, defense blue, offense yellow/orange, utility silver + yellow, Xenite violet).
+- [ ] Level 2 weapon icons and shots use the amber / steel palette (ore amber, steel, white-hot tips). No cyan.
 - [ ] Weapon icons read as the weapon's shot at 44 px (HUD) and at 110 px (card).
 - [ ] No icon uses enemy cyan as its main colour, and no pure red or green.

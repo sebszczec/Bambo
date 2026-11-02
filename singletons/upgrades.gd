@@ -80,8 +80,23 @@ func _add_weapon(id : String, title : String, desc : String, desc_up : String, i
 func get_weapon_icon(type : Enums.WEAPONS) -> Texture2D:
 	for entry in _pool:
 		if entry["weapon"] and entry["type"] == type:
-			return entry["icon"]
+			return _skinned(entry)["icon"]
 	return null
+
+# the level can rename a weapon and give it its own card icon ("weapon_skin" in levels.gd)
+func _skinned(entry : Dictionary) -> Dictionary:
+	if !entry["weapon"]:
+		return entry
+	var skin = Levels.get_current().get("weapon_skin", {}).get(entry["type"], {})
+	if skin.is_empty():
+		return entry
+	var result = entry.duplicate()
+	for key in ["title", "desc", "desc_up"]:
+		if skin.has(key):
+			result[key] = skin[key]
+	if skin.has("icon"):
+		result["icon"] = load(skin["icon"])
+	return result
 
 # public - dev console
 func get_pool() -> Array:
@@ -147,6 +162,8 @@ func roll(count : int, weapons_only : bool = false) -> Array:
 			"icon" : load(PERKS + "icon_repair.png"), "max_level" : 999, "weapon" : false, "weight" : 1,
 			"apply" : func(): game.player.updateLife(40) })
 
+	for i in range(result.size()):
+		result[i] = _skinned(result[i])
 	return result
 
 # public

@@ -115,6 +115,19 @@ var _levels : Array = [
 				["res://resources/levels/level2/background/asteroid_huge.png", Vector2(900, 350), 0.9],
 			],
 		},
+		# optional "weapon_skin" = { weapon : skin } renames a weapon of the level and swaps its card icon
+		# and its bullet art (the weapon id, damage and levels stay the same). bullet = slug texture,
+		# trail = tint of the engine trail behind it
+		"weapon_skin" : {
+			Enums.WEAPONS.SMALL : {
+				"title" : "Rivet Gun",
+				"desc" : "Main gun",
+				"desc_up" : "Faster and wider main gun",
+				"icon" : "res://resources/levels/level2/weapons/rivet_gun/rivet_gun_icon.png",
+				"bullet" : "res://resources/levels/level2/weapons/rivet_gun/rivet_gun_slug.png",
+				"trail" : Color(1.6, 0.9, 0.4),
+			},
+		},
 	},
 	{ "name" : "The Red Nebula", "available" : false },
 	{ "name" : "Hive Outpost", "available" : false },

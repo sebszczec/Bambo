@@ -136,7 +136,22 @@ class Weapon:
 		bullet.Speed = speed
 		bullet.LifeTime = life_time
 		bullet.connect("freeing", _on_bullet_freeing)
+		if player_owned:
+			_apply_skin(bullet)
 		return bullet
+
+	# the level can give a player weapon its own bullet art (see levels.gd "weapon_skin")
+	func _apply_skin(bullet):
+		var skin = Levels.get_current().get("weapon_skin", {}).get(type, {})
+		if !skin.has("bullet"):
+			return
+		var slug = Sprite2D.new()
+		slug.texture = load(skin["bullet"])
+		# the bullet flies along its local -Y, the slug art points right
+		slug.rotation = -PI / 2
+		bullet.add_child(slug)
+		# the bullet is not in the tree yet, so its @onready helpers are not set: tint the trail node directly
+		bullet.get_node("BulletEffect").self_modulate = skin.get("trail", Color.WHITE)
 
 	# bigger, warm glow so homing rockets stand out from regular bullets
 	func apply_rocket_look(bullet):
