@@ -91,6 +91,7 @@ var _levels : Array = [
 		"replace" : {
 			Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE,
 			Enums.ENEMIES.GUARD : Enums.ENEMIES.BOULDER_BEETLE,
+			Enums.ENEMIES.HUNTER : Enums.ENEMIES.SHARD_WASP,
 		},
 		"background" : {
 			"base" : "res://resources/background/level2/bg.jpg",

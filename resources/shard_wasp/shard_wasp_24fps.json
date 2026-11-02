@@ -1,0 +1,13 @@
+{
+  "image": "shard_wasp_24fps.png",
+  "frameWidth": 160,
+  "frameHeight": 97,
+  "columns": 5,
+  "rows": 10,
+  "frameCount": 47,
+  "fps": 24,
+  "source": {
+    "video": "source/shard_wasp.mp4",
+    "frames": "fly loop 134..180 (24 fps native, key auto, --width 160, loop seam 1.7 vs median step 1.4, no bridge)"
+  }
+}

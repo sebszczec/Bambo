@@ -8,6 +8,7 @@ description: Step-by-step checklist for adding a new enemy or boss to Space Thun
 Reference implementations: `scripts/enemy_1.gd` (simple chaser), `enemy_2.gd`/`enemy_3.gd` (shooters),
 `scripts/pebble_mite.gd` (level 2 swarm enemy: state machine Walk -> Charge -> Discharge -> Recover driven by animation frames, area shock attack, particle trail),
 `scripts/boulder_beetle.gd` (level 2 kamikaze: 360 degree scan (`shaders/radar_sweep.gdshader`) triggers a charge, the blast kills enemies and breaks rocks in a radius with a physics shape query run in `_physics_process`, bosses and mines skipped),
+`scripts/shard_wasp.gd` (level 2 chaser: orbits the player, aim line telegraph, locked-path lunge tested as a swept segment, leaves `scripts/shard_wake.gd` - a lingering wall of wing shards added to the world that cuts the player on entry only),
 `scripts/boss.gd` (boss spawning minions), `scripts/worm_boss.gd` (boss with attack cycle, enrage, own weapon, laser/mines, sprite-sheet animations with planned switches - see `sprite-animation`).
 Read the closest one before writing a new enemy.
 
