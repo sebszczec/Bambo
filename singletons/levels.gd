@@ -95,6 +95,7 @@ var _levels : Array = [
 			Enums.ENEMIES.GUARD : Enums.ENEMIES.BOULDER_BEETLE,
 			Enums.ENEMIES.HUNTER : Enums.ENEMIES.SHARD_WASP,
 			Enums.ENEMIES.BOSS : Enums.ENEMIES.QUARRY_MANTIS,
+			Enums.ENEMIES.WORM_BOSS : Enums.ENEMIES.BEDROCK_QUEEN,
 		},
 		"background" : {
 			"base" : "res://resources/background/level2/bg.jpg",

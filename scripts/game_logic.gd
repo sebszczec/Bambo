@@ -287,6 +287,8 @@ func spawn_boss(type : Enums.ENEMIES):
 		phaseBanner.show_text("THE DEVOURER RISES", Color.MEDIUM_PURPLE)
 	elif type == Enums.ENEMIES.QUARRY_MANTIS:
 		phaseBanner.show_text("THE QUARRY MANTIS AWAKENS", Color(0.4, 0.85, 0.95))
+	elif type == Enums.ENEMIES.BEDROCK_QUEEN:
+		phaseBanner.show_text("THE BEDROCK QUEEN STIRS", Color(0.4, 0.85, 0.95))
 	else:
 		phaseBanner.show_text("HIVE CARRIER DETECTED", Color.RED)
 	Juice.shake(10.0)

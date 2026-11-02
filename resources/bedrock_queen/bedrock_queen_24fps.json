@@ -1,0 +1,15 @@
+{
+  "image": "bedrock_queen_24fps.png",
+  "frameWidth": 420,
+  "frameHeight": 253,
+  "columns": 12,
+  "rows": 20,
+  "frameCount": 240,
+  "fps": 24,
+  "clips": {
+    "Bedrock queen animations": [
+      0,
+      239
+    ]
+  }
+}
