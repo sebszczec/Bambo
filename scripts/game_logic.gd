@@ -139,6 +139,7 @@ func init_weapons():
 
 func _create_weapon(type : Enums.WEAPONS):
 	var w = WeaponFactory.get_weapon(type, false, true)
+	w.is_player_weapon = true
 	w.set_owner(self)
 	w.register_internal_nodes(player)
 	w.connect("bulletNumerChange", _on_weapon_bullet_number_change)

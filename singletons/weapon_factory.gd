@@ -55,6 +55,8 @@ class Weapon:
 	var type : Enums.WEAPONS = Enums.WEAPONS.SMALL
 	var level = 1
 	var player_owned = false
+	# set by game logic for the ship's own weapons only (mines and enemies fire the same classes)
+	var is_player_weapon = false
 	# auto weapons without a target in range do not fire
 	var needs_target = true
 	var extra_projectiles = 0
@@ -136,7 +138,7 @@ class Weapon:
 		bullet.Speed = speed
 		bullet.LifeTime = life_time
 		bullet.connect("freeing", _on_bullet_freeing)
-		if player_owned:
+		if is_player_weapon:
 			_apply_skin(bullet)
 		return bullet
 
@@ -287,7 +289,7 @@ class BigBullet extends Weapon:
 		var bullet = super.create_bullet(start_position, direction)
 		# the level can make the heavy shells pierce enemies (levels.gd "weapon_skin": pierce, pierce_level)
 		var skin = Levels.get_current().get("weapon_skin", {}).get(type, {})
-		if player_owned and skin.has("pierce") and level >= skin.get("pierce_level", 1):
+		if is_player_weapon and skin.has("pierce") and level >= skin.get("pierce_level", 1):
 			bullet.PierceCount = skin["pierce"]
 		return bullet
 
@@ -331,6 +333,8 @@ class SmallBulletWave extends SmallBullet:
 				bullet.connect("freeing", _on_bullet_freeing)
 				owner.add_child(bullet)
 				bullet.set_modulate_color(modulate_color)
+				if is_player_weapon:
+					_apply_skin(bullet)
 
 			start_cooldown()
 			updateBulletNumber(bullet_count)
