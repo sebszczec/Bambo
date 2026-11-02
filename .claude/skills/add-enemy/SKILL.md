@@ -54,7 +54,7 @@ Enemy weapons: `WeaponFactory.get_weapon(type, true, false)`, `set_owner(get_tre
 Mirror `enemy_1.tscn`: `CollisionShape2D`, `Ship` (Node2D, holds Sprite2D/AnimatedSprite2D, rotated to face player), `LifeBar` (instance of `life_bar.tscn`),
 `HitBox` (Area2D, **groups=["Enemy"]**, `collision_layer = 8`, default mask 1) + collision shape, `Explosion` (`object_explosion.tscn`), `AudioStreamPlayer2D`, `Mark` (`mark.tscn`).
 Sprites use the Dissolve material (`shaders/Dissolve.tres`) for the spawn tween; `Juice.is_flashing` must be checked before touching shader params.
-Effects built from `resources/kenney_particle_pack` (white textures, tint with an HDR color so bloom makes them glow):
+Effects built from `resources/vendor/kenney/particles` (white textures, tint with an HDR color so bloom makes them glow):
 - one-shot effects with many sprites: a child Node2D with its own script that creates its Sprite2Ds on first use and only
   runs `_process` while active (`scripts/mite_shock.gd`: lightning ring from `spark_05/06` bolts laid along a circle,
   re-randomized every 45 ms, additive `CanvasItemMaterial` shared as a static).

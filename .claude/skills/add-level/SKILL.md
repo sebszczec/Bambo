@@ -38,7 +38,7 @@ Every level is a 10-minute survival run with its own stages, bosses, story and l
 	"boss_life_factor" : 0.8, "victory_bonus" : 5000,
 	"replace" : { Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE },   # optional
 	"background" : {                                                   # optional
-		"base" : "res://resources/background/level2/bg.jpg",         # 1920x1080, fixed to the screen
+		"base" : "res://resources/levels/level2/background/bg.jpg",         # 1920x1080, fixed to the screen
 		"brightness" : { "far" : 0.5, "mid" : 0.65, "near" : 0.75 },  # optional layer modulate
 		"far" : [[texture, Vector2(pos), scale], ...],                # ParallaxLayer motion 0.1, mirror 1920x1080
 		"mid" : [...],                                                # motion 0.3, mirror 2880x1620
@@ -51,9 +51,9 @@ when the mix or pacing should differ. Story and speech audio: the phase speeches
 and still play in every level.
 
 ## Background art from Gemini
-The user delivers a backdrop (opaque) plus single asteroids/props on green into `resources/background/level<N>/source/`
+The user delivers a backdrop (opaque) plus single asteroids/props on green into `resources/levels/level<N>/background/source/`
 (add an empty `.gdignore` there). A folder with a space in the name may be locked by the editor - copy instead of rename.
-1. Props: `python -I .claude/skills/add-level/scripts/cut_sprite.py "<src>" resources/background/level<N>/<name>.png <width>`
+1. Props: `python -I .claude/skills/add-level/scripts/cut_sprite.py "<src>" resources/levels/level<N>/background/<name>.png <width>`
    (keys any green by green dominance, so a dull green or a lighter square works too). Small 256 px, medium 512, huge 1024.
 2. Backdrop: crop to 16:9 and resize to 1920x1080 jpg (PIL, quality ~92).
 3. Check the cut-outs composited on dark and light (PIL contact sheet, Read it) for green fringes.

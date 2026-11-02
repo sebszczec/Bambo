@@ -92,7 +92,7 @@ func _ready() -> void:
 
 	mainBody.play("spin")
 
-	xpAudio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_zap.ogg")
+	xpAudio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_zap.ogg")
 	xpAudio.volume_db = -14
 	xpAudio.max_polyphony = 4
 	add_child(xpAudio)

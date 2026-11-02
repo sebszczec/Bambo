@@ -1,11 +1,11 @@
 [gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/worm_mine.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://resources/wormboss/worm_mine.png" id="2_sheet"]
+[ext_resource type="Texture2D" path="res://resources/levels/level1/enemies/worm_boss/worm_mine.png" id="2_sheet"]
 [ext_resource type="Shader" uid="uid://djdajod804d6o" path="res://shaders/blink.gdshader" id="3_blink"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/light_01.png" id="4_light"]
-[ext_resource type="AudioStream" uid="uid://bo2aogf8q25qe" path="res://resources/sfx/countdown-b.ogg" id="5_blink"]
-[ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/explode_sounds/350971__cabled_mess__boom_c_07.wav" id="6_boom"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/light_01.png" id="4_light"]
+[ext_resource type="AudioStream" uid="uid://bo2aogf8q25qe" path="res://resources/shared/audio/sfx/countdown-b.ogg" id="5_blink"]
+[ext_resource type="AudioStream" uid="uid://ef5w6pygoou3" path="res://resources/shared/audio/explosions/350971__cabled_mess__boom_c_07.wav" id="6_boom"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_blink"]
 resource_local_to_scene = true

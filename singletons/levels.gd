@@ -88,7 +88,7 @@ var _levels : Array = [
 		"swarm_per_stage" : 2,
 		"boss_life_factor" : 0.8,
 		"victory_bonus" : 5000,
-		"music" : "res://resources/music/level2_asteroid_siege.ogg",
+		"music" : "res://resources/levels/level2/music/level2_asteroid_siege.ogg",
 		"music_db" : 6.0,
 		"replace" : {
 			Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE,
@@ -98,21 +98,21 @@ var _levels : Array = [
 			Enums.ENEMIES.WORM_BOSS : Enums.ENEMIES.BEDROCK_QUEEN,
 		},
 		"background" : {
-			"base" : "res://resources/background/level2/bg.jpg",
+			"base" : "res://resources/levels/level2/background/bg.jpg",
 			# the painted rocks are darker than the planets, the scene dimming hides them
 			"brightness" : { "far" : 0.5, "mid" : 0.65, "near" : 0.75 },
 			"far" : [
-				["res://resources/background/level2/asteroid_small_1.png", Vector2(230, 190), 0.18],
-				["res://resources/background/level2/asteroid_small_2.png", Vector2(1010, 470), 0.14],
-				["res://resources/background/level2/asteroid_small_3.png", Vector2(1500, 860), 0.16],
-				["res://resources/background/level2/asteroid_small_4.png", Vector2(1640, 140), 0.12],
+				["res://resources/levels/level2/background/asteroid_small_1.png", Vector2(230, 190), 0.18],
+				["res://resources/levels/level2/background/asteroid_small_2.png", Vector2(1010, 470), 0.14],
+				["res://resources/levels/level2/background/asteroid_small_3.png", Vector2(1500, 860), 0.16],
+				["res://resources/levels/level2/background/asteroid_small_4.png", Vector2(1640, 140), 0.12],
 			],
 			"mid" : [
-				["res://resources/background/level2/asteroid_small_4.png", Vector2(320, 470), 0.5],
-				["res://resources/background/level2/asteroid_medium.png", Vector2(1900, 1100), 0.45],
+				["res://resources/levels/level2/background/asteroid_small_4.png", Vector2(320, 470), 0.5],
+				["res://resources/levels/level2/background/asteroid_medium.png", Vector2(1900, 1100), 0.45],
 			],
 			"near" : [
-				["res://resources/background/level2/asteroid_huge.png", Vector2(900, 350), 0.9],
+				["res://resources/levels/level2/background/asteroid_huge.png", Vector2(900, 350), 0.9],
 			],
 		},
 	},

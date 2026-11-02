@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://x6huptovxly5"]
 
-[ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/kenney_particle_pack/magic_04.png" id="1_44jxp"]
+[ext_resource type="Texture2D" uid="uid://bi51sms8iv3k2" path="res://resources/vendor/kenney/particles/magic_04.png" id="1_44jxp"]
 [ext_resource type="Script" uid="uid://bxcx70eecxc0c" path="res://scripts/mark.gd" id="1_g57e7"]
 
 [node name="Mark" type="Node2D"]

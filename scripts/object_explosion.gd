@@ -11,7 +11,7 @@ const MAX_ALIVE = 80
 
 static var alive_count = 0
 
-@export var PathToSprite : String = "res://resources/kenney_particle_pack/window_04.png"
+@export var PathToSprite : String = "res://resources/vendor/kenney/particles/window_04.png"
 @export var SpriteTexture : Texture2D = null
 # the sprite is cut into Grid x Grid fragments, smaller grid is cheaper
 @export var Grid : int = 5

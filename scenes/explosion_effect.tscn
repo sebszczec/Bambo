@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://bcse0ykxxf4m6"]
 
-[ext_resource type="Texture2D" uid="uid://b7ecthhebv3j3" path="res://resources/kenney_particle_pack/scorch_01.png" id="1_7gbgg"]
+[ext_resource type="Texture2D" uid="uid://b7ecthhebv3j3" path="res://resources/vendor/kenney/particles/scorch_01.png" id="1_7gbgg"]
 
 [sub_resource type="Gradient" id="Gradient_lotst"]
 offsets = PackedFloat32Array(0.52459, 1)

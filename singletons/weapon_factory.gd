@@ -74,7 +74,7 @@ class Weapon:
 	func setup():
 		shooting_delay = 0.1
 		bullet_scene = preload("res://scenes/bullet.tscn")
-		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		audio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_laser2.ogg")
 
 	func set_owner(owner):
 		object_owner = owner
@@ -168,7 +168,7 @@ class Bomb extends Weapon:
 	func setup():
 		shooting_delay = 0.01
 		bullet_scene = preload("res://scenes/bomb.tscn")
-		audio.stream = load("res://resources/sfx/seismic_charge.mp3")
+		audio.stream = load("res://resources/shared/audio/sfx/seismic_charge.mp3")
 		type = Enums.WEAPONS.BOMB
 
 	func shoot(_owner: Node, _start_position: Vector2, _direction: Vector2):
@@ -255,7 +255,7 @@ class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
 		bullet_scene = preload("res://scenes/big_bullet.tscn")
-		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser2.ogg")
+		audio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_laser2.ogg")
 		type = Enums.WEAPONS.BIG
 
 	func apply_level():
@@ -319,7 +319,7 @@ class Fireworks extends BigBullet:
 		shooting_delay = 0.5
 		speed = 8
 		life_time = 2
-		explosion_audio.stream = load("res://resources/explode_sounds/350977__cabled_mess__boom_c_06.wav")
+		explosion_audio.stream = load("res://resources/shared/audio/explosions/350977__cabled_mess__boom_c_06.wav")
 		type = Enums.WEAPONS.FIREWORKS
 
 	func apply_level():
@@ -420,7 +420,7 @@ class WormSpit extends Weapon:
 		life_time = 3
 		spread = 0.2
 		bullet_scene = preload("res://scenes/worm_bullet.tscn")
-		audio.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_laser1.ogg")
+		audio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_laser1.ogg")
 		type = Enums.WEAPONS.WORM_SPIT
 		needs_target = false
 

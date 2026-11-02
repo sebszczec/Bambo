@@ -19,7 +19,7 @@ Two separate systems:
 _add_stat("id", "Title", "+X% effect", PERKS + "icon.png", max_level,
 	func(): PlayerStatus.NewStat += X)
 ```
-   Icons: `res://resources/perks/` (`PERKS`) or kenney power-ups (`PU`). Weight is 10 for stats, 12 for weapons.
+   Icons: `res://resources/shared/pickups/` (`PERKS`) or kenney power-ups (`PU`). Weight is 10 for stats, 12 for weapons.
    If applying needs the player, write a `_apply_x()` helper using `game.player` (see `_apply_max_life`).
 
 ## Floor pickup perk

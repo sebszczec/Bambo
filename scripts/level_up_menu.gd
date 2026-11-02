@@ -31,7 +31,7 @@ func _ready() -> void:
 	_set_visible(false)
 
 func _build():
-	var font = load("res://resources/kenney_space-shooter-redux/Bonus/kenvector_future.ttf")
+	var font = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/kenvector_future.ttf")
 
 	_dim = ColorRect.new()
 	_dim.color = Color(0, 0, 0.05, 0.75)
@@ -70,9 +70,9 @@ func _build():
 		_cards.add_child(button)
 		_buttons.append(button)
 
-	_sound.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_twoTone.ogg")
+	_sound.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_twoTone.ogg")
 	add_child(_sound)
-	_focus_sound.stream = load("res://resources/sfx/Menu Selection Click.wav")
+	_focus_sound.stream = load("res://resources/shared/audio/sfx/Menu Selection Click.wav")
 	_focus_sound.volume_db = -6
 	add_child(_focus_sound)
 

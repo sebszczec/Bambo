@@ -3,10 +3,14 @@
 > **How to use this file in Gemini:** paste the whole document at the start of the conversation
 > (or put it into the instructions of a Gem) and say: *"Follow this art bible for every image and
 > animation you make."* Then use the prompt templates in section 10.
-> Attach **one of the level 2 asteroids** (`resources/background/level2/asteroid_medium.png` or
+> Attach **one of the level 2 asteroids** (`resources/levels/level2/background/asteroid_medium.png` or
 > `asteroid_huge.png`) as a material reference for the rock, and a **Worm Boss frame** (level 1) as a
 > reference for the painted technique, outline and glow, whenever Gemini starts drifting.
 > Player ship, pickups and upgrade icons don't change: they are in `art_level1.md`.
+>
+> **Status:** all five level 2 enemies are in the game (Pebble Mite, Boulder Beetle, Shard Wasp,
+> Quarry Mantis, Bedrock Queen). Section 6.1 describes how each one behaves in code, section 7.1 lists
+> the animation names the scripts play. Keep the new art in step with those.
 
 ---
 
@@ -119,6 +123,49 @@ design, **look at it shrunk to the in‑game size**. If the silhouette or the fr
 at that size, simplify. A rock bug shrunk too far turns into a gray blob: keep the legs and the
 mandibles big and the outline thick.
 
+### 6.1 Behaviour in game (current code)
+
+Level 2 uses the level 1 timeline (`art_level1.md` section 13): swarms every 2:00, the elite at 7:30,
+the mid boss at 5:00 and the final boss at 10:00. The swap is in `singletons/levels.gd` ("replace").
+
+- **Pebble Mite** (`pebble_mite.gd`, Life 30, contact 3). Crawls at the player and stops at hull
+  distance. Within 170 px it charges (the cracks light up, it slows), then discharges a **lightning ring**
+  of radius 120 px (8 damage) from its eye, recovers and walks again. About 3 s between rings. On death
+  its shell crumbles, then the fragments fly.
+- **Boulder Beetle** (`boulder_beetle.gd`, Life 120, contact 5). Crawls in with a 360° scanner (140 px).
+  When the player enters the scan it starts a charge (the scan turns amber) and brakes. After the charge
+  it **blows up**: 30 damage to the player inside 140 px, and every enemy and rock in the blast dies or
+  breaks. Bullets do nothing once it is charging. Shot down before that, it only shatters, with no blast.
+  The elite is a beetle with 1.8× size and 12× life.
+- **Shard Wasp** (`shard_wasp.gd`, Life 90, contact 6). Circles the player at about 230 px. Within 380 px,
+  when its 3.5 s cooldown is over, it **aims** for 0.8 s (a targeting line appears and heats up
+  0.25 s before the strike), then **lunges** at 1250 px/s through the player's position, overshooting
+  170 px. Its wings leave a **wake** of shard splinters that hangs for 2.6 s and cuts whoever flies
+  through (10 damage on the lunge, 5 in the wake). Then it recovers for 0.5 s. The wings beat faster
+  while it aims and lunges.
+- **Quarry Mantis** (`quarry_mantis.gd`, Life 16000, boss). Stalks the player at 340 px. It never repeats
+  the last attack:
+  - **Slash**: its scythes rise while a wedge marks the path, it dashes forward, then both scythes cross
+    in front (60 damage). Not picked when the player is beyond 750 px, and more likely when close (under 420 px).
+  - **Spit**: two volleys of shards from the mouth (7 and 6; 9, 8, 9 when enraged).
+  - **Beam**: the chest charges (0.9 s), then a cyan beam fires from the mouth (1.8 s).
+  - **Rockfall**: the scythes strike the ground and rock plates drop on warning marks around the
+    player, the first where the player is heading (6 rocks, 9 when enraged, 45 damage each).
+  - **Enraged** below half life: 1.3× speed, a double slash, more shards, more rocks, a sweeping beam,
+    and it calls 3 Shard Wasps.
+- **Bedrock Queen** (`bedrock_queen.gd`, Life 16000, final boss). Drifts at about 420 px. Four attacks:
+  - **Brood**: the rear plates lift and the egg sacs hatch Pebble Mites twice (3 mites per hatch, 6 in
+    all; 4 per hatch, three hatches, when enraged).
+  - **Beam**: the X-crack charges (1.4 s), then a beam fires from the head, locked on the player's
+    direction. When enraged the beam can sweep a little.
+  - **Crown spines**: a full ring of 12 rock shards from the whole shell (16 shards, two rings, when
+    enraged).
+  - **Quake**: the body shudders for 0.9 s, then 6 rocks drop on warning marks around the player (9
+    when enraged).
+  - **Enraged** below half life: 1.3× speed, a second brood, a double crown and more rocks. It calls
+    3 Shard Wasps.
+  - Death: the shell goes dark, shakes for 1.2 s, then bursts.
+
 ## 7. Animation rules (most important for a consistent game)
 
 The game builds every animation from the clips Gemini makes. A clip is an **animated GIF or a
@@ -168,17 +215,22 @@ An **attack** is shaped as **anticipation** (pull back, raise claws, glow builds
 **action** (snap forward or burst, ~20 %), then **recovery** (back to the key pose, ~40 %). The
 game fires the projectile at the action moment.
 
-### Boss attack ideas (one clip each)
+### 7.1 Clips the scripts play (current code)
 
-- **Quarry Mantis:** `attack_scythe` (both scythes slash forward in a cross), `attack_spit`
-  (head pulls back, mouth glows, spits: the game fires a spread of rock shards), `charge` + `fire`
-  (eyes and chest crack glow for a beam), `special` (scythes cross over the head, plates lock:
-  armored guard pose), `enrage`, `death`.
-- **Bedrock Queen:** `attack_slam` (head shield rises and slams down: the game spawns a shock
-  ring), `attack_brood` (back plates lift, the egg sacs pulse: the game spawns Pebble Mites),
-  `special_curl` (rolls into a stone ball and back: the game makes it charge), `charge` + `fire`
-  (the X-crack on the back opens and glows: a beam), `enrage` (the crack splits wider, amber light),
-  `death`.
+Name the clip files after these animation names, so the game code can use them directly. The
+frame numbers are indices of the animation, not of the sheet.
+
+| Enemy | Clips | What the code does with them |
+|---|---|---|
+| Pebble Mite | `Walk` (loop), `Charge`, `Discharge`, `Recover`, `Death` | Walk exits into Charge on frames 21 or 49. The lightning fires on Discharge frame 6. Recover ends on Walk frame 49. |
+| Boulder Beetle | `Walk` (loop), `ChargeA`, `ChargeB` | Walk leaves into ChargeA on frame 8 or ChargeB on frame 35 (bridge frames keep it moving). It brakes at frame 3, then blows up when the charge ends. No Death clip: it shatters with the particle explosion. |
+| Shard Wasp | `Fly` (loop) | Only one clip. Wing speed is set by state in code (×1 chase, ×2.5 aim, ×3 lunge, ×1.5 recover). |
+| Quarry Mantis | `Idle`, `Move` (loop), `Slash`, `Spit`, `BeamCharge`, `BeamFire`, `BeamEnd`, `Death` | Slash dashes on frame 9 and hits on frame 15. Rockfall also uses Slash. Spit fires volleys on frames 19, 22, 25. Move's speed is set so it reaches the exit frame of the next attack. |
+| Bedrock Queen | `Idle` (ping-pong loop), `Brood`, `BeamCharge`, `BeamFire`, `BeamEnd`, `Death` | Brood hatches on frames 44 and 56 (44, 52, 60 when enraged). Idle is also used by the spines and the quake, since the queen has no clip for them. Its drift has no move clip. |
+
+Ideas for new clips, if the animation is worth it: a mantis `Special` (scythes cross over the head,
+armored pose) or a queen curl clip. Neither exists in the code yet, so add them with the enemy script
+before the art is wired.
 
 ## 8. Technical requirements for Gemini output
 
@@ -298,8 +350,8 @@ If you cut a video, write down the part you want to use (seconds).
 
 ### Step 3 — Claude Code (sprite sheet and game)
 
-Copy the files to `resources/<name>/source/` (e.g. `resources/pebble_mite/source/`) and ask
-Claude Code, e.g.: *"Make sprite sheets from the GIFs and MP4s in resources/pebble_mite/source/
+Copy the files to `resources/levels/level2/enemies/<name>/source/` (e.g. `resources/levels/level2/enemies/pebble_mite/source/`) and ask
+Claude Code, e.g.: *"Make sprite sheets from the GIFs and MP4s in resources/levels/level2/enemies/pebble_mite/source/
 and use them for the Pebble Mite in level 2 (use the sprite-animation skill). pebble_mite_move.mp4:
 use 0.5–2.0 s."* Claude Code then:
 
@@ -326,14 +378,14 @@ color you used if it isn't green.
 
 ## 12. References
 
-- **Material:** `resources/background/level2/asteroid_medium.png` and `asteroid_huge.png`
+- **Material:** `resources/levels/level2/background/asteroid_medium.png` and `asteroid_huge.png`
   (stone, craters, black hive roots with cyan veins). The enemies use the same stone and hive
   tissue, but **brighter, sharper and outlined**.
-- **Technique:** the level 1 Worm Boss, `resources/wormboss/source/worm_spritesheet_12fps.png`
+- **Technique:** the level 1 Worm Boss, `resources/levels/level1/enemies/worm_boss/source/worm_spritesheet_12fps.png`
   (painted detail, outline, glow amount, top-down readability, head on the right).
 - **Lessons from level 1** (`art_level1.md` section 11): separate clips that start and end on the
   key pose, a flat green background, and dedicated `attack_*` / `charge` / `fire` clips for bosses.
-- **Lessons from the Quarry Mantis** (`resources/quarry_mantis/source/`): one 8 s video with all actions in
+- **Lessons from the Quarry Mantis** (`resources/levels/level2/enemies/quarry_mantis/source/`): one 8 s video with all actions in
   order (idle, walk, slash, spit, beam charge, death), each returning to the key pose, works well for a
   boss when Gemini only gives long videos. Video backgrounds come out as a dull green (`#29D027`), which
   Claude Code handles. For debris, an **exploded view** of the key pose (every piece apart on green) is

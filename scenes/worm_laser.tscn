@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/worm_laser.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/light_01.png" id="2_light"]
-[ext_resource type="AudioStream" path="res://resources/kenney_space-shooter-redux/Bonus/sfx_zap.ogg" id="3_zap"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/light_01.png" id="2_light"]
+[ext_resource type="AudioStream" path="res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_zap.ogg" id="3_zap"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
 blend_mode = 1

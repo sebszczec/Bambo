@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://cqntmyxcyau0u" path="res://scripts/boss.gd" id="1_i78ob"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="2_0i4fg"]
-[ext_resource type="Texture2D" path="res://resources/skullboss/skull_24fps.png" id="2_b55u5"]
-[ext_resource type="Texture2D" uid="uid://bvuwed75ngje2" path="res://resources/kenney_particle_pack/magic_04.png" id="65_l1el4"]
-[ext_resource type="AudioStream" uid="uid://ca05pfy0doh4d" path="res://resources/explode_sounds/explosion-fx-343683.mp3" id="66_0i4fg"]
+[ext_resource type="Texture2D" path="res://resources/levels/level1/enemies/hive_beetle/skull_24fps.png" id="2_b55u5"]
+[ext_resource type="Texture2D" uid="uid://bvuwed75ngje2" path="res://resources/vendor/kenney/particles/magic_04.png" id="65_l1el4"]
+[ext_resource type="AudioStream" uid="uid://ca05pfy0doh4d" path="res://resources/shared/audio/explosions/explosion-fx-343683.mp3" id="66_0i4fg"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="67_6vfmo"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="68_r8ox1"]
 

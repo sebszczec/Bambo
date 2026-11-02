@@ -23,7 +23,7 @@ var _blink_time = 0.0
 var _title_hue = 0.0
 
 func _ready() -> void:
-	_font = load("res://resources/kenney_space-shooter-redux/Bonus/kenvector_future.ttf")
+	_font = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/kenvector_future.ttf")
 	alignment = BoxContainer.ALIGNMENT_CENTER
 	add_theme_constant_override("separation", 16)
 

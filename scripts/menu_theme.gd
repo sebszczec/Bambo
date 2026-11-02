@@ -3,7 +3,7 @@ class_name MenuTheme
 
 # Shared Space Thunder look for the menus: dark blue panels, neon blue borders, gold focus.
 
-const FONT_PATH = "res://resources/kenney_space-shooter-redux/Bonus/kenvector_future.ttf"
+const FONT_PATH = "res://resources/vendor/kenney/space_shooter_redux/Bonus/kenvector_future.ttf"
 const TITLE_COLOR = Color(0.6, 1.4, 2.2)
 const TEXT_COLOR = Color(0.75, 0.85, 1.0)
 const ACCENT_COLOR = Color(1.0, 0.85, 0.2)

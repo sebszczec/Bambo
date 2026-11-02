@@ -5,7 +5,7 @@
 # Parts are found along the painted dark outlines and cyan seams (watershed from the plate interiors),
 # the three biggest parts are split further with jagged cuts, and every cut edge gets a dark rim with
 # a cyan glow vein (broken hive tissue). The atlas is 4x4 cells of 128 px, one shared scale so the
-# relative sizes stay true. Used for resources/boulder_beetle/beetle_shards.png.
+# relative sizes stay true. Used for resources/levels/level2/enemies/boulder_beetle/beetle_shards.png.
 import sys, numpy as np, cv2
 from PIL import Image
 src, out, prev = sys.argv[1:4]

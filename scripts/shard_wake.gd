@@ -5,7 +5,7 @@ extends Node2D
 # flies through. Lives in the world, so the wall stays when the wasp is shot down.
 # Built while the wasp flies (extend_to), armed after the lunge (seal), then shatters.
 
-const ATLAS = preload("res://resources/shard_wasp/wasp_shards.png")
+const ATLAS = preload("res://resources/levels/level2/enemies/shard_wasp/wasp_shards.png")
 # atlas cells of wing slivers and the stinger tip (4x4 grid of 128 px, cut_shards.py)
 const SHARD_CELLS = [0, 2, 5, 6, 7]
 const CELL = 128

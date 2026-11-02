@@ -17,10 +17,10 @@ static var all : Array = []
 
 @onready var sprite = $Sprite2D
 
-var _blue = preload("res://resources/kenney_space-shooter-redux/PNG/Power-ups/pill_blue.png")
-var _green = preload("res://resources/kenney_space-shooter-redux/PNG/Power-ups/pill_green.png")
-var _red = preload("res://resources/kenney_space-shooter-redux/PNG/Power-ups/pill_red.png")
-var _gold = preload("res://resources/kenney_space-shooter-redux/PNG/Power-ups/pill_yellow.png")
+var _blue = preload("res://resources/vendor/kenney/space_shooter_redux/PNG/Power-ups/pill_blue.png")
+var _green = preload("res://resources/vendor/kenney/space_shooter_redux/PNG/Power-ups/pill_green.png")
+var _red = preload("res://resources/vendor/kenney/space_shooter_redux/PNG/Power-ups/pill_red.png")
+var _gold = preload("res://resources/vendor/kenney/space_shooter_redux/PNG/Power-ups/pill_yellow.png")
 
 var _player = null
 var _attracted = false

@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" path="res://scripts/pebble_mite.gd" id="1_ww31q"]
 [ext_resource type="Shader" uid="uid://be3jx5fx6r42k" path="res://shaders/Dissolve.tres" id="2_6nrqq"]
-[ext_resource type="Texture2D" path="res://resources/pebble_mite/pebble_mite_24fps.png" id="2_mite"]
+[ext_resource type="Texture2D" path="res://resources/levels/level2/enemies/pebble_mite/pebble_mite_24fps.png" id="2_mite"]
 [ext_resource type="PackedScene" uid="uid://dpm6hiryffgjp" path="res://scenes/life_bar.tscn" id="3_0fnij"]
 [ext_resource type="PackedScene" uid="uid://duflxbbh6hvpx" path="res://scenes/object_explosion.tscn" id="5_qxt44"]
-[ext_resource type="AudioStream" path="res://resources/sfx/rock_break.ogg" id="6_vngkm"]
-[ext_resource type="AudioStream" path="res://resources/sfx/seismic_charge.mp3" id="7_shock"]
+[ext_resource type="AudioStream" path="res://resources/shared/audio/sfx/rock_break.ogg" id="6_vngkm"]
+[ext_resource type="AudioStream" path="res://resources/shared/audio/sfx/seismic_charge.mp3" id="7_shock"]
 [ext_resource type="Script" path="res://scripts/mite_shock.gd" id="9_shock"]
-[ext_resource type="Texture2D" path="res://resources/kenney_particle_pack/smoke_07.png" id="10_smoke"]
+[ext_resource type="Texture2D" path="res://resources/vendor/kenney/particles/smoke_07.png" id="10_smoke"]
 [ext_resource type="PackedScene" uid="uid://x6huptovxly5" path="res://scenes/mark.tscn" id="8_oweuj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h81d"]

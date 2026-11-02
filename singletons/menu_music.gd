@@ -3,7 +3,7 @@ extends AudioStreamPlayer
 # one music player for all menu scenes, so the track keeps playing when switching
 # between start menu, save slots, missions and hangar instead of starting over
 
-const MENU_TRACK = preload("res://resources/music/Orbital Colossus.mp3")
+const MENU_TRACK = preload("res://resources/shared/audio/music/Orbital Colossus.mp3")
 
 func _ready() -> void:
 	stream = MENU_TRACK

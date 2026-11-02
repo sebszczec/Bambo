@@ -20,7 +20,7 @@ timeout 180 "$GODOT" --headless --path . --import 2>&1 | grep -E "ERROR|Parse Er
 
 Filtered noise (always present, harmless): "invalid UID ... using text path instead" (`.import` files are gitignored) and RID/ObjectDB/resource leak messages at exit.
 A brand new texture reports `ERROR: Failed loading resource: res://....png` on the run that first imports it - run `--import` again, only the second run counts.
-Folders with an empty `.gdignore` (e.g. `resources/wormboss/source/`) are skipped by Godot - used for source art that the game does not load.
+Folders with an empty `.gdignore` (e.g. `resources/levels/level1/enemies/worm_boss/source/`) are skipped by Godot - used for source art that the game does not load.
 Known real warning: `scenes/bullet.tscn` references `res://scripts/Bullet.gd` (capital B) - breaks on case-sensitive export platforms until fixed.
 
 Single script:

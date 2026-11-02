@@ -5,7 +5,7 @@ extends Node2D
 # above (big and faint -> its real size) and hurts the player inside the ring.
 # Built in code, the boss adds it to the world: MantisRock.new() + setup().
 
-const SHARDS = preload("res://resources/quarry_mantis/mantis_shards.png")
+const SHARDS = preload("res://resources/levels/level2/enemies/quarry_mantis/mantis_shards.png")
 # atlas cells (4x4 of 128 px) that look like rock plates
 const ROCK_CELLS = [2, 3, 4, 10, 15]
 const WARN_COLOR = Color(0.35, 1.3, 1.6, 0.8)

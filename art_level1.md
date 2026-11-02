@@ -3,6 +3,8 @@
 > **Status: done.** All level 1 art (player, Scout, Guard, Hunter, Hive Beetle boss, Worm Boss, pickups,
 > upgrade icons) is in the game. Level 2 has its own brief: `art_level2.md`. The pickups and upgrade
 > icons (section 12) are shared by every level.
+> **Section 13** describes how level 1 plays now (timeline, waves, enemy behaviour, boss attacks and
+> animation names), so new art can match the behaviour. It follows `singletons/levels.gd` and `scripts/`.
 
 > **How to use this file in Gemini:** paste the whole document at the start of the conversation
 > (or put it into the instructions of a Gem) and say: *"Follow this art bible for every image and
@@ -263,8 +265,8 @@ the part you want to use (seconds).
 
 ### Step 3 — Claude Code (sprite sheet and game)
 
-Copy the files to `resources/<name>/source/` and ask Claude Code, e.g.:
-*"Make sprite sheets from the GIFs and MP4s in resources/hunter/source/ and use them for the
+Copy the files to `resources/levels/<n>/enemies/<name>/source/` and ask Claude Code, e.g.:
+*"Make sprite sheets from the GIFs and MP4s in resources/levels/level1/enemies/hunter/source/ and use them for the
 Hunter (use the sprite-animation skill). hunter_move.mp4: use 0.5–3.3 s."* Claude Code then:
 
 - removes the green background with `gif_to_sheet.py` (GIF, MP4, WebM and MOV), resamples videos to 12 fps and cuts them to the parts you named, giving every clip of the ship the same crop and pivot;
@@ -287,7 +289,7 @@ background color you used if it isn't green.
 
 ## 11. Reference: the Worm Boss (canonical example)
 
-`resources/wormboss/source/worm_spritesheet_12fps.png` (frames 378×161 px, 12 fps; in game 1.1×,
+`resources/levels/level1/enemies/worm_boss/source/worm_spritesheet_12fps.png` (frames 378×161 px, 12 fps; in game 1.1×,
 ~415 px long).
 
 - **Design:** a giant armored space centipede. It has ribbed violet‑navy segments with
@@ -368,7 +370,7 @@ Avoid **enemy cyan** as the main color of any player item (it is the hive's colo
 
 **In game:** about **28–36 px** on screen, wobbling, on a near‑black starfield with bloom.
 **Deliver:** a square key image (1024 px+). Claude Code cuts it out and saves it as a 96×96 PNG in
-`resources/perks/`. The game scales it to 0.3.
+`resources/shared/pickups/`. The game scales it to 0.3.
 
 All floor pickups except the Xenite shard share one **base shape**: a small **rounded
 hexagonal supply token** (a thick metal rim, steel `#9AA3B5`, dark inner face) with the emblem
@@ -398,7 +400,7 @@ key image (section 6 rules 2–5).
 selected, border `#4D66B3`), so dark navy parts of an icon need the outline and a light rim to
 stand out. Weapon icons also appear in the HUD at **44 px**, so a weapon icon must still read at
 that size. **Deliver:** a square key image (1024 px+). Claude Code saves a 256×256 PNG with
-transparency in `resources/perks/`.
+transparency in `resources/shared/pickups/`.
 
 Card icons have **no token and no background plate**, because the card is the frame. The emblem
 floats freely. Stat icons show the ship *system* that gets better; weapon icons show the
@@ -441,7 +443,7 @@ Only **Xenite scanner** (`salvage`) has its own icon (`perks/icon_xenite_scanner
 dish locked onto a violet crystal, in xenite violet plus silver.
 
 The Hangar rows show these icons (`icon` in `singletons/meta_progress.gd`). To redo an icon, generate
-it again and keep the file name; the sheets used for the first set are in `resources/perks/source/`.
+it again and keep the file name; the sheets used for the first set are in `resources/shared/pickups/source/`.
 
 ### 12.5 Prompt templates
 
@@ -475,15 +477,15 @@ icons). Pick the one that reads best. Save it as `<name>_key.png`.
 
 ### 12.6 Delivery to Claude Code
 
-Put the approved images in `resources/perks/source/` (Claude Code adds a `.gdignore` there so
+Put the approved images in `resources/shared/pickups/source/` (Claude Code adds a `.gdignore` there so
 the sources are not loaded by the game) and say, e.g.:
-*"Cut out the icons in resources/perks/source/ (green background) and use them: magnet_key.png
+*"Cut out the icons in resources/shared/pickups/source/ (green background) and use them: magnet_key.png
 for the magnet pickup and the Tractor beam card, nuke_key.png for the bomb pickup."*
 Claude Code then:
 
 - removes the background;
 - trims the image to the same margin as the rest of the set;
-- scales it (96 px pickups, 256 px icons) and saves it to `resources/perks/`;
+- scales it (96 px pickups, 256 px icons) and saves it to `resources/shared/pickups/`;
 - points the perk scene or the upgrade entry in `singletons/upgrades.gd` at the new file.
 
 ### 12.7 Checklist for pickups and icons
@@ -494,3 +496,63 @@ Claude Code then:
 - [ ] Upgrade icons: no token or plate; same visual size as the rest of the set.
 - [ ] Thick dark outline, glow inside the shape, no halo, no text.
 - [ ] Flat `#00FF00` background, ~10 % margin, nothing touches the edge.
+
+---
+
+## 13. Level 1 as it plays now (reference)
+
+Level 1 "First Contact" is the first rung of the level ladder (`singletons/levels.gd`). It is a
+10-stage survival run. The Worm Boss at 10:00 is the final boss: killing it wins the level and
+unlocks level 2. Level 2 reuses this timeline and swaps the enemies (see `art_level2.md`).
+
+### 13.1 Timeline
+
+| Time | Event |
+|---|---|
+| 0:00 – 10:00 | Stages 1–10. A wave spawns every 1.1 s (stage 1) down to 0.5 s (stage 10). Max alive enemies: 25 → 110 |
+| every 2:00 | **Swarm**: a ring of Scouts around the player ("SWARM INCOMING!"), 15 at first, +2 per stage |
+| 5:00 | **Hive Beetle** boss (carrier, not final) |
+| 7:30 | **Elite**: a Guard with 12× life, 1.8× size, violet tint, drops 10 shards |
+| 10:00 | **Worm Boss** boss (final) |
+
+Waves per stage (`[enemy, count, chance]` in the data; a chance below 100 % is rolled per wave):
+
+| Stage | Wave |
+|---|---|
+| 1 | 3 Scouts |
+| 2 | 3 Scouts, Guard 15 % |
+| 3 | 4 Scouts, Guard 25 % |
+| 4 | 4 Scouts, Guard 30 %, Hunter 10 % |
+| 5 | 4 Scouts, Guard 35 %, Hunter 15 % |
+| 6 | 5 Scouts, Guard 40 %, Hunter 20 % |
+| 7 | 5 Scouts, Guard 45 %, Hunter 25 % |
+| 8 | 5 Scouts, 2 Guards 50 %, Hunter 30 % |
+| 9 | 6 Scouts, 2 Guards 55 %, Hunter 35 % |
+| 10 | 6 Scouts, 2 Guards 60 %, Hunter 40 % |
+
+### 13.2 Enemy behaviour
+
+- **Scout** (`enemy_1.gd`, Life 30, contact 8, speed 110). Flies straight at the player and explodes on
+  contact. Fast, weak, comes in swarms. Animation: `Fly`.
+- **Guard** (`enemy_2.gd`, Life 120, contact 20). Drifts toward the player slowly (speed 70) and turns to
+  face them. Its radar beam sweeps the area; once the radar locks on, it winds up for 0.25 s and rams
+  the player at speed 300 for 1 s. The radar beam is the warning. Animation: `Fly`.
+- **Hunter** (`enemy_3.gd`, Life 100, contact 12). Chases at speed 100. When its forward aim ray sees the
+  player, it speeds up to 200 and fires its small gun every 0.5 s. Animation: `Fly`.
+- **Hive Beetle** boss (`boss.gd`, Life 15000, contact 100). Chases the player and idles 4 s between
+  attacks. **Shoot**: the shell opens (`ShellOpen`, `ShellHold`), it fires 6 shots from two guns, one
+  after the other, then closes (`ShellClose`). **Summon**: it raises its antennae (`Summon`) and spawns
+  5 Scouts around itself. Animation: `Idle`.
+- **Worm Boss** (`worm_boss.gd`, Life 20000, contact 120). Slithers after the player and keeps its
+  distance. Four attacks: **Spread** (`Spread`), **laser** (`LaserCharge`, `LaserFire`), **homing
+  mines** (`Mines`), **teleport** (`TeleportOut`, `TeleportIn`). When no attack is playing it flinches
+  (`Hurt`). Below half life it is enraged: faster, more bullets and a sweeping laser. Also `Idle`,
+  `Move`, `Death`.
+
+### 13.3 What this means for art
+
+- Each enemy's silhouette must show its role at a glance: the Scout is a fast dart, the Guard a heavy
+  ram with a radar dish (the sweep itself is drawn by the game), the Hunter a long shooter with a visible gun, the bosses have a head, a mouth
+  or a gun that the player can aim at.
+- Clips that the scripts play: the Scout, Guard and Hunter only need `Fly`. The bosses need the clip
+  names above, because the code switches between them at specific frames.

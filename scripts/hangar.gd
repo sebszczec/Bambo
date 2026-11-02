@@ -26,7 +26,7 @@ func _ready() -> void:
 	MenuMusic.play_menu()
 	theme = MenuTheme.create()
 	_level = Levels.current
-	_buy_sound.stream = load("res://resources/kenney_space-shooter-redux/Bonus/sfx_shieldUp.ogg")
+	_buy_sound.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_shieldUp.ogg")
 	add_child(_buy_sound)
 
 	_ui = Control.new()

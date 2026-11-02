@@ -16,7 +16,7 @@ var _font = null
 var _combo_tween : Tween = null
 
 func _ready() -> void:
-	_font = load("res://resources/kenney_space-shooter-redux/Bonus/kenvector_future.ttf")
+	_font = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/kenvector_future.ttf")
 
 	_xp_bar = ProgressBar.new()
 	_xp_bar.show_percentage = false
