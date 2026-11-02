@@ -46,6 +46,7 @@ const _LEVEL1_BOSSES = [
 # optional "replace" = { enemy : enemy } swaps enemies of the shared waves, swarms, bosses and boss minions
 # without it the level keeps the planets of world.tscn
 # optional "music" = in-level track (looped), without it the level keeps the track of world.tscn
+# optional "music_db" = volume of the in-level track (default 0)
 var _levels : Array = [
 	{
 		"name" : "First Contact",
@@ -88,6 +89,7 @@ var _levels : Array = [
 		"boss_life_factor" : 0.8,
 		"victory_bonus" : 5000,
 		"music" : "res://resources/music/level2_asteroid_siege.ogg",
+		"music_db" : 6.0,
 		"replace" : {
 			Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE,
 			Enums.ENEMIES.GUARD : Enums.ENEMIES.BOULDER_BEETLE,

@@ -41,4 +41,5 @@ func _apply_music() -> void:
 	# *.import files are not committed, so the loop flag can't come from the import settings
 	stream.loop = true
 	_music.stream = stream
+	_music.volume_db = Levels.get_current().get("music_db", 0.0)
 	_music.play()
