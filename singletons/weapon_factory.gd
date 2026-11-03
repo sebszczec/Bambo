@@ -135,6 +135,9 @@ class Weapon:
 		bullet.set_collision_mask(collision_mask)
 		bullet.position = start_position
 		bullet.velocity = direction
+		# face the shot from the first frame, bullet.gd only turns it on its first physics tick
+		if direction != Vector2.ZERO:
+			bullet.rotation = PI / 2 + direction.angle()
 		bullet.Speed = speed
 		bullet.LifeTime = life_time
 		bullet.connect("freeing", _on_bullet_freeing)
