@@ -149,7 +149,7 @@ var _levels : Array = [
 			Enums.WEAPONS.ORBIT : {
 				"title" : "Tether Rocks",
 				"desc" : "Boulders circling your ship",
-				"desc_up" : "More rocks, faster spin",
+				"desc_up" : "Bigger rocks, wider orbit. Lv 6: outer ring",
 				"icon" : "res://resources/levels/level2/weapons/tether_rocks/tether_rocks_icon.png",
 				"bullet" : "res://resources/levels/level2/weapons/tether_rocks/tether_rocks_rock.png",
 				"trail" : Color(1.6, 0.9, 0.4),

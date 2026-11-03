@@ -16,7 +16,7 @@ All weapons live in `singletons/weapon_factory.gd` as inner classes extending `W
 Override what you need from `Weapon`:
 - `setup()` - base stats: `shooting_delay`, `speed`, `life_time`, `spread`, `bullet_scene`, `audio.stream`, `type = Enums.WEAPONS.X`, `needs_target`.
   Call `super.setup()` when extending a concrete weapon. `setup()` runs from `_init`, before `apply_level()`.
-- `apply_level()` - stats per `level` (player weapons only; called on creation and each `level_up()`). Existing curve: `delay * pow(0.88, level - 1)`.
+- `apply_level()` - stats per `level` (player weapons only; called on creation and each `level_up()`). Existing curve: `delay * pow(0.88, level - 1)`. For a weapon whose growth must be visible (more or bigger bodies, a second ring), use a per-level table like `Orbit.LEVEL_STATS` (clamp `level` to the table) and apply it in `process()` every frame, so existing bullets pick up size changes too.
 - `shoot(owner, start_position, direction)` - check `canShoot`, play audio, spawn via `create_bullet()`, `owner.add_child`, `start_cooldown()`, `updateBulletNumber(n)`.
 - `get_projectile_count()` - default adds `extra_projectiles + PlayerStatus.ProjectileCount` for player weapons.
 - `process(delta, player)` - per-frame logic for persistent weapons (see `Orbit`); `clear()` if it owns long-lived nodes (called on player death).
@@ -25,6 +25,7 @@ Override what you need from `Weapon`:
 Rules:
 - `start_cooldown()` already applies `PlayerStatus.get_delay_factor()` for player weapons - do not apply fire rate twice.
 - Every spawned bullet must connect `freeing` -> `_on_bullet_freeing` (done by `create_bullet`) so bullet counts stay right.
+- `create_bullet()` sets the bullet's rotation from `direction`: `bullet.gd` only turns it on its first physics tick, so anything drawn on spawn would otherwise point up. Pass `Vector2.ZERO` for bodies that place themselves (orbit rocks).
 - Bullet scenes: root `StaticBody2D` with `scripts/bullet.gd` (or subclass), `LifeTimer`, `HitBox` Area2D in group `"Bullet"` assigned to the exported `HitBox`, a `BulletEffect` node (used by `set_modulate_color` / `apply_rocket_look`). See `scenes/bullet.tscn`, `scenes/worm_bullet.tscn`.
   Player bullets that hit enemies need `collision_mask = 9` on the HitBox (enemy hitboxes are on layer 8, see `space-thunder-conventions`); enemy-only bullets keep the default mask 1.
   Hit/explosion particles come from `Juice.hit_effect` / `Juice.explosion_effect` - do not instantiate effect scenes per hit.

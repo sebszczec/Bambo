@@ -396,34 +396,71 @@ class Fireworks extends BigBullet:
 # blades circling the player, they pass through enemies
 class Orbit extends Weapon:
 	const SMOKE_TEXTURE = "res://resources/vendor/kenney/particles/smoke_01.png"
+	# per weapon level: rocks on the inner ring (Multishot adds to it), rocks on the outer ring,
+	# rock scale (hit box too), inner radius and spin
+	const LEVEL_STATS = [
+		{ "rocks" : 2, "outer" : 0, "scale" : 2.0, "radius" : 85.0, "spin" : 3.0 },
+		{ "rocks" : 2, "outer" : 0, "scale" : 2.4, "radius" : 100.0, "spin" : 3.4 },
+		{ "rocks" : 3, "outer" : 0, "scale" : 2.4, "radius" : 100.0, "spin" : 3.8 },
+		{ "rocks" : 3, "outer" : 0, "scale" : 2.8, "radius" : 115.0, "spin" : 4.2 },
+		{ "rocks" : 4, "outer" : 0, "scale" : 2.8, "radius" : 115.0, "spin" : 4.6 },
+		{ "rocks" : 4, "outer" : 2, "scale" : 3.0, "radius" : 115.0, "spin" : 4.6 },
+	]
+	# level 6 outer ring, turns the other way
+	const OUTER_RADIUS = 190.0
+	const OUTER_SPIN = -3.0
+
 	var blades : Array = []
-	var radius = 90.0
+	var outer_blades : Array = []
+	var radius = 85.0
+	var outer_radius = OUTER_RADIUS
 	var rotation_speed = 3.0
+	var outer_spin = OUTER_SPIN
+	var rock_scale = 2.0
 	var angle = 0.0
+	var outer_angle = 0.0
 
 	func setup():
 		super.setup()
 		type = Enums.WEAPONS.ORBIT
 		needs_target = false
 
+	func _stats() -> Dictionary:
+		return LEVEL_STATS[clampi(level, 1, LEVEL_STATS.size()) - 1]
+
 	func apply_level():
-		rotation_speed = 2.6 + 0.4 * level
-		radius = 80.0 + 6.0 * level
+		var stats = _stats()
+		rock_scale = stats["scale"]
+		radius = stats["radius"]
+		rotation_speed = stats["spin"]
 
 	func get_blade_count() -> int:
-		return 1 + level + PlayerStatus.ProjectileCount
+		return _stats()["rocks"] + PlayerStatus.ProjectileCount
+
+	func get_outer_count() -> int:
+		return _stats()["outer"]
 
 	func shoot(_owner: Node, _start_position: Vector2, _direction: Vector2):
 		pass
 
 	func process(delta: float, player: Node2D):
 		blades = blades.filter(func(b): return is_instance_valid(b) and !b.is_queued_for_deletion())
-		while blades.size() < get_blade_count():
+		outer_blades = outer_blades.filter(func(b): return is_instance_valid(b) and !b.is_queued_for_deletion())
+		_grow_ring(blades, get_blade_count(), player)
+		_grow_ring(outer_blades, get_outer_count(), player)
+
+		angle = wrapf(angle + rotation_speed * delta, 0, TAU)
+		outer_angle = wrapf(outer_angle + outer_spin * delta, 0, TAU)
+		_place_ring(blades, radius, angle, player)
+		_place_ring(outer_blades, outer_radius, outer_angle, player)
+
+	# adds rocks until the ring holds count of them
+	func _grow_ring(ring : Array, count : int, player : Node2D):
+		while ring.size() < count:
 			var blade = create_bullet(player.global_position, Vector2.ZERO)
 			blade.Speed = 0
 			blade.LifeTime = 100000
 			blade.Piercing = true
-			blade.scale = Vector2(2.0, 2.0)
 			object_owner.add_child(blade)
 			# the level skin paints the rocks (Tether Rocks); without one the blades keep the cyan tint.
 			# set after add_child: the tint node is only ready once the bullet is in the tree
@@ -431,16 +468,20 @@ class Orbit extends Weapon:
 				blade.set_modulate_color(Color(0.4, 1.6, 2.0))
 			else:
 				_add_smoke(blade)
-			blades.append(blade)
+			ring.append(blade)
 			updateBulletNumber(1)
 
-		angle = wrapf(angle + rotation_speed * delta, 0, TAU)
-		var step = TAU / blades.size()
-		for i in range(blades.size()):
-			var offset = Vector2(radius, 0).rotated(angle + i * step)
-			blades[i].global_position = player.global_position + offset
+	# spreads the rocks of a ring evenly on its circle, every rock gets the level scale
+	func _place_ring(ring : Array, ring_radius : float, ring_angle : float, player : Node2D):
+		if ring.is_empty():
+			return
+		var step = TAU / ring.size()
+		for i in range(ring.size()):
+			var offset = Vector2(ring_radius, 0).rotated(ring_angle + i * step)
+			ring[i].global_position = player.global_position + offset
+			ring[i].scale = Vector2.ONE * rock_scale
 			# point along the direction of flight (tangent of the circle)
-			blades[i].rotation = offset.angle() + PI
+			ring[i].rotation = offset.angle() + PI
 
 	# smoke puffs left behind each rock (Tether Rocks). Emitted in global space, so the puffs stay
 	# where the rock was and form a trail while it orbits; they go with the rock when it is freed
@@ -465,10 +506,11 @@ class Orbit extends Weapon:
 
 	# public - removes blades when the player dies
 	func clear():
-		for blade in blades:
+		for blade in blades + outer_blades:
 			if is_instance_valid(blade):
 				blade.dispose()
 		blades.clear()
+		outer_blades.clear()
 
 # acid spit of the worm boss, fires count bullets in a fan,
 # spread = TAU / count gives a full ring

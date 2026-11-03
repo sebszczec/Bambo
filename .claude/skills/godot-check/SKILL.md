@@ -6,13 +6,13 @@ description: Validate the Space Thunder Godot project headlessly - parse all GDS
 # Checking and running the project
 
 Godot binary (4.7.2, console build prints to stdout):
-`C:\Users\sebsz\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-(the `.exe` part of the first path is a folder). If it is missing, ask the user for the Godot path.
+`D:\Programy\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
+(the `.exe` part of the first path is a folder). Not on PATH. If it is missing, ask the user for the Godot path.
 
 ## Headless validation (preferred after edits)
 Run from the repo root (Bash):
 ```bash
-GODOT="/c/Users/sebsz/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
+GODOT="/d/Programy/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
 timeout 180 "$GODOT" --headless --path . --import 2>&1 | grep -E "ERROR|Parse Error|WARNING" \
   | grep -v -e "addons/godot_state_charts" -e "invalid UID" -e "leaked at exit" -e "still in use at exit" | head -50
 ```

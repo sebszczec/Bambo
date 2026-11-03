@@ -9,7 +9,7 @@ Harness: `.claude/skills/perf-stress/scripts/stress.gd` (a `SceneTree` script th
 god mode on, phases stopped, level-ups disabled, vsync off). Godot binary and filtering as in `godot-check`.
 
 ```bash
-GODOT="/c/Users/sebsz/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
+GODOT="/d/Programy/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
 timeout 150 "$GODOT" --path . --script "$(pwd -W)/.claude/skills/perf-stress/scripts/stress.gd" -- --enemies=400 2>&1 \
   | grep -E "frames|process|alive|gems|SCRIPT ERROR"
 ```

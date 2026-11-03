@@ -56,7 +56,7 @@ func _build_pool():
 		PERKS + "icon_missiles.png", Enums.WEAPONS.SMALL_HOMING)
 	_add_weapon("w_fireworks", "Fireworks", "Shell exploding into shrapnel", "Bigger explosions",
 		PERKS + "icon_fireworks.png", Enums.WEAPONS.FIREWORKS)
-	_add_weapon("w_orbit", "Orbit", "Blades circling your ship", "More blades, faster spin",
+	_add_weapon("w_orbit", "Orbit", "Blades circling your ship", "Bigger blades, wider orbit. Lv 6: outer ring",
 		PERKS + "icon_orbit.png", Enums.WEAPONS.ORBIT)
 
 func _apply_max_life():

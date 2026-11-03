@@ -16,7 +16,7 @@ Last version (Nov 2026, 61 s, levels 1 + 2): `C:\Users\sebsz\Videos\SpaceThunder
 Godot binary as in `godot-check`. Work dir `$SP` in the scratchpad, shots go to `$SP/shots/<shot>.avi` (MJPEG + PCM, ~1 GB each).
 Run 3-4 shots in parallel (~2 min per batch), not headless:
 ```bash
-GODOT="/c/Users/sebsz/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
+GODOT="/d/Programy/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
 SCRIPT="$(pwd -W)/.claude/skills/trailer/scripts/shots.gd"; mkdir -p "$SP/shots"
 rec() { timeout 900 "$GODOT" --path . --write-movie "$(cygpath -w "$SP/shots/$1.avi")" --fixed-fps 60 --resolution 1920x1080 \
   --script "$SCRIPT" -- --shot=$1 > "$SP/shots/$1.log" 2>&1; echo "$1 done $?"; }
