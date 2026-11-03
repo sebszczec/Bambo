@@ -70,5 +70,16 @@ Preset "Windows Desktop" exports to `../../exports/Bambo.exe`:
 ```
 Only export when the user asks.
 
+## Headless unit checks of singletons
+For logic that does not need a playable scene (pool filtering, PlayerStatus effects, bullet bounce), write a temporary
+`res://res_test_<name>.gd` extending `SceneTree`, run it with `--script`, then delete it with its `.gd.uid`:
+- Get autoloads with `root.get_node("Upgrades")`, `root.get_node("PlayerStatus")`, `root.get_node("Levels")`
+  (they are not identifiers in `--script` mode). Set `Levels.current` before `Upgrades.reset(null)` / `roll()`.
+- Make fake enemies in the test instead of instancing `scenes/*.tscn`: a `Node2D` with a script built from a
+  string (`GDScript.new()`, `source_code`, `reload()`) that has `Life`, `isDead`, `handleDamage(damage)` and `explode()`.
+  Real enemy scenes need a player and a game scene; without them they throw `global_position` errors on every physics frame
+  and the run never finishes (killed by `timeout`).
+- Do the timing with `await create_timer(t).timeout` in `_run()`, and `quit(0 / 1)` at the end so the exit code shows the result.
+
 ## Performance
 Frame-time measurements (horde, nuke, magnet, before vs after a change): use the `perf-stress` skill.

@@ -458,7 +458,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		if _is_dead or !_vulnerable:
 			return
 
-		var damage = PlayerStatus.get_boss_damage_from_weapon(bullet.Type, _max_life)
+		var damage = PlayerStatus.get_boss_damage_from_weapon(bullet.Type, _max_life, self)
 		Juice.flash(sprite, 0.05)
 
 		if handleDamage(damage, bullet.get_global_position()) == false:

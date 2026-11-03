@@ -38,7 +38,9 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
   (layer 1, mask 2) does not collide with enemies; an enemy masking layer 1 gets pushed along by the player and looks glued to it.
 - Player finds enemies via `get_tree().get_first_node_in_group("player")` (lowercase group on the player node).
 - Enemy damage to player: player reads `enemy.Damage`, `enemy.IsDamageOverTime`, `enemy.DamageTickTime` from `area.get_parent()`.
-- Bullet damage to enemy: `PlayerStatus.get_damage_from_weapon(bullet.Type)`; to player: `DamageValues.get_damage(bullet.Type)`.
+- Bullet damage to enemy: `PlayerStatus.get_damage_from_weapon(bullet.Type, self)` (the enemy passes itself as the hit target,
+  bosses use `get_boss_damage_from_weapon(bullet.Type, _max_life, self)`); to player: `DamageValues.get_damage(bullet.Type)`.
+  Bullets also apply burns (Slag Trails, `PlayerStatus.apply_burn`) and bounce off enemies (Ricochet, `BounceCount`).
 - Non-bullet hazards (e.g. worm laser) call the player's public hazard damage function (see `player.gd` comment "damage from hazards").
 
 ## Code style (match it)

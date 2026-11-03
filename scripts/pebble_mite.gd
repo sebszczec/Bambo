@@ -206,7 +206,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		velocity += bullet.global_position.direction_to(global_position) * Knockback
 		Juice.flash(sprite)
 
-		if handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type)) == false:
+		if handleDamage(PlayerStatus.get_damage_from_weapon(bullet.Type, self)) == false:
 			isDead = true
 			explode()
 

@@ -129,10 +129,17 @@ class Weapon:
 	func shoot_on_start(_owner: Node, _start_position: Vector2, _direction: Vector2):
 		pass
 
+	# straight shots that can bounce off enemies (see Ricochet Plates)
+	func can_bounce() -> bool:
+		return false
+
 	func create_bullet(start_position: Vector2, direction: Vector2):
 		var bullet = bullet_scene.instantiate()
 		bullet.Type = type
 		bullet.set_collision_mask(collision_mask)
+		# Ricochet Plates: only player shots that hit enemies bounce
+		if can_bounce() and bullet.is_damaging_enemy():
+			bullet.BounceCount = PlayerStatus.Ricochet
 		bullet.position = start_position
 		bullet.velocity = direction
 		# face the shot from the first frame, bullet.gd only turns it on its first physics tick
@@ -211,6 +218,9 @@ class Bomb extends Weapon:
 		updateBulletNumber(1)
 
 class SmallBullet extends Weapon:
+	func can_bounce() -> bool:
+		return true
+
 	func apply_level():
 		shooting_delay = 0.14 * pow(0.88, level - 1)
 		extra_projectiles = int(level >= 3) + int(level >= 5)

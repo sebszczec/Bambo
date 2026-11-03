@@ -129,21 +129,60 @@ projectile art and card text are the level 2 skin (see the code follow-up in the
 ### 5.1 Stat cards (XP only, same icon style)
 
 The level-up pool also has stat cards. They use the same icon style as the Hangar bonuses, but each is
-bigger, and they only apply to the current run.
+bigger, and they only apply to the current run. Level 2 cards are not a rename of level 1's: several change
+how the weapons look and fire. Palette rule as for the weapons: ore amber, steel, white-hot tips, grey rock
+chips. No cyan, no pure red or green.
 
-| Card | Icon | Effect | Max level |
-|---|---|---|---|
-| Damage | energy blade with up-chevron | +15 % damage | 10 |
-| Precision | targeting reticle | +5 % critical chance | 8 |
-| Lethality | cracked armor plate with a spark star | +30 % critical damage | 8 |
-| Thrusters | engine nozzle with flame | +10 % move speed | 5 |
-| Overclock | reactor chip with lightning bolt | +12 % fire rate | 6 |
-| Multishot | three bullets fanning out | +1 projectile for every weapon | 3 |
-| Hull plating | layered plates with rose cross | +20 max life, heals 20 | 8 |
-| Nanobots | repair drones around rose cross | +0.6 life per second | 5 |
-| Armor | riveted steel plate | −2 damage from every hit | 5 |
-| Shield capacitor | battery cell with hex emblem | +25 max shield | 4 |
-| Tractor beam | horseshoe magnet with pull arrow | +40 % pickup radius | 5 |
+**Status legend:** *Implemented* = works in the game as the level 2 card. *Not implemented* = only in this document. A card can be
+implemented for its stat effect while its weapon-visual part is still open; the Status cell then says so.
+Checked against `singletons/upgrades.gd` (the level-up pool) and `singletons/levels.gd` (level 2 skins), which have
+only the level 1 stat cards and the level 2 weapon names and icons.
+
+**Global cards** (apply to every weapon):
+
+| Card | Icon | Effect | Max level | Weapon change | Status |
+|---|---|---|---|---|---|
+| Carbide Tips | steel drill head with a hot amber tip and an up-chevron | +12 % damage | 10 | shots get a white-hot tip; bigger chip spray on hit | **Implemented** (+12 % damage, level 2 only, `singletons/upgrades.gd`, icon `resources/shared/pickups/icon_carbide.png`). Not yet: white-hot shot tip and chip spray |
+| Fault Line | rock slab split by a glowing amber crack | +35 % critical damage | 6 | a crit throws 3 rock chips (small area hit, 20 % damage); amber flash and its own sound | **Implemented** (+35 % critical damage, level 2 only, `singletons/upgrades.gd`, icon `resources/shared/pickups/icon_fault_line.png`). Not yet: crit shatter (3 rock chips), amber flash and crit sound |
+| Seismic Sensor | steel geophone spike with amber ripple rings | +6 % critical chance | 6 | amber ring pulse around the ship on each crit | **Implemented** (+6 % critical chance, level 2 only, `singletons/upgrades.gd`, icon `resources/shared/pickups/icon_seismic.png`). Not yet: amber ring pulse on crit |
+| Pressure Valve | steel valve wheel with a puff of steam | +10 % fire rate | 6 | steam puff from the muzzle, shorter shot sound | **Implemented** (+10 % fire rate, level 2 only, `singletons/upgrades.gd`, icon `resources/shared/pickups/icon_pressure_valve.png`). Not yet: steam puff from the muzzle, shorter shot sound |
+| Extra Charges | three blasting canisters tied together | +1 projectile for every weapon | 3 | shots leave the ship as a bundle | **Implemented** (+1 projectile for every weapon, level 2 only, `singletons/upgrades.gd`, icon `resources/shared/pickups/icon_extra_charges.png`). Not yet: bundle look on shots |
+| Ricochet Plates | steel plate with a bounce arrow | straight shots (Rivet Gun, Thermite Lances) bounce once to the nearest enemy; level 2: twice | 2 | slug or lance bends in flight, spark on each bounce | **Implemented** (bounce to the nearest enemy, level 2 only, `singletons/upgrades.gd`, `scripts/bullet.gd`, icon `resources/shared/pickups/icon_ricochet.png`). Not yet: slug or lance bend and spark on each bounce |
+| Fracture | stone with a hammer mark | every 6th hit on the same enemy deals +60 % damage and cracks it | 4 | crack decal on the enemy; more cracks per stack | **Implemented** (every 6th hit on an enemy +60 %, one hit sooner per level, max level 4, level 2 only, `singletons/upgrades.gd`, `singletons/player_status.gd`, icon `resources/shared/pickups/icon_fracture.png`). Not yet: crack decal on the enemy and more cracks per stack |
+| Slag Trails | molten drip behind a shell | every shot leaves an ember trail that burns enemies for 15 % of hit damage over 2 s | 4 | glowing embers behind shots | **Implemented** (burn of 15 % of hit damage per level over 2 s, max level 4, level 2 only, `singletons/upgrades.gd`, `singletons/player_status.gd`, `scripts/bullet.gd`, icon `resources/shared/pickups/icon_slag_trails.png`). Not yet: glowing ember particles behind shots |
+
+**Weapon cards** (only in the pool once the named weapon is owned):
+
+| Card | Needs | Icon | Effect | Max level | Weapon change | Status |
+|---|---|---|---|---|---|---|
+| Diamond Bit | Drill Cannon | drill bit with a diamond-white tip | +1 pierce (3 enemies in total); the bit drills into the first enemy for 0.5 s and deals tick damage | 3 | bit turns white while drilling | Not implemented (Drill Cannon exists; its level 4 pierce is in levels.gd) |
+| Rotary Magazine | Rivet Gun | revolving drum | every 10th volley is a full burst: all slugs ×2 damage for 1 s | 3 | drum spin sound and sparks | Not implemented (Rivet Gun exists) |
+| Seismic Rings | Quake Charge | stone disc with echo rings | the ring pulses twice; the second ring comes 0.3 s later, is bigger and knocks enemies back | 3 | two-stage pulse | Not implemented (Quake Charge exists) |
+| Aftershock | Quake Charge | cracked disc with small arrows | a shard that kills an enemy spawns a mini pulse of 6 shards | 3 | mini pulses around kills | Not implemented (Quake Charge exists) |
+| Thermite Cloud | Thermite Lances | burning lance with smoke | a lance leaves a burning patch where it hits, ticking for 2 s | 3 | lances turn bright orange | Not implemented (Thermite Lances exists) |
+| Homing Fuses | Thermite Lances | lance with a curl trail | lances curve toward enemies; turn rate rises per level | 3 | curved flight path | Not implemented (Thermite Lances exists) |
+| Cluster Charge | Blast Charge | canister with 3 smaller canisters | the burst releases 3 mini-charges, each bursting again after 0.5 s | 3 | smaller fragment ring | Not implemented (Blast Charge exists) |
+| Long Fuse | Blast Charge | coiled fuse | the charge sticks to the first enemy, bursts 1 s later at full size, +40 % blast damage | 3 | fuse sparks while it sticks | Not implemented (Blast Charge exists) |
+| Heavy Boulders | Tether Rocks | boulder with a weight mark | rocks +50 % size; they knock enemies back on hit, spin slows | 3 | bigger rocks | Not implemented (Tether Rocks exists) |
+| Mining Laser Link | Tether Rocks | two rocks joined by a glowing beam | a beam links neighbouring rocks; enemies crossing it take tick damage | 3 | amber beam between rocks | Not implemented (Tether Rocks exists) |
+
+**Survival and utility cards:**
+
+| Card | Icon | Effect | Max level | Feel change | Status |
+|---|---|---|---|---|---|
+| Hardhat Plating | dented mining helmet with a lamp | +25 max life, heals 25 | 8 | none | Not implemented (level 1 "Hull plating" exists) |
+| Rock Shell | grey stone carapace with amber cracks | −2 damage from every hit | 5 | rock chips on the hull, more per level | Not implemented (level 1 "Armor" exists) |
+| Shock Absorber | coiled steel spring on a plate | +30 max shield | 4 | shield breaks in an amber flash and knocks back nearby enemies | Not implemented (level 1 "Shield capacitor" exists) |
+| Grav Winch | winch hook pulling a crystal on a cable | +50 % pickup radius | 4 | gems fly in along a visible amber cable | Not implemented (level 1 "Tractor beam" exists) |
+| Jet Boots | miner boot with a thruster flame | +10 % move speed | 5 | longer engine flame | Not implemented (level 1 "Thrusters" exists) |
+| Magnet Core | horseshoe magnet with a spark | killed enemies pull nearby gems and xenite | 3 | magnetic spark on each pull | Not implemented |
+
+Cards that change a weapon's behaviour need new code (weapon hooks, bullet scenes). Stat-only cards reuse the
+existing `PlayerStatus` values.
+
+**Pool rule for level 2:** a level 1 stat card is not offered in level 2 once its level 2 replacement is
+implemented. So far **Damage** (replaced by Carbide Tips), **Precision** (replaced by Seismic Sensor), **Lethality** (replaced by Fault Line) and **Overclock** (replaced by Pressure Valve) and **Multishot** (replaced by Extra Charges) are removed. The other level 1 stat cards stay
+in level 2 until their replacements exist, otherwise level 2 would lose those stats entirely.
 
 ## 6. How bonuses change damage and enemies
 
@@ -155,9 +194,9 @@ critical hit (chance = Critical chance, default 10 %): damage × (Critical multi
 ```
 
 - Plasma Coils (Hangar, max) makes BaseDamage 125, so every hit is ×1.25.
-- Damage (XP card) adds +15 % to BaseDamage per level.
+- Carbide Tips (XP card) adds +12 % to BaseDamage per level.
 - Level 2 weapons use the same damage ranges as level 1 (section 5), so the formula is unchanged.
-- Targeting AI and Precision raise the critical chance; Lethality raises the critical multiplier (200 % → 230 %).
+- Targeting AI and Seismic Sensor raise the critical chance; Fault Line raises the critical multiplier by 35 points per level (200 % → 235 % at level 1).
 - Critical hits show a different floating number, so the player can see them.
 
 **Enemies:**
@@ -165,7 +204,7 @@ critical hit (chance = Critical chance, default 10 %): damage × (Critical multi
 - No Hangar bonus changes an enemy's stats. Enemies keep their life, speed and damage.
 - The only Hangar bonus that touches enemies is **Xenite Scanner**: it changes how often they drop crystals.
 - **Armor** and **Regen** change how much damage the ship takes from enemies, not what the enemies do.
-- **Tractor Beam** (Hangar and XP card) makes the pickup radius bigger, so crystals are collected from further away.
+- **Tractor Beam** (Hangar) and **Grav Winch** (XP card) make the pickup radius bigger, so crystals are collected from further away.
 
 **Level 2 enemy life** (the number the weapons have to wear down). Bosses use the level factor 0.8.
 
@@ -187,3 +226,4 @@ critical hit (chance = Critical chance, default 10 %): damage × (Critical multi
 - [ ] Level 2 weapon icons and shots use the amber / steel palette (ore amber, steel, white-hot tips). No cyan.
 - [ ] Weapon icons read as the weapon's shot at 44 px (HUD) and at 110 px (card).
 - [ ] No icon uses enemy cyan as its main colour, and no pure red or green.
+- [ ] Level 2 stat card icons: one object each, same style as the Hangar icons, amber / steel palette.

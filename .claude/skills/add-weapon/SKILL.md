@@ -30,6 +30,14 @@ Rules:
   Player bullets that hit enemies need `collision_mask = 9` on the HitBox (enemy hitboxes are on layer 8, see `space-thunder-conventions`); enemy-only bullets keep the default mask 1.
   Hit/explosion particles come from `Juice.hit_effect` / `Juice.explosion_effect` - do not instantiate effect scenes per hit.
 - `bullet.Piercing = true` for weapons that should not be destroyed on hit.
+- Bounces (Ricochet Plates): `bullet.gd` has `BounceCount` and `_bounce_to_next(hit_area)`. On an enemy hit with bounces left it turns the
+  shot to the nearest other living enemy within `BOUNCE_RANGE` (400 px) and keeps the speed; otherwise the shot is disposed.
+  `create_bullet()` sets `BounceCount = PlayerStatus.Ricochet` only when `can_bounce()` returns true **and** the bullet damages enemies.
+  `Weapon.can_bounce()` is false by default; `SmallBullet` (Rivet Gun, and Thermite via inheritance) returns true. Override it
+  in a new straight-shot weapon class to opt in. Piercing bullets never bounce.
+- Burn hook: every player bullet hit on an enemy in `bullet.gd` calls `PlayerStatus.apply_burn(area.get_parent(), Type)`
+  (Slag Trails, no-op at level 0). New player bullets get this automatically through the same handler; bullets that
+  bypass `_on_hit_box_area_entered` do not burn.
 
 ## 3a. Player weapon - offer it on level up
 `singletons/upgrades.gd` `_build_pool()`:

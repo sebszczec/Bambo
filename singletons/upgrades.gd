@@ -23,18 +23,23 @@ func reset(game_logic):
 	_levels["w_blaster"] = 1
 
 func _build_pool():
+	# not offered in level 2 (index 1): replaced by Carbide Tips there
 	_add_stat("damage", "Damage", "+15% damage", PERKS + "icon_damage.png", 10,
-		func(): PlayerStatus.increase_damage(15))
+		func(): PlayerStatus.increase_damage(15), -1, 1)
+	# not offered in level 2 (index 1): replaced by Seismic Sensor there
 	_add_stat("crit_chance", "Precision", "+5% critical chance", PERKS + "icon_precision.png", 8,
-		func(): PlayerStatus.increase_critic_chance(5))
+		func(): PlayerStatus.increase_critic_chance(5), -1, 1)
+	# not offered in level 2 (index 1): replaced by Fault Line there
 	_add_stat("crit_mult", "Lethality", "+30% critical damage", PERKS + "icon_lethality.png", 8,
-		func(): PlayerStatus.increase_critic_hit_multiplier(30))
+		func(): PlayerStatus.increase_critic_hit_multiplier(30), -1, 1)
 	_add_stat("speed", "Thrusters", "+10% move speed", PERKS + "icon_thrusters.png", 5,
 		func(): PlayerStatus.increase_speed(10))
+	# not offered in level 2 (index 1): replaced by Pressure Valve there
 	_add_stat("fire_rate", "Overclock", "+12% fire rate", PERKS + "icon_overclock.png", 6,
-		func(): PlayerStatus.FireRate += 12)
+		func(): PlayerStatus.FireRate += 12, -1, 1)
+	# not offered in level 2 (index 1): replaced by Extra Charges there
 	_add_stat("projectile", "Multishot", "+1 projectile for every weapon", PERKS + "icon_multishot.png", 3,
-		func(): PlayerStatus.ProjectileCount += 1)
+		func(): PlayerStatus.ProjectileCount += 1, -1, 1)
 	_add_stat("max_life", "Hull plating", "+20 max life, heals 20", PERKS + "icon_hull.png", 8,
 		_apply_max_life)
 	_add_stat("regen", "Nanobots", "+0.6 life per second", PERKS + "icon_nanobots.png", 5,
@@ -45,6 +50,30 @@ func _build_pool():
 		_apply_max_shield)
 	_add_stat("magnet", "Tractor beam", "+40% pickup radius", PERKS + "icon_tractor.png", 5,
 		func(): PlayerStatus.PickupRadius *= 1.4)
+	# level 2 only (levels.gd index 1): Asteroid Siege stat card, see level2_bonuses.md 5.1
+	_add_stat("carbide", "Carbide Tips", "+12% damage", PERKS + "icon_carbide.png", 10,
+		func(): PlayerStatus.increase_damage(12), 1)
+	# level 2 only: Asteroid Siege replacement for Precision
+	_add_stat("seismic", "Seismic Sensor", "+6% critical chance", PERKS + "icon_seismic.png", 6,
+		func(): PlayerStatus.increase_critic_chance(6), 1)
+	# level 2 only: Asteroid Siege replacement for Lethality
+	_add_stat("fault_line", "Fault Line", "+35% critical damage", PERKS + "icon_fault_line.png", 6,
+		func(): PlayerStatus.increase_critic_hit_multiplier(35), 1)
+	# level 2 only: Asteroid Siege replacement for Overclock
+	_add_stat("pressure_valve", "Pressure Valve", "+10% fire rate", PERKS + "icon_pressure_valve.png", 6,
+		func(): PlayerStatus.FireRate += 10, 1)
+	# level 2 only: Asteroid Siege replacement for Multishot
+	_add_stat("extra_charges", "Extra Charges", "+1 projectile for every weapon", PERKS + "icon_extra_charges.png", 3,
+		func(): PlayerStatus.ProjectileCount += 1, 1)
+	# level 2 only: new card, straight shots bounce to the next enemy
+	_add_stat("ricochet", "Ricochet Plates", "Shots bounce once to the nearest enemy", PERKS + "icon_ricochet.png", 2,
+		func(): PlayerStatus.Ricochet += 1, 1)
+	# level 2 only: every 6th hit on an enemy deals +60%, one hit sooner per level
+	_add_stat("fracture", "Fracture", "Every 6th hit on an enemy: +60% damage, 1 hit sooner per level", PERKS + "icon_fracture.png", 4,
+		func(): PlayerStatus.Fracture += 1, 1)
+	# level 2 only: shots burn the enemy they hit for 15 % of the hit damage per level, over 2 s
+	_add_stat("slag", "Slag Trails", "Shots burn enemies: 15% of hit damage over 2 s per level", PERKS + "icon_slag_trails.png", 4,
+		func(): PlayerStatus.Slag += 1, 1)
 
 	_add_weapon("w_blaster", "Blaster", "Main gun", "Faster and wider main gun",
 		PERKS + "icon_blaster.png", Enums.WEAPONS.SMALL)
@@ -67,9 +96,10 @@ func _apply_max_shield():
 	PlayerStatus.increase_max_shield(25)
 	game.player.updateShield(25)
 
-func _add_stat(id : String, title : String, desc : String, icon : String, max_level : int, apply : Callable):
+func _add_stat(id : String, title : String, desc : String, icon : String, max_level : int, apply : Callable, only_level : int = -1, except_level : int = -1):
 	_pool.append({ "id" : id, "title" : title, "desc" : desc, "desc_up" : desc, "icon" : load(icon),
-		"max_level" : max_level, "weapon" : false, "weight" : 10, "apply" : apply })
+		"max_level" : max_level, "weapon" : false, "weight" : 10, "apply" : apply,
+		"only_level" : only_level, "except_level" : except_level })
 
 func _add_weapon(id : String, title : String, desc : String, desc_up : String, icon : String, type : Enums.WEAPONS):
 	_pool.append({ "id" : id, "title" : title, "desc" : desc, "desc_up" : desc_up, "icon" : load(icon),
@@ -123,6 +153,13 @@ func get_weapon_count() -> int:
 
 func _is_available(entry : Dictionary, weapons_only : bool) -> bool:
 	if weapons_only and !entry["weapon"]:
+		return false
+
+	# level-specific cards (only_level = index in Levels) are not offered in other levels
+	if entry.get("only_level", -1) >= 0 and entry["only_level"] != Levels.current:
+		return false
+	# level 1 cards replaced by a level-specific card (except_level = index in Levels)
+	if entry.get("except_level", -1) >= 0 and entry["except_level"] == Levels.current:
 		return false
 
 	var level = get_level(entry["id"])

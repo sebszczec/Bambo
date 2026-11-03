@@ -34,7 +34,7 @@ ship and it looks glued to the player (happened with the Pebble Mite, fixed for 
   `explosion.SpriteTexture` = shown frame, then `explosion.explode()`; free after ~1.2 s (`wait_time = 1.2`, fragments fade in 1 s, particles/sound live in Juice).
   Bosses may call `explosion.init(Vector2(3, 3), 250)` first for a bigger burst.
 - Bullet hits: in the `HitBox` `area_entered` handler check `area.is_in_group("Bullet")`, `bullet.is_damaging_enemy()`, then
-  `Juice.hit_effect`, `Juice.flash(sprite)`, damage via `PlayerStatus.get_damage_from_weapon(bullet.Type)`, show `FloatingText` when `showDamage and FloatingText.can_spawn(crit)`.
+  `Juice.hit_effect`, `Juice.flash(sprite)`, damage via `PlayerStatus.get_damage_from_weapon(bullet.Type, self)` (pass `self` so per-enemy effects like Fracture work; bosses use `get_boss_damage_from_weapon(bullet.Type, _max_life, self)`), show `FloatingText` when `showDamage and FloatingText.can_spawn(crit)`.
 - Find the player with `get_tree().get_first_node_in_group("player")`.
 - Attacks that are not bullets or body contact (shock ring, beams) call `player.take_damage(amount)` (the player's hazard
   damage, handles armor/shield/god mode). Scale that damage with `Damage` (game_logic scales only `Damage`), e.g.

@@ -9,6 +9,12 @@ var CriticalHitMultiplier : float = 200
 var Speed : float = 100
 var FireRate : float = 100
 var ProjectileCount : int = 0
+# bounces of straight player shots after an enemy hit (Ricochet Plates)
+var Ricochet : int = 0
+# Fracture level: every (7 - Fracture)th hit on an enemy deals FRACTURE_BONUS (Fracture card)
+var Fracture : int = 0
+# Slag Trails level: shots burn the enemy they hit for Slag * 15 % of the hit damage over 2 s
+var Slag : int = 0
 var Armor : float = 0
 var Regen : float = 0
 var PickupRadius : float = 120
@@ -53,6 +59,9 @@ func reset():
 	Speed = DEFAULT_SPEED
 	FireRate = DEFAULT_FIRE_RATE
 	ProjectileCount = 0
+	Ricochet = 0
+	Fracture = 0
+	Slag = 0
 	Armor = 0
 	Regen = 0
 	PickupRadius = DEFAULT_PICKUP_RADIUS
@@ -116,7 +125,8 @@ func increase_max_shield(value : float):
 func get_delay_factor() -> float:
 	return 100.0 / FireRate
 
-func get_damage_from_weapon(weapon : Enums.WEAPONS):
+# target = the enemy that is hit, needed for Fracture (hits are counted per enemy)
+func get_damage_from_weapon(weapon : Enums.WEAPONS, target = null):
 	var damage = Damage.new()
 	damage.Value = 0.01 * BaseDamage * DamageValues.get_damage(weapon)
 	damage.Critical = false
@@ -125,17 +135,75 @@ func get_damage_from_weapon(weapon : Enums.WEAPONS):
 		damage.Value *= 0.01 * CriticalHitMultiplier
 		damage.Critical = true
 
+	# Fracture: every hit-th hit on the same enemy deals +60 % (hit = 7 - Fracture, so 6 at level 1, 3 at level 4)
+	if target != null and Fracture > 0:
+		var hits = target.get_meta("fracture_hits", 0) + 1
+		target.set_meta("fracture_hits", hits)
+		if hits % (7 - Fracture) == 0:
+			damage.Value *= FRACTURE_BONUS
+
 	return damage
 
 func get_damage():
 	return get_damage_from_weapon(CurrentWeapon)
 
+# Slag Trails: a shot that hits an enemy sets it burning. 4 ticks over 2 s, the burn does not stack,
+# a new shot refreshes it. The tick goes through the enemy's own handleDamage, so death works as usual.
+const SLAG_BURN_PART = 0.15
+const BURN_TICKS = 4
+const BURN_TICK_TIME = 0.5
+
+func apply_burn(target : Node, weapon : Enums.WEAPONS):
+	if Slag <= 0 or !target.has_method("handleDamage"):
+		return
+	var per_tick = max(1, roundi(0.01 * BaseDamage * DamageValues.get_damage(weapon) * SLAG_BURN_PART * Slag / BURN_TICKS))
+	if target.has_meta("burn_timer") and is_instance_valid(target.get_meta("burn_timer")):
+		target.set_meta("burn_ticks", BURN_TICKS)
+		target.set_meta("burn_damage", max(target.get_meta("burn_damage"), per_tick))
+		return
+	var timer = Timer.new()
+	timer.wait_time = BURN_TICK_TIME
+	target.add_child(timer)
+	target.set_meta("burn_timer", timer)
+	target.set_meta("burn_ticks", BURN_TICKS)
+	target.set_meta("burn_damage", per_tick)
+	timer.timeout.connect(_burn_tick.bind(target, timer))
+	timer.start()
+
+func _burn_tick(target : Node, timer : Timer):
+	if !is_instance_valid(target) or target.is_queued_for_deletion() or target.get("Life") <= 0:
+		_end_burn(target, timer)
+		return
+	target.set_meta("burn_ticks", target.get_meta("burn_ticks") - 1)
+	var damage = Damage.new()
+	damage.Value = target.get_meta("burn_damage")
+	damage.Critical = false
+	var handle = target.handleDamage
+	var alive = handle.call(damage) if handle.get_argument_count() == 1 else handle.call(damage, target.global_position)
+	if !alive:
+		# same death flags as the bullet path, so the enemy is not exploded twice
+		for flag in ["isDead", "_isDead", "_is_dead"]:
+			if flag in target:
+				target.set(flag, true)
+		target.explode()
+	if !alive or target.get_meta("burn_ticks") <= 0:
+		_end_burn(target, timer)
+
+func _end_burn(target : Node, timer : Timer):
+	if is_instance_valid(timer):
+		timer.queue_free()
+	if is_instance_valid(target) and target.has_meta("burn_timer"):
+		target.remove_meta("burn_timer")
+		target.remove_meta("burn_ticks")
+		target.remove_meta("burn_damage")
+
 # the nuke wipes the horde but only takes a slice of a boss's life
 const BOMB_BOSS_LIFE_PART = 0.1
+const FRACTURE_BONUS = 1.6
 
-func get_boss_damage_from_weapon(weapon : Enums.WEAPONS, max_life):
+func get_boss_damage_from_weapon(weapon : Enums.WEAPONS, max_life, target = null):
 	if weapon != Enums.WEAPONS.BOMB:
-		return get_damage_from_weapon(weapon)
+		return get_damage_from_weapon(weapon, target)
 
 	var damage = Damage.new()
 	damage.Value = ceili(max_life * BOMB_BOSS_LIFE_PART)

@@ -16,6 +16,9 @@ Every level is a 10-minute survival run with its own stages, bosses, story and l
   - `is_completed(i)` / `mark_completed(i)` - stored in the save slot (`ConfigHandler` "Progress/completed_levels"),
     `game_logic` marks it when the final boss dies. `select()` also restores the last played level on slot load and
     falls back to level 1 if that level is locked.
+- Level-specific level-up cards are not in `levels.gd`: they are entries in `singletons/upgrades.gd` with
+  `only_level` / `except_level` = the level index (see the add-upgrade skill). `weapon_skin` only renames weapons and swaps
+  their card icon, it does not add or hide cards. A new level with its own cards needs its own index in those fields.
 - `scripts/phase_guard.gd` reads `stages`, `bosses`, `elite_at`, `swarm_*` in `_load_level` (read only - the arrays
   can be consts).
 - `scripts/game_logic.gd` - `_level_enemy(type)` applies the level's `"replace"` map to waves, swarms and boss minions
