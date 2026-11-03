@@ -392,6 +392,7 @@ class Fireworks extends BigBullet:
 
 # blades circling the player, they pass through enemies
 class Orbit extends Weapon:
+	const SMOKE_TEXTURE = "res://resources/vendor/kenney/particles/smoke_01.png"
 	var blades : Array = []
 	var radius = 90.0
 	var rotation_speed = 3.0
@@ -421,7 +422,12 @@ class Orbit extends Weapon:
 			blade.Piercing = true
 			blade.scale = Vector2(2.0, 2.0)
 			object_owner.add_child(blade)
-			blade.set_modulate_color(Color(0.4, 1.6, 2.0))
+			# the level skin paints the rocks (Tether Rocks); without one the blades keep the cyan tint.
+			# set after add_child: the tint node is only ready once the bullet is in the tree
+			if !Levels.get_current().get("weapon_skin", {}).has(type):
+				blade.set_modulate_color(Color(0.4, 1.6, 2.0))
+			else:
+				_add_smoke(blade)
 			blades.append(blade)
 			updateBulletNumber(1)
 
@@ -432,6 +438,27 @@ class Orbit extends Weapon:
 			blades[i].global_position = player.global_position + offset
 			# point along the direction of flight (tangent of the circle)
 			blades[i].rotation = offset.angle() + PI
+
+	# smoke puffs left behind each rock (Tether Rocks). Emitted in global space, so the puffs stay
+	# where the rock was and form a trail while it orbits; they go with the rock when it is freed
+	func _add_smoke(blade):
+		var smoke = CPUParticles2D.new()
+		smoke.texture = load(SMOKE_TEXTURE)
+		smoke.local_coords = false
+		smoke.amount = 36
+		smoke.lifetime = 1.1
+		smoke.explosiveness = 0.0
+		smoke.spread = 180.0
+		smoke.gravity = Vector2.ZERO
+		smoke.initial_velocity_min = 3.0
+		smoke.initial_velocity_max = 12.0
+		# the texture is 512 px: these scales give puffs of about 40-80 px
+		smoke.scale_amount_min = 0.08
+		smoke.scale_amount_max = 0.16
+		var fade = Gradient.new()
+		fade.colors = PackedColorArray([Color(1, 1, 1, 0.7), Color(0.8, 0.8, 0.82, 0.0)])
+		smoke.color_ramp = fade
+		blade.add_child(smoke)
 
 	# public - removes blades when the player dies
 	func clear():
