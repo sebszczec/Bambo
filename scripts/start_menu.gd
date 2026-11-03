@@ -13,7 +13,7 @@ const TitleBackdrop = preload("res://scripts/title_backdrop.gd")
 var logo : TitleLogo
 var highScoreTable : HighScoreTable
 var backdrop : Node2D
-var _target_scene = "res://scenes/save_slots.tscn"
+var _target_scene = "res://scenes/menus/save_slots.tscn"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -55,7 +55,7 @@ func _on_quit_pressed() -> void:
 
 
 func _on_new_game_pressed() -> void:
-	_leave("res://scenes/save_slots.tscn")
+	_leave("res://scenes/menus/save_slots.tscn")
 
 
 func _on_continue_pressed() -> void:
@@ -63,7 +63,7 @@ func _on_continue_pressed() -> void:
 		continueButton.visible = false
 		newGameButton.grab_focus()
 		return
-	_leave("res://scenes/level_select.tscn")
+	_leave("res://scenes/menus/level_select.tscn")
 
 
 # warp jump out of the menu, the scene changes when the animation ends
@@ -79,7 +79,7 @@ func _leave(scene : String) -> void:
 
 
 func _on_settings_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/settings_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/settings_menu.tscn")
 
 
 func _on_button_focus_changed() -> void:

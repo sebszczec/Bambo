@@ -6,11 +6,15 @@ description: How levels work in Space Thunder and how to add or change one - the
 # Levels
 
 Every level is a 10-minute survival run with its own stages, bosses, story and look. All of it is data in
-`singletons/levels.gd` (`Levels` autoload); the run itself is the same `scenes/world.tscn` for every level.
+`Levels` autoload (`singletons/levels.gd`) builds the ladder from `resources/levels/levelN/level.tres` (`LevelDef`);
+the run itself is the same `scenes/shared/world.tscn` for every level.
 
 ## Where things live
-- `singletons/levels.gd` - `_levels` array (max `MAX_LEVELS` = 10). A level without `"available": true` is shown as
-  "UNDER DEVELOPMENT". Shared wave data is in consts (`_LEVEL1_STAGES`, `_LEVEL1_BOSSES`) so levels can reuse it.
+- `resources/levels/levelN/level.tres` - one `LevelDef` per playable level (`scripts/level_def.gd`). Its `data` dictionary
+  holds the keys listed below; `inherits` points to a base level and the level only lists what differs (level 2 inherits
+  level 1's stages, bosses and tuning).
+- `singletons/levels.gd` - `LEVEL_DEFS` (the playable levels, `preload`ed) and `_UNBUILT_LEVELS` (name-only placeholders,
+  shown as "UNDER DEVELOPMENT"). Max `MAX_LEVELS` = 10.
   - `is_available(i)` - the level has gameplay data.
   - `is_unlocked(i)` - available **and** (`i == 0` or level `i - 1` is completed). Launch, Hangar and `select()` use this.
   - `is_completed(i)` / `mark_completed(i)` - stored in the save slot (`ConfigHandler` "Progress/completed_levels"),
@@ -30,28 +34,15 @@ Every level is a 10-minute survival run with its own stages, bosses, story and l
   (level 2 rock bugs). Each one is **self-contained** - the user pastes the whole file into Gemini.
 
 ## Level entry
-```gdscript
-{
-	"name" : "Asteroid Siege",
-	"tagline" : "...", "story" : ["paragraph", ...], "objective" : "...", "win_text" : "ASTEROID SIEGE BROKEN",
-	"available" : true,
-	"stages" : _LEVEL1_STAGES,      # 10 x { delay, max_alive, wave : [[enemy, count, chance %], ...] }
-	"bosses" : _LEVEL1_BOSSES,      # [{ at (s), type, final }], the final one ends the run
-	"elite_at" : 450.0, "swarm_every" : 120.0, "swarm_base" : 15, "swarm_per_stage" : 2,
-	"boss_life_factor" : 0.8, "victory_bonus" : 5000,
-	"replace" : { Enums.ENEMIES.SCOUT : Enums.ENEMIES.PEBBLE_MITE },   # optional
-	"background" : {                                                   # optional
-		"base" : "res://resources/levels/level2/background/bg.jpg",         # 1920x1080, fixed to the screen
-		"brightness" : { "far" : 0.5, "mid" : 0.65, "near" : 0.75 },  # optional layer modulate
-		"far" : [[texture, Vector2(pos), scale], ...],                # ParallaxLayer motion 0.1, mirror 1920x1080
-		"mid" : [...],                                                # motion 0.3, mirror 2880x1620
-		"near" : [...],                                               # motion 1.0, mirror 3840x2160
-	},
-}
-```
-Use `"replace"` to give a level its own enemies while it shares the waves of another level; give it own `stages`
-when the mix or pacing should differ. Story and speech audio: the phase speeches in `world.tscn` are level 1 lines
-and still play in every level.
+Keys of `data` in the `.tres` (written as `var_to_str` text; enums are their numbers, see the `LevelDef` header):
+`name`, `tagline`, `story` (array of paragraphs), `objective`, `win_text`, `available`, `stages` (10 x
+`{ delay, max_alive, wave : [[enemy, count, chance %], ...] }`), `bosses` (`[{ at (s), type, final }]`, the final one
+ends the run), `elite_at`, `swarm_every`, `swarm_base`, `swarm_per_stage`, `boss_life_factor`, `victory_bonus`, and the
+optional `replace` (`{ enemy : enemy }`), `background`, `music`, `music_db`, `weapon_skin`.
+
+To add a level: create `resources/levels/levelN/level.tres` (set `inherits` to the base level when it only changes a few
+keys), add its `preload` to `LEVEL_DEFS` in `levels.gd` and drop its placeholder from `_UNBUILT_LEVELS`. Generate the
+`.tres` from a Godot script with `var_to_str` rather than typing the nested data by hand.
 
 ## Background art from Gemini
 The user delivers a backdrop (opaque) plus single asteroids/props on green into `resources/levels/level<N>/background/source/`
@@ -68,8 +59,8 @@ Background props must stay dimmer, softer and outline-free compared to enemies, 
 ## Verify
 - `godot-check` (the first `--import` reports `Failed loading resource` for new pngs - run it again).
 - Scripted run of a level (see `godot-check`, "Scripted run"): set `get_root().get_node("Levels").current = <i>` in
-  `_initialize`, `change_scene_to_file("res://scenes/world.tscn")`, screenshot after ~3 s and again after moving the
+  `_initialize`, `change_scene_to_file("res://scenes/shared/world.tscn")`, screenshot after ~3 s and again after moving the
   player (`player.global_position += Vector2(1500, 900)`) to check parallax seams. Compare against level 1 in the same way.
 - Trailer footage of the new level: add `lN_*` shots to `trailer/scripts/shots.gd` (see the `trailer` skill).
-- Unlocking: print `Levels.is_available(i)` / `is_unlocked(i)` from a scripted run and screenshot `res://scenes/level_select.tscn`
+- Unlocking: print `Levels.is_available(i)` / `is_unlocked(i)` from a scripted run and screenshot `res://scenes/menus/level_select.tscn`
   with a locked level focused (`current_scene._level_buttons[i].grab_focus()`).

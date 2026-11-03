@@ -11,3 +11,8 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
 		taken.emit()
 		queue_free()
+
+# public
+func apply_to(player) -> void:
+	player.createFloatingText("Critic chance +" + str(int(CriticChanceUp)) + "%", Color.DEEP_PINK, 2)
+	PlayerStatus.increase_critic_chance(CriticChanceUp)

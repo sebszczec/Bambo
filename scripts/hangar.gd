@@ -180,10 +180,10 @@ func _on_buy_pressed(id : String):
 		_refresh()
 
 func _on_launch_pressed():
-	_leave("res://scenes/count_down.tscn")
+	_leave("res://scenes/effects/count_down.tscn")
 
 func _on_back_pressed():
-	_leave("res://scenes/start_menu.tscn" if Levels.hangar_after_death else "res://scenes/level_select.tscn")
+	_leave("res://scenes/menus/start_menu.tscn" if Levels.hangar_after_death else "res://scenes/menus/level_select.tscn")
 
 func _leave(scene : String):
 	if _leaving:

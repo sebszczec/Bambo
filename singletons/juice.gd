@@ -12,8 +12,8 @@ const HIT_EFFECT_POOL_SIZE = 32
 const SOUND_POOL_SIZE = 6
 const SOUND_MIN_INTERVAL_MS = 40
 
-var _hit_effect_scene = preload("res://scenes/hit_effect.tscn")
-var _explosion_scene = preload("res://scenes/explosion_effect.tscn")
+var _hit_effect_scene = preload("res://scenes/effects/hit_effect.tscn")
+var _explosion_scene = preload("res://scenes/effects/explosion_effect.tscn")
 
 var _last_hitstop = -100000
 var _hitstop_active = false

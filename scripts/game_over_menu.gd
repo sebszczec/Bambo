@@ -143,24 +143,24 @@ func _focus_first_button():
 
 func _on_retry_button_pressed() -> void:
 	setPause(false)
-	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
+	get_tree().change_scene_to_file("res://scenes/effects/count_down.tscn")
 
 
 func _on_next_button_pressed() -> void:
 	setPause(false)
 	Levels.select(_next_level)
-	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
+	get_tree().change_scene_to_file("res://scenes/effects/count_down.tscn")
 
 
 func _on_hangar_button_pressed() -> void:
 	setPause(false)
 	Levels.hangar_after_death = !_victory
-	get_tree().change_scene_to_file("res://scenes/hangar.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/hangar.tscn")
 
 
 func _on_quit_button_pressed() -> void:
 	setPause(false)
-	get_tree().change_scene_to_file("res://scenes/level_select.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/level_select.tscn")
 
 
 func _on_button_focus_changed() -> void:

@@ -1,0 +1,70 @@
+[gd_resource type="Resource" script_class="LevelDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/level_def.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+data = {
+"available": true,
+"boss_life_factor": 0.8,
+"bosses": [{
+"at": 300.0,
+"final": false,
+"type": 3
+}, {
+"at": 600.0,
+"final": true,
+"type": 4
+}],
+"elite_at": 450.0,
+"name": "First Contact",
+"objective": "Survive the invasion and destroy both alien flagships.",
+"stages": [{
+"delay": 1.1,
+"max_alive": 25,
+"wave": [[0, 3, 100]]
+}, {
+"delay": 1.0,
+"max_alive": 35,
+"wave": [[0, 3, 100], [1, 1, 15]]
+}, {
+"delay": 0.9,
+"max_alive": 45,
+"wave": [[0, 4, 100], [1, 1, 25]]
+}, {
+"delay": 0.8,
+"max_alive": 55,
+"wave": [[0, 4, 100], [1, 1, 30], [2, 1, 10]]
+}, {
+"delay": 0.75,
+"max_alive": 60,
+"wave": [[0, 4, 100], [1, 1, 35], [2, 1, 15]]
+}, {
+"delay": 0.7,
+"max_alive": 70,
+"wave": [[0, 5, 100], [1, 1, 40], [2, 1, 20]]
+}, {
+"delay": 0.65,
+"max_alive": 80,
+"wave": [[0, 5, 100], [1, 1, 45], [2, 1, 25]]
+}, {
+"delay": 0.6,
+"max_alive": 90,
+"wave": [[0, 5, 100], [1, 2, 50], [2, 1, 30]]
+}, {
+"delay": 0.55,
+"max_alive": 100,
+"wave": [[0, 6, 100], [1, 2, 55], [2, 1, 35]]
+}, {
+"delay": 0.5,
+"max_alive": 110,
+"wave": [[0, 6, 100], [1, 2, 60], [2, 1, 40]]
+}],
+"story": ["2189. The deep-space array at the edge of the Kuiper Belt went silent nineteen minutes ago. Its last transmission showed a single image: a wall of bio-mechanical ships, swarming like insects, pouring out of a tear in space.", "Earth's fleet is still three days out. The only thing between the swarm and the inner colonies is the Thunder-class interceptor on patrol in this sector. That's you.", "Command's orders are simple: hold the line. Scout drones will come first, then their guardians and hunters. Long-range scans picked up two massive signatures behind the swarm - a carrier-class Hive Beetle and something even bigger, burrowing through the debris field.", "Bring them down, pilot. Show them that this system bites back."],
+"swarm_base": 15,
+"swarm_every": 120.0,
+"swarm_per_stage": 2,
+"tagline": "They were never coming in peace.",
+"victory_bonus": 5000,
+"win_text": "FIRST CONTACT REPELLED"
+}

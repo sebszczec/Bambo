@@ -206,7 +206,7 @@ func _on_launch_pressed():
 	var tween = create_tween()
 	tween.tween_property(_ui, "modulate:a", 0.0, LAUNCH_TIME)
 	tween.tween_property(warp, "Brightness", 0.0, LAUNCH_TIME)
-	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/count_down.tscn"))
+	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/effects/count_down.tscn"))
 
 func _on_hangar_pressed():
 	if _launching or !Levels.is_unlocked(_selected):
@@ -216,10 +216,10 @@ func _on_hangar_pressed():
 	Levels.select(_selected)
 	var tween = create_tween()
 	tween.tween_property(_ui, "modulate:a", 0.0, LAUNCH_TIME * 0.5)
-	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/hangar.tscn"))
+	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/menus/hangar.tscn"))
 
 func _on_back_pressed():
-	get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/start_menu.tscn")
 
 func _on_button_focus_changed() -> void:
 	$Sfx.play()

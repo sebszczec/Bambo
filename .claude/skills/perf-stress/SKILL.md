@@ -5,7 +5,7 @@ description: Measure Space Thunder frame times under load - big horde, nuke (bom
 
 # Performance stress test
 
-Harness: `.claude/skills/perf-stress/scripts/stress.gd` (a `SceneTree` script that loads `res://scenes/world.tscn`,
+Harness: `.claude/skills/perf-stress/scripts/stress.gd` (a `SceneTree` script that loads `res://scenes/shared/world.tscn`,
 god mode on, phases stopped, level-ups disabled, vsync off). Godot binary and filtering as in `godot-check`.
 
 ```bash

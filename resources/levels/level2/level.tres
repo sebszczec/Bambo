@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="LevelDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/level_def.gd" id="1_def"]
+[ext_resource type="Resource" path="res://resources/levels/level1/level.tres" id="2_base"]
+
+[resource]
+script = ExtResource("1_def")
+inherits = ExtResource("2_base")
+data = {
+"background": {
+"base": "res://resources/levels/level2/background/bg.jpg",
+"brightness": {
+"far": 0.5,
+"mid": 0.65,
+"near": 0.75
+},
+"far": [["res://resources/levels/level2/background/asteroid_small_1.png", Vector2(230, 190), 0.18], ["res://resources/levels/level2/background/asteroid_small_2.png", Vector2(1010, 470), 0.14], ["res://resources/levels/level2/background/asteroid_small_3.png", Vector2(1500, 860), 0.16], ["res://resources/levels/level2/background/asteroid_small_4.png", Vector2(1640, 140), 0.12]],
+"mid": [["res://resources/levels/level2/background/asteroid_small_4.png", Vector2(320, 470), 0.5], ["res://resources/levels/level2/background/asteroid_medium.png", Vector2(1900, 1100), 0.45]],
+"near": [["res://resources/levels/level2/background/asteroid_huge.png", Vector2(900, 350), 0.9]]
+},
+"music": "res://resources/levels/level2/music/level2_asteroid_siege.ogg",
+"music_db": 6.0,
+"name": "Asteroid Siege",
+"objective": "Break the hive siege of the asteroid belt and destroy both alien flagships.",
+"replace": {
+0: 5,
+1: 6,
+2: 7,
+3: 8,
+4: 9
+},
+"story": ["The swarm did not retreat. It dug in. Three weeks after First Contact, the mining colonies of the Hilda asteroid belt stopped answering, and survey drones came back with images of black, root-like growths spreading across the rocks, pulsing with cold blue light.", "The hive is turning the belt into a fortress. Every asteroid it touches becomes a nest, and every nest pours out more drones. If the growth reaches the refinery stations, the colonies lose their only fuel supply.", "Your orders: fly into the belt, break the siege and kill whatever is commanding it from inside the rock. Watch the debris, pilot - out here even the scenery can hit back."],
+"tagline": "The rocks are alive now.",
+"weapon_skin": {
+0: {
+"bullet": "res://resources/levels/level2/weapons/rivet_gun/rivet_gun_slug.png",
+"desc": "Main gun",
+"desc_up": "Faster and wider main gun",
+"icon": "res://resources/levels/level2/weapons/rivet_gun/rivet_gun_icon.png",
+"title": "Rivet Gun",
+"trail": Color(1.6, 0.9, 0.4, 1)
+},
+1: {
+"bullet": "res://resources/levels/level2/weapons/drill_cannon/drill_cannon_bit.png",
+"desc": "Auto-aimed drill shells",
+"desc_up": "Faster, more shells. Lv 4: shells pierce one enemy",
+"icon": "res://resources/levels/level2/weapons/drill_cannon/drill_cannon_icon.png",
+"pierce": 1,
+"pierce_level": 4,
+"title": "Drill Cannon",
+"trail": Color(1.8, 1, 0.5, 1)
+},
+2: {
+"bullet": "res://resources/levels/level2/weapons/quake_charge/quake_charge_shard.png",
+"desc": "Ring of rock shards around you",
+"desc_up": "More shards, faster pulse",
+"icon": "res://resources/levels/level2/weapons/quake_charge/quake_charge_icon.png",
+"title": "Quake Charge",
+"trail": Color(1.5, 0.8, 0.2, 1)
+},
+7: {
+"bullet": "res://resources/levels/level2/weapons/tether_rocks/tether_rocks_rock.png",
+"desc": "Boulders circling your ship",
+"desc_up": "Bigger rocks, wider orbit. Lv 6: outer ring",
+"icon": "res://resources/levels/level2/weapons/tether_rocks/tether_rocks_icon.png",
+"title": "Tether Rocks",
+"trail": Color(1.6, 0.9, 0.4, 1)
+}
+},
+"win_text": "ASTEROID SIEGE BROKEN"
+}

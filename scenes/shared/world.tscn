@@ -1,0 +1,417 @@
+[gd_scene load_steps=32format=3 uid="uid://3r5m53y3clh3"]
+
+[ext_resource type="PackedScene" uid="uid://cl0ta7xxx5arv" path="res://scenes/shared/player.tscn" id="1_6neka"]
+[ext_resource type="Script" uid="uid://dl5xx7qcb1rkw" path="res://scripts/game_logic.gd" id="1_ib5o5"]
+[ext_resource type="Script" uid="uid://daootrcewuxwv" path="res://scripts/world.gd" id="1_twfab"]
+[ext_resource type="Script" uid="uid://q5e7fpsuwgsc" path="res://scripts/information_box.gd" id="2_0s2sw"]
+[ext_resource type="Texture2D" uid="uid://clwuwqp2k0qxf" path="res://resources/vendor/kenney/ui/shadow_bar.png" id="2_r3oad"]
+[ext_resource type="Texture2D" uid="uid://gl8t1mrmpjay" path="res://resources/vendor/kenney/ui/red_bar.png" id="3_p7qxo"]
+[ext_resource type="Texture2D" uid="uid://dhcf6xxv7uwaw" path="res://resources/vendor/kenney/ui/green_bar.png" id="4_ntn4d"]
+[ext_resource type="Texture2D" uid="uid://dxiky5xpl62ho" path="res://resources/vendor/kenney/ui/blue_bar.png" id="5_mptyy"]
+[ext_resource type="PackedScene" uid="uid://snwsk5j436tk" path="res://scenes/shared/score.tscn" id="6_btsp4"]
+[ext_resource type="PackedScene" uid="uid://ckojs6xfmg620" path="res://scenes/perks/active_perk.tscn" id="7_4045b"]
+[ext_resource type="PackedScene" uid="uid://cf76yjmqmhyiw" path="res://scenes/menus/pause_menu.tscn" id="7_cxjtb"]
+[ext_resource type="PackedScene" uid="uid://bqe5io5j7p56k" path="res://scenes/shared/player_info.tscn" id="8_oo54l"]
+[ext_resource type="Texture2D" uid="uid://cwvljcbccx4bo" path="res://resources/levels/level1/background/space_bg.jpg" id="10_o8fc1"]
+[ext_resource type="AudioStream" uid="uid://cq10n6jcyrn64" path="res://resources/shared/audio/sfx/speech/phase1_speech.mp3" id="11_ctatt"]
+[ext_resource type="Script" uid="uid://cm2qnkjn3qfsr" path="res://scripts/phase_guard.gd" id="11_kpybi"]
+[ext_resource type="Texture2D" uid="uid://cttmsh76aflb3" path="res://resources/vendor/kenney/planets/Planets/planet00.png" id="11_xo05s"]
+[ext_resource type="Texture2D" uid="uid://cea5o47hm7hhf" path="res://resources/vendor/kenney/planets/Planets/planet02.png" id="12_dss4m"]
+[ext_resource type="PackedScene" uid="uid://b3ftwkyidl5vh" path="res://scenes/menus/game_over_menu.tscn" id="12_glc5x"]
+[ext_resource type="AudioStream" uid="uid://bl807my34byur" path="res://resources/shared/audio/sfx/speech/phase2_speech.mp3" id="12_munwf"]
+[ext_resource type="Texture2D" uid="uid://d4b548tu05a4v" path="res://resources/vendor/kenney/planets/Planets/planet09.png" id="13_7t5mc"]
+[ext_resource type="AudioStream" uid="uid://denud1kbhiex6" path="res://resources/shared/audio/sfx/speech/phase3_speech.mp3" id="13_ts3gi"]
+[ext_resource type="AudioStream" uid="uid://dnug1msrm6e4m" path="res://resources/shared/audio/music/awake10_megaWall.mp3" id="14_o8fc1"]
+[ext_resource type="Texture2D" uid="uid://b3wb5qpkbs3i5" path="res://resources/vendor/kenney/planets/Planets/planet04.png" id="14_pm21f"]
+[ext_resource type="AudioStream" uid="uid://b65hk36m4ht0v" path="res://resources/shared/audio/sfx/speech/phase4_speech.mp3" id="14_ts3gi"]
+[ext_resource type="AudioStream" uid="uid://c8aacln5iejww" path="res://resources/shared/audio/sfx/speech/final_phase_speech.mp3" id="15_0nbtd"]
+[ext_resource type="AudioStream" uid="uid://bitm04vlhb7pd" path="res://resources/shared/audio/sfx/speech/phase5_speech.mp3" id="15_ph5sp"]
+[ext_resource type="Texture2D" uid="uid://dbgq4a4kmxgs1" path="res://resources/vendor/kenney/planets/Planets/planet05.png" id="15_2lf6f"]
+[ext_resource type="Texture2D" uid="uid://cx3em884v6ich" path="res://resources/vendor/kenney/planets/Planets/planet07.png" id="16_2lf6f"]
+[ext_resource type="PackedScene" uid="uid://cd28o5h6cf3l8" path="res://scenes/effects/lightning.tscn" id="21_7iits"]
+[ext_resource type="Script" path="res://scripts/phase_banner.gd" id="22_phbnr"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_y1cda"]
+vertices = PackedVector2Array(3072, 1875, -1596.01, 1875, -1597.99, -1616, 3072, -1616.99)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(3082, 1885, -1606, 1885, -1608, -1626, 3082, -1627)])
+
+[sub_resource type="Environment" id="Environment_4fyp0"]
+background_mode = 3
+glow_enabled = true
+glow_levels/1 = 1.0
+glow_levels/2 = 1.0
+glow_levels/4 = 1.0
+glow_levels/6 = 1.0
+glow_levels/7 = 1.0
+glow_blend_mode = 1
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_twfab")
+
+[node name="GUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="GUI"]
+
+[node name="Panel" type="Panel" parent="GUI/CanvasLayer"]
+offset_left = 8.0
+offset_top = 968.0
+offset_right = 410.0
+offset_bottom = 1073.0
+
+[node name="LifeLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 45.0
+offset_bottom = 28.0
+text = "Life:
+"
+
+[node name="AfterburnerLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 37.0
+offset_right = 60.0
+offset_bottom = 86.0
+text = "Afterburner:"
+
+[node name="ShieldLabel" type="Label" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 69.0
+offset_right = 57.0
+offset_bottom = 92.0
+text = "Shield:
+"
+
+[node name="LifeBar" type="TextureProgressBar" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 3.0
+offset_right = 372.0
+offset_bottom = 43.0
+texture_under = ExtResource("2_r3oad")
+texture_progress = ExtResource("3_p7qxo")
+
+[node name="AfterburnerBar" type="TextureProgressBar" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 38.0
+offset_right = 372.0
+offset_bottom = 78.0
+texture_under = ExtResource("2_r3oad")
+texture_progress = ExtResource("4_ntn4d")
+
+[node name="ShieldBar" type="TextureProgressBar" parent="GUI/CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 73.0
+offset_right = 372.0
+offset_bottom = 113.0
+texture_under = ExtResource("2_r3oad")
+texture_progress = ExtResource("5_mptyy")
+
+[node name="Score" parent="GUI/CanvasLayer" instance=ExtResource("6_btsp4")]
+position = Vector2(960, 16)
+
+[node name="ActivePerkPanel" type="Panel" parent="GUI/CanvasLayer"]
+offset_left = 960.0
+offset_top = 936.0
+offset_right = 1064.0
+offset_bottom = 1072.0
+
+[node name="ActivePerk" parent="GUI/CanvasLayer/ActivePerkPanel" instance=ExtResource("7_4045b")]
+
+[node name="PlayerInfoPanel" type="Panel" parent="GUI/CanvasLayer"]
+offset_left = 1720.0
+offset_top = 472.0
+offset_right = 1912.0
+offset_bottom = 560.0
+
+[node name="PlayerInfo" parent="GUI/CanvasLayer/PlayerInfoPanel" instance=ExtResource("8_oo54l")]
+
+[node name="PhaseBanner" type="Label" parent="GUI/CanvasLayer"]
+offset_top = 260.0
+offset_right = 1920.0
+offset_bottom = 380.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("22_phbnr")
+
+[node name="BossBar" type="TextureProgressBar" parent="GUI/CanvasLayer"]
+visible = false
+offset_left = 660.0
+offset_top = 110.0
+offset_right = 1260.0
+offset_bottom = 150.0
+value = 100.0
+nine_patch_stretch = true
+stretch_margin_left = 12
+stretch_margin_top = 12
+stretch_margin_right = 12
+stretch_margin_bottom = 12
+texture_under = ExtResource("2_r3oad")
+texture_progress = ExtResource("3_p7qxo")
+
+[node name="BossLabel" type="Label" parent="GUI/CanvasLayer/BossBar"]
+layout_mode = 0
+offset_top = -34.0
+offset_right = 600.0
+offset_bottom = -4.0
+theme_override_font_sizes/font_size = 22
+text = "BOSS"
+horizontal_alignment = 1
+
+[node name="InformationBox" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_0s2sw")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="InformationBox"]
+
+[node name="BoxContainer" type="BoxContainer" parent="InformationBox/CanvasLayer"]
+offset_left = 16.0
+offset_top = 110.0
+offset_right = 56.0
+offset_bottom = 150.0
+vertical = true
+
+[node name="FpsCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
+layout_mode = 2
+
+[node name="EnemyCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
+layout_mode = 2
+text = "Enemies: 0"
+
+[node name="BulletCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
+layout_mode = 2
+text = "Bullets: 0"
+
+[node name="MeteorCounter" type="Label" parent="InformationBox/CanvasLayer/BoxContainer"]
+layout_mode = 2
+text = "Meteors: 0"
+
+[node name="GameLogic" type="Node" parent="."]
+script = ExtResource("1_ib5o5")
+
+[node name="Phase1Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("11_ctatt")
+volume_db = 6.0
+
+[node name="Phase2Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("12_munwf")
+volume_db = 6.0
+
+[node name="Phase3Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("13_ts3gi")
+volume_db = 6.0
+
+[node name="Phase4Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("14_ts3gi")
+volume_db = 6.0
+
+[node name="Phase5Sound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("15_ph5sp")
+volume_db = 6.0
+
+[node name="FinalPhaseSound" type="AudioStreamPlayer2D" parent="GameLogic"]
+stream = ExtResource("15_0nbtd")
+volume_db = 6.0
+
+[node name="PhaseGuard" type="Node" parent="GameLogic"]
+script = ExtResource("11_kpybi")
+
+[node name="MeteorSpawnTimer" type="Timer" parent="GameLogic"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground"]
+position = Vector2(959, 540)
+texture = ExtResource("10_o8fc1")
+
+[node name="SmallPlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color(0.196078, 0.196078, 0.196078, 1)
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(1920, 1080)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/SmallPlanets"]
+position = Vector2(224, 207)
+scale = Vector2(0.02, 0.02)
+texture = ExtResource("11_xo05s")
+
+[node name="Planet2" type="Sprite2D" parent="ParallaxBackground/SmallPlanets"]
+position = Vector2(992, 464)
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("12_dss4m")
+
+[node name="Planet3" type="Sprite2D" parent="ParallaxBackground/SmallPlanets"]
+position = Vector2(1137, 116)
+scale = Vector2(0.03, 0.03)
+texture = ExtResource("13_7t5mc")
+
+[node name="MediumPlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color(0.392157, 0.392157, 0.392157, 1)
+motion_scale = Vector2(0.3, 0.3)
+motion_mirroring = Vector2(2880, 1620)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/MediumPlanets"]
+position = Vector2(314, 462)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("14_pm21f")
+
+[node name="Planet2" type="Sprite2D" parent="ParallaxBackground/MediumPlanets"]
+position = Vector2(1212, 664)
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("15_2lf6f")
+
+[node name="LargePlanets" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color(0.490196, 0.490196, 0.490196, 1)
+motion_mirroring = Vector2(3840, 2160)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/LargePlanets"]
+position = Vector2(899, 347)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("16_2lf6f")
+
+[node name="Player" parent="." instance=ExtResource("1_6neka")]
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="Player"]
+position = Vector2(-576, -324)
+stream = ExtResource("14_o8fc1")
+autoplay = true
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+position = Vector2(-504, 128)
+navigation_polygon = SubResource("NavigationPolygon_y1cda")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("7_cxjtb")]
+
+[node name="GameOverMenu" parent="CanvasLayer" instance=ExtResource("12_glc5x")]
+visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4fyp0")
+
+[node name="BarrierLeft" type="Node2D" parent="."]
+
+[node name="lightning_v1" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -1334)
+
+[node name="lightning_v2" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -750)
+
+[node name="lightning_v3" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -150)
+
+[node name="lightning_v4" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 450)
+
+[node name="lightning_v5" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1050)
+
+[node name="lightning_v6" parent="BarrierLeft" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1650)
+
+[node name="BarierUp" type="Node2D" parent="."]
+
+[node name="lightning_h1" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(-1070, -1632)
+rotation = 1.5708
+
+[node name="lightning_h2" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(-470, -1632)
+rotation = 1.5708
+
+[node name="lightning_h3" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(130, -1632)
+rotation = 1.5708
+
+[node name="lightning_h4" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(730, -1632)
+rotation = 1.5708
+
+[node name="lightning_h5" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(1330, -1632)
+rotation = 1.5708
+
+[node name="lightning_h6" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(1930, -1632)
+rotation = 1.5708
+
+[node name="lightning_h7" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(2530, -1632)
+rotation = 1.5708
+
+[node name="lightning_h8" parent="BarierUp" instance=ExtResource("21_7iits")]
+position = Vector2(3130, -1632)
+rotation = 1.5708
+
+[node name="BarrierRight" type="Node2D" parent="."]
+position = Vector2(4816, -8)
+
+[node name="lightning_v1" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -1334)
+
+[node name="lightning_v2" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -750)
+
+[node name="lightning_v3" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, -150)
+
+[node name="lightning_v4" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 450)
+
+[node name="lightning_v5" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1050)
+
+[node name="lightning_v6" parent="BarrierRight" instance=ExtResource("21_7iits")]
+position = Vector2(-1928, 1650)
+
+[node name="BarierDown" type="Node2D" parent="."]
+position = Vector2(8, 3632)
+
+[node name="lightning_h1" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(-1070, -1632)
+rotation = 1.5708
+
+[node name="lightning_h2" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(-470, -1632)
+rotation = 1.5708
+
+[node name="lightning_h3" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(130, -1632)
+rotation = 1.5708
+
+[node name="lightning_h4" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(730, -1632)
+rotation = 1.5708
+
+[node name="lightning_h5" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(1330, -1632)
+rotation = 1.5708
+
+[node name="lightning_h6" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(1930, -1632)
+rotation = 1.5708
+
+[node name="lightning_h7" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(2530, -1632)
+rotation = 1.5708
+
+[node name="lightning_h8" parent="BarierDown" instance=ExtResource("21_7iits")]
+position = Vector2(3130, -1632)
+rotation = 1.5708
+
+[connection signal="timeout" from="GameLogic/MeteorSpawnTimer" to="GameLogic" method="_on_meteor_spawn_timer_timeout"]

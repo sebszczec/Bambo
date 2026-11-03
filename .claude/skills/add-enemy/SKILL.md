@@ -13,43 +13,29 @@ Reference implementations: `scripts/enemy_1.gd` (simple chaser), `enemy_2.gd`/`e
 Read the closest one before writing a new enemy.
 
 ## 1. Register it
-1. `singletons/enums.gd` - append to `ENEMIES` (append at the end; values are used as dictionary keys).
+1. `singletons/enums.gd` - append to `ENEMIES` (append at the end; values are numbers stored in the level data).
 2. `singletons/level_settings.gd`:
-   - `_points_dict["<Name>"]` and `_xp_dict["<Name>"]` - key must equal what `get_enemy_name()` returns.
-   - `_enemy_scenes[Enums.ENEMIES.X] = preload("res://scenes/<name>.tscn")`.
-   - Only add it to `get_random_enemy()` if it is a regular horde enemy (bosses are spawned by phase logic only).
-
-## 2. Script contract (game_logic and player depend on these)
-Root node: `CharacterBody2D` with `collision_layer = 8` and **`collision_mask = 2`** (rocks only). Never mask the player
-(layer 1): the player body does not collide with enemies, so the enemy's depenetration shoves it along in front of the
-ship and it looks glued to the player (happened with the Pebble Mite, fixed for every enemy and boss).
-- Exported vars: `Life` (int), `Damage`, `IsDamageOverTime`, `DamageTickTime` - game_logic scales `Life`/`Damage` by difficulty before `add_child`, so read `Life` as max life in `_ready()`.
-- `signal killed` emitted **once** with `get_instance_id()` when the enemy dies (before the death animation ends).
-- `func get_enemy_name()` -> key used in LevelSettings dicts.
-- `func setup_rotation(angle)` - called right after `add_child`.
-- `func set_mark()` - used by the Mark node / targeting.
-- `dispose()` that guards `is_queued_for_deletion()`; disable collision shapes with `set_deferred("disabled", true)` on death.
-- `explode()` (also called by `game_logic.kill_all_enemies` after setting the dead flag) must stay cheap, a nuke runs it for the whole horde in one frame:
-  `Juice.play_sound(audio)` instead of `audio.play()`, `set_physics_process(false)` and stop own timers (no shooting / radar after death),
-  `explosion.SpriteTexture` = shown frame, then `explosion.explode()`; free after ~1.2 s (`wait_time = 1.2`, fragments fade in 1 s, particles/sound live in Juice).
-  Bosses may call `explosion.init(Vector2(3, 3), 250)` first for a bigger burst.
-- Bullet hits: in the `HitBox` `area_entered` handler check `area.is_in_group("Bullet")`, `bullet.is_damaging_enemy()`, then
-  `Juice.hit_effect`, `Juice.flash(sprite)`, damage via `PlayerStatus.get_damage_from_weapon(bullet.Type, self)` (pass `self` so per-enemy effects like Fracture work; bosses use `get_boss_damage_from_weapon(bullet.Type, _max_life, self)`), show `FloatingText` when `showDamage and FloatingText.can_spawn(crit)`.
-- Find the player with `get_tree().get_first_node_in_group("player")`.
-- Attacks that are not bullets or body contact (shock ring, beams) call `player.take_damage(amount)` (the player's hazard
-  damage, handles armor/shield/god mode). Scale that damage with `Damage` (game_logic scales only `Damage`), e.g.
-  `ShockDamage = int(ShockDamage * Damage / BASE_DAMAGE)` in `_ready`.
-- Contact damage is read by the player from `Damage` / `IsDamageOverTime` / `DamageTickTime`. A horde enemy that stays
-  alive on contact should use a single small hit (`IsDamageOverTime = false`) and stop at a `StopDistance` outside the
-  hull - a pile of enemies ticking damage under the ship kills a player in seconds.
-
-Boss extras (game_logic `_spawn_boss` connects them unconditionally):
-- `signal spawn_requested(enemy : Enums.ENEMIES, spawn_position : Vector2)` - declare even if unused (`@warning_ignore("unused_signal")`).
-- `signal health_changed(value : int, max_value : int)` - drives the boss bar.
-- Optional `signal enraged` - connected only if present (`has_signal`).
-
-Enemy weapons: `WeaponFactory.get_weapon(type, true, false)`, `set_owner(get_tree().current_scene)`, `register_internal_nodes(self)`; see `add-weapon`.
-
+   - `ENEMY_SCENE_PATHS[Enums.ENEMIES.X] = "res://scenes/levels/levelN/<name>.tscn"` (scenes load per level, see below).
+   - Add the enum to `LEVEL_ENEMIES[n]` for the level that spawns it (drives the background load and release).
+   - `_points_dict`, `_xp_dict`, `_shard_drops` are keyed by the enum; bosses also need a `BOSS_BANNERS` entry if they
+     announce themselves and `BOSS_KINDS` if they are bosses.
+   - Regular horde enemies are spawned by the wave tables, bosses only by phase logic.
+## 2. Script contract
+Scripts extend the shared bases: `extends EnemyBase` for an ordinary enemy (`scripts/enemy_base.gd`), `extends BossBase`
+for a big boss with an attack loop (`scripts/boss_base.gd`). Set the identity and stats in `_init()` (scene overrides still
+win): `enemy_name`, `Life`, `Damage`, `Knockback`, `RotationSpeed`, `idleAnimation`, `shapesFollowShip`, `fragmentTint`,
+`dissolveIn`, `randomStartFrame`. Put the enemy's own behaviour in these hooks, do not copy the base methods:
+- `_on_ready()` (extra setup, timers), `_show_life_bar(settings)`, `_on_died()` (stop own timers and emitters),
+  `_on_player_contact()`, `_accepts_hits()`, `_knockback_enabled()`, `_damage_from_bullet(bullet)`, `_label_position(bullet)`,
+  `_on_damage_taken()`, `explode()` (override only if the death is special, call `_disable_body()` and `_shatter()`).
+- Bosses: `_on_boss_ready()`, `_pick_attack()`, `_perform(attack)`, `_keep_distance_for(attack)`, `_on_enrage()`,
+  `_glow_sprite()`; the base provides `_chase`, `_wait`, `_play_matched`, `_beam_attack`, `_rain_rocks`, `_burst`, `_fling_piece`.
+- Base contract: `signal killed` is emitted once with `get_instance_id()` when the enemy dies (the base does it in
+  `explode()`); game logic reads `enemy_kind` (set by `LevelSettings.get_enemy`) for points, xp and shards.
+- Collision: root `CharacterBody2D` with `collision_layer = 8` and **`collision_mask = 2`** (rocks only). Never mask the
+  player (layer 1): the depenetration shoves the player along and it looks glued to the ship.
+- `explode()` must stay cheap, a nuke runs it for the whole horde in one frame: `Juice.play_sound(audio)`, physics off,
+  `_disable_body()`, `_shatter()` (fragments via `explosion`, dies after `DEATH_DELAY`).
 ## 3. Scene structure (`scenes/<name>.tscn`)
 Mirror `enemy_1.tscn`: `CollisionShape2D`, `Ship` (Node2D, holds Sprite2D/AnimatedSprite2D, rotated to face player), `LifeBar` (instance of `life_bar.tscn`),
 `HitBox` (Area2D, **groups=["Enemy"]**, `collision_layer = 8`, default mask 1) + collision shape, `Explosion` (`object_explosion.tscn`), `AudioStreamPlayer2D`, `Mark` (`mark.tscn`).

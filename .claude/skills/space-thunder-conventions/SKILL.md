@@ -12,7 +12,9 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
 ## Layout
 - `singletons/` - autoloads (registered in `project.godot` `[autoload]`):
   - `Enums` - `WEAPONS`, `PERKS`, `ENEMIES`, `MASKS {PLAYER=1, ENEMY=8}`, `PHASE`.
-  - `LevelSettings` - level bounds, points/xp per enemy name, floor-perk drop chances (per 1000), preloaded scenes for enemies/perks/meteors/gems.
+  - `LevelSettings` - level bounds, points/xp per enemy kind, floor-perk drop chances (per 1000), enemy scenes loaded per level (`activate_level`), preloaded perks/meteors/gems.
+  - Reuse layer: `scripts/enemy_base.gd` (`EnemyBase`), `scripts/boss_base.gd` (`BossBase`), `scripts/bullet.gd` (pooled per scene, `Bullet.acquire`), `scripts/enemy_spawner.gd` (registry, spawn, kills), `scripts/drop_service.gd`, `scripts/combo_tracker.gd`, `scripts/meteor_spawner.gd`, `scripts/level_def.gd` (level data resources).
+  - Scenes live in folders by owner: `scenes/levels/level1|level2`, `scenes/menus`, `scenes/perks`, `scenes/effects`, `scenes/shared`.
   - `DamageValues` - min/max damage per `Enums.WEAPONS`.
   - `WeaponFactory` - `get_weapon(type, damaging_player, damaging_enemy)` + all weapon classes (inner classes of `Weapon`).
   - `PlayerStatus` - run stats (damage, crit, speed, fire rate, projectiles, armor, regen...), xp/level, `reset()` per run, `get_damage_from_weapon()`.

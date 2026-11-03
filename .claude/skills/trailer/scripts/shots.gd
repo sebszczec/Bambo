@@ -28,11 +28,11 @@ func _initialize():
 		if a.begins_with("--shot="):
 			shot = a.trim_prefix("--shot=")
 	if shot == "title":
-		change_scene_to_file("res://scenes/start_menu.tscn")
+		change_scene_to_file("res://scenes/menus/start_menu.tscn")
 		_title()
 		return
 	root.get_node("Levels").current = 1 if shot.begins_with("l2") else 0
-	change_scene_to_file("res://scenes/world.tscn")
+	change_scene_to_file("res://scenes/shared/world.tscn")
 	_run()
 
 func _title():

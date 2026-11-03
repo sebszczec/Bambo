@@ -24,7 +24,7 @@ var _detonating: bool = false
 var _world = null
 var _weapon = null
 
-var floatTextScene = preload("res://scenes/floating_text.tscn")
+var floatTextScene = preload("res://scenes/effects/floating_text.tscn")
 
 func _ready() -> void:
 	_world = get_tree().current_scene

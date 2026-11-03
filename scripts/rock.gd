@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 class_name Rock
 
-var rock_scene = preload("res://scenes/rock.tscn")
+var rock_scene = preload("res://scenes/shared/rock.tscn")
 
 @onready var sprite = $Sprite2D
 @onready var explosion = $Explosion

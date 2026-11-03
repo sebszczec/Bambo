@@ -12,3 +12,8 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
 		taken.emit()
 		queue_free()
+
+# public
+func apply_to(player) -> void:
+	player.createShieldFloatingText("+" + str(Shield), 2)
+	player.updateShield(Shield)

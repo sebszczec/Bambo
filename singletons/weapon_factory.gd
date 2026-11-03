@@ -75,7 +75,7 @@ class Weapon:
 
 	func setup():
 		shooting_delay = 0.1
-		bullet_scene = preload("res://scenes/bullet.tscn")
+		bullet_scene = preload("res://scenes/shared/bullet.tscn")
 		audio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_laser2.ogg")
 
 	func set_owner(owner):
@@ -134,7 +134,7 @@ class Weapon:
 		return false
 
 	func create_bullet(start_position: Vector2, direction: Vector2):
-		var bullet = bullet_scene.instantiate()
+		var bullet = Bullet.acquire(bullet_scene)
 		bullet.Type = type
 		bullet.set_collision_mask(collision_mask)
 		# Ricochet Plates: only player shots that hit enemies bounce
@@ -147,27 +147,14 @@ class Weapon:
 			bullet.rotation = PI / 2 + direction.angle()
 		bullet.Speed = speed
 		bullet.LifeTime = life_time
-		bullet.connect("freeing", _on_bullet_freeing)
+		bullet.connect("freeing", _on_bullet_freeing, CONNECT_ONE_SHOT)
 		if is_player_weapon:
 			_apply_skin(bullet)
 		return bullet
 
 	# the level can give a player weapon its own bullet art (see levels.gd "weapon_skin")
 	func _apply_skin(bullet):
-		var skin = Levels.get_current().get("weapon_skin", {}).get(type, {})
-		if !skin.has("bullet"):
-			return
-		# the heavy shell has its own star sprite, the skin replaces it
-		for child in bullet.get_children():
-			if child is Sprite2D:
-				child.visible = false
-		var slug = Sprite2D.new()
-		slug.texture = load(skin["bullet"])
-		# the bullet flies along its local -Y, the slug art points right
-		slug.rotation = -PI / 2
-		bullet.add_child(slug)
-		# the bullet is not in the tree yet, so its @onready helpers are not set: tint the trail node directly
-		bullet.get_node("BulletEffect").self_modulate = skin.get("trail", Color.WHITE)
+		bullet.apply_skin(Levels.get_current().get("weapon_skin", {}).get(type, {}))
 
 	# bigger, warm glow so homing rockets stand out from regular bullets
 	func apply_rocket_look(bullet):
@@ -198,7 +185,7 @@ class Weapon:
 class Bomb extends Weapon:
 	func setup():
 		shooting_delay = 0.01
-		bullet_scene = preload("res://scenes/bomb.tscn")
+		bullet_scene = preload("res://scenes/shared/bomb.tscn")
 		audio.stream = load("res://resources/shared/audio/sfx/seismic_charge.mp3")
 		type = Enums.WEAPONS.BOMB
 
@@ -288,7 +275,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 class BigBullet extends Weapon:
 	func setup():
 		shooting_delay = 0.2
-		bullet_scene = preload("res://scenes/big_bullet.tscn")
+		bullet_scene = preload("res://scenes/shared/big_bullet.tscn")
 		audio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_laser2.ogg")
 		type = Enums.WEAPONS.BIG
 
@@ -334,7 +321,7 @@ class SmallBulletWave extends SmallBullet:
 				bullet_count += 4 * PlayerStatus.ProjectileCount
 			var radial_increment = (2.0 * PI) / float(bullet_count)
 			for i in range (0, bullet_count):
-				var bullet = bullet_scene.instantiate()
+				var bullet = Bullet.acquire(bullet_scene)
 				bullet.Type = type
 				bullet.set_collision_mask(collision_mask)
 				bullet.Speed = speed
@@ -343,7 +330,7 @@ class SmallBulletWave extends SmallBullet:
 				var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)
 				bullet.position = start_position + radial_v
 				bullet.velocity = radial_v
-				bullet.connect("freeing", _on_bullet_freeing)
+				bullet.connect("freeing", _on_bullet_freeing, CONNECT_ONE_SHOT)
 				owner.add_child(bullet)
 				bullet.set_modulate_color(modulate_color)
 				if is_player_weapon:
@@ -355,7 +342,7 @@ class SmallBulletWave extends SmallBullet:
 class Fireworks extends BigBullet:
 	var size = 30
 	var explosion_speed = 2
-	var explosion_bullet_scene = preload("res://scenes/bullet.tscn")
+	var explosion_bullet_scene = preload("res://scenes/shared/bullet.tscn")
 
 
 	func setup():
@@ -378,7 +365,7 @@ class Fireworks extends BigBullet:
 			audio.play()
 			canShoot = false
 			var bullet = create_bullet(start_position, direction)
-			bullet.connect("freeing", _explode)
+			bullet.connect("freeing", _explode, CONNECT_ONE_SHOT)
 			owner.add_child(bullet)
 			start_cooldown()
 
@@ -388,7 +375,7 @@ class Fireworks extends BigBullet:
 		explosion_audio.play()
 		var radial_increment = (2.0 * PI) / float(size)
 		for i in range (0, size):
-			var bullet = explosion_bullet_scene.instantiate()
+			var bullet = Bullet.acquire(explosion_bullet_scene)
 			bullet.Type = type
 			bullet.set_collision_mask(collision_mask)
 			bullet.Speed = explosion_speed
@@ -398,7 +385,7 @@ class Fireworks extends BigBullet:
 			var radial_v = Vector2(0.1, 0).rotated(i * radial_increment)
 			bullet.position = bullet_owner.position + radial_v
 			bullet.velocity = radial_v
-			bullet.connect("freeing", _on_bullet_freeing)
+			bullet.connect("freeing", _on_bullet_freeing, CONNECT_ONE_SHOT)
 			object_owner.call_deferred("add_child", bullet)
 
 		updateBulletNumber(size)
@@ -532,7 +519,7 @@ class WormSpit extends Weapon:
 		speed = 5
 		life_time = 3
 		spread = 0.2
-		bullet_scene = preload("res://scenes/worm_bullet.tscn")
+		bullet_scene = preload("res://scenes/levels/level1/worm_bullet.tscn")
 		audio.stream = load("res://resources/vendor/kenney/space_shooter_redux/Bonus/sfx_laser1.ogg")
 		type = Enums.WEAPONS.WORM_SPIT
 		needs_target = false

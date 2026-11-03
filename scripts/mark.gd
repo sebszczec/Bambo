@@ -7,6 +7,10 @@ extends Node2D
 
 var _angle = 0
 
+# most enemies never get marked, the spin only runs while the mark is shown
+func _ready() -> void:
+	set_process(false)
+
 func _process(delta: float) -> void:
 	sprite.rotate(RotationSpeed * delta)
 	_angle += 2 * delta
@@ -15,6 +19,7 @@ func _process(delta: float) -> void:
 
 func activate(time: float):
 	sprite.visible = true
+	set_process(true)
 	
 	if timer.is_stopped():
 		timer.wait_time = time
@@ -23,3 +28,4 @@ func activate(time: float):
 
 func _on_activation_period_timer_timeout() -> void:
 	sprite.visible = false
+	set_process(false)

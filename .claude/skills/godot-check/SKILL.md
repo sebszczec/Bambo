@@ -34,7 +34,7 @@ Launch in the background so the session is not blocked, then ask the user to pla
 ```bash
 "$GODOT" --path . 2>&1 | tail -100
 ```
-Run with `run_in_background`. Start a run directly from the world scene with `"$GODOT" --path . res://scenes/world.tscn`.
+Run with `run_in_background`. Start a run directly from the world scene with `"$GODOT" --path . res://scenes/shared/world.tscn`.
 Debug cheats (debug builds only): F1 level up, F2 skip 60 s, F3 skip to boss, F4 spawn worm boss.
 
 ## Scripted run (see a change working without a human player)
@@ -45,7 +45,7 @@ repo root (it must be inside the project) and delete it together with its `.gd.u
 ```
 - Autoloads are not identifiers in a `-s` script (`Identifier not found: Levels`) - use `get_root().get_node("Levels")`,
   and plain ints for enum values (e.g. `5` for `Enums.ENEMIES.PEBBLE_MITE`). Inside the running scene they work normally.
-- `_initialize()`: set state (`Levels.current`), `change_scene_to_file("res://scenes/world.tscn")`. Do the work in
+- `_initialize()`: set state (`Levels.current`), `change_scene_to_file("res://scenes/shared/world.tscn")`. Do the work in
   `_process(delta)` (return `false`), find `current_scene.get_node("GameLogic")` / `"Player"`, `quit()` when done.
 - Quiet test arena: `game.get_node("PhaseGuard").set_process(false)`, `.phase_timer.stop()`, `game.kill_all_enemies()`;
   `player.godMode = true` to survive, `player.set_physics_process(false)` to keep it still; spawn with

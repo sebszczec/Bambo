@@ -60,7 +60,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
+		get_tree().change_scene_to_file("res://scenes/menus/start_menu.tscn")
 
 	# gamepad shoulder buttons switch tabs
 	if Input.is_joy_button_pressed(0, JOY_BUTTON_LEFT_SHOULDER) != _shoulder_left:
@@ -83,7 +83,7 @@ func _on_tab_changed(tab : int):
 		2: resetScoresButton.grab_focus()
 
 func _on_back_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/start_menu.tscn")
 
 
 func _on_button_focus_changed() -> void:

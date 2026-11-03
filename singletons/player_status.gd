@@ -178,13 +178,10 @@ func _burn_tick(target : Node, timer : Timer):
 	var damage = Damage.new()
 	damage.Value = target.get_meta("burn_damage")
 	damage.Critical = false
-	var handle = target.handleDamage
-	var alive = handle.call(damage) if handle.get_argument_count() == 1 else handle.call(damage, target.global_position)
+	var alive = target.handleDamage(damage, target.global_position)
 	if !alive:
-		# same death flags as the bullet path, so the enemy is not exploded twice
-		for flag in ["isDead", "_isDead", "_is_dead"]:
-			if flag in target:
-				target.set(flag, true)
+		# same death flag as the bullet path, so the enemy is not exploded twice
+		target.isDead = true
 		target.explode()
 	if !alive or target.get_meta("burn_ticks") <= 0:
 		_end_burn(target, timer)

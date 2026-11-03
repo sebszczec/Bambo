@@ -46,12 +46,12 @@ func _on_resume_button_pressed() -> void:
 
 func _on_restart_button_pressed() -> void:
 	setPause(false)
-	get_tree().change_scene_to_file("res://scenes/count_down.tscn")
+	get_tree().change_scene_to_file("res://scenes/effects/count_down.tscn")
 
 
 func _on_menu_button_pressed() -> void:
 	setPause(false)
-	get_tree().change_scene_to_file("res://scenes/level_select.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/level_select.tscn")
 
 
 func _on_quit_button_pressed() -> void:

@@ -154,7 +154,7 @@ func _on_slot_pressed(slot : int):
 	_leaving = true
 	var tween = create_tween()
 	tween.tween_property(_ui, "modulate:a", 0.0, FADE_TIME * 0.5)
-	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/level_select.tscn"))
+	tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/menus/level_select.tscn"))
 
 func _on_delete_pressed(slot : int):
 	if _leaving or !ConfigHandler.slot_exists(slot):
@@ -183,7 +183,7 @@ func _on_back_pressed():
 	if _leaving:
 		return
 	_leaving = true
-	get_tree().change_scene_to_file("res://scenes/start_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/start_menu.tscn")
 
 func _on_button_focus_changed() -> void:
 	$Sfx.play()

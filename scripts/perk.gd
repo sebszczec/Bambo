@@ -31,5 +31,9 @@ func set_perk_type(type: Enums.PERKS):
 func get_perk_type() -> Enums.PERKS:
 	return _perk_type
 
+# public - the pickup effect, called by the player when it collects the perk
+func apply_to(_player) -> void:
+	pass
+
 func _foobar():
 	taken.emit()

@@ -15,7 +15,7 @@ func _initialize():
 		var kv = a.trim_prefix("--").split("=")
 		if kv.size() == 2 and _args.has(kv[0]):
 			_args[kv[0]] = kv[1] if kv[0] == "only" else int(kv[1])
-	change_scene_to_file("res://scenes/world.tscn")
+	change_scene_to_file("res://scenes/shared/world.tscn")
 	_run()
 
 func _monitors() -> String:

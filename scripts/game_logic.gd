@@ -16,15 +16,15 @@ const CROWDED_ENEMY_COUNT = 120.0
 const BASE_ZOOM = 1.25
 const CROWDED_ZOOM = 1.0
 # enemy scripts name their dead flag differently, get() / set() ignore the missing ones
-const DEAD_FLAGS = ["isDead", "_isDead", "_is_dead"]
 
 var XpGemScript = preload("res://scripts/xp_gem.gd")
 var RunHudScript = preload("res://scripts/run_hud.gd")
 var DevConsoleScript = preload("res://scripts/dev_console.gd")
-var levelUpMenuScene = preload("res://scenes/level_up_menu.tscn")
+var levelUpMenuScene = preload("res://scenes/menus/level_up_menu.tscn")
 
-var enemy_count = 0
-var meteor_count = 0
+var enemy_count : int:
+	get:
+		return spawner.count
 var world = null
 var score = null
 var player = null
@@ -42,13 +42,17 @@ var weapon = null
 var bomb = null
 # all weapons owned in this run, the main gun included
 var owned_weapons : Array = []
-var active_enemies : Dictionary = {}
-var elites : Dictionary = {}
+var active_enemies : Dictionary:
+	get:
+		return spawner.active_enemies
+
+var spawner : EnemySpawner = null
 var boss = null
 var run_over = false
 var kills = 0
-var combo = 0
-var combo_time_left = 0.0
+var combo_tracker : ComboTracker = null
+var drops : DropService = null
+var meteors : MeteorSpawner = null
 # shard result of the finished run for the result screen
 var run_shards = {}
 
@@ -62,6 +66,10 @@ var run_shards = {}
 @onready var final_phase_sound = $FinalPhaseSound
 
 func _ready() -> void:
+	# bullets find the living enemies through the group (see Bullet._bounce_to_next)
+	add_to_group("GameLogic")
+	# only this level's enemy scenes are kept in memory, see LevelSettings.activate_level
+	LevelSettings.activate_level(Levels.current)
 	world = get_parent()
 	player = world.find_child("Player")
 
@@ -84,6 +92,10 @@ func _ready() -> void:
 
 	hud = RunHudScript.new()
 	add_child(hud)
+	combo_tracker = ComboTracker.new(hud, phaseBanner)
+	drops = DropService.new(self, Callable(self, "_on_bomb_taken"))
+	meteors = MeteorSpawner.new(world, informationBox)
+	spawner = EnemySpawner.new(world, informationBox, phase_guard, player, Callable(self, "_on_enemy_killed"))
 	levelUpMenu = levelUpMenuScene.instantiate()
 	add_child(levelUpMenu)
 	if OS.is_debug_build():
@@ -276,7 +288,7 @@ func _on_elite_requested():
 	var elite = spawn_enemy(Enums.ENEMIES.GUARD, get_spawn_position(), ELITE_LIFE_FACTOR)
 	elite.scale = Vector2(ELITE_SCALE, ELITE_SCALE)
 	elite.modulate = Color(1.6, 0.6, 1.6)
-	elites[elite.get_instance_id()] = true
+	spawner.elites[elite.get_instance_id()] = true
 
 func _on_boss_requested(type : Enums.ENEMIES, _is_final : bool):
 	# levels share the boss list, a level can swap a boss for its own (level 2: hive carrier -> quarry mantis)
@@ -284,14 +296,11 @@ func _on_boss_requested(type : Enums.ENEMIES, _is_final : bool):
 
 # public - also used by the dev console
 func spawn_boss(type : Enums.ENEMIES):
-	if type == Enums.ENEMIES.WORM_BOSS:
-		phaseBanner.show_text("THE DEVOURER RISES", Color.MEDIUM_PURPLE)
-	elif type == Enums.ENEMIES.QUARRY_MANTIS:
-		phaseBanner.show_text("THE QUARRY MANTIS AWAKENS", Color(0.4, 0.85, 0.95))
-	elif type == Enums.ENEMIES.BEDROCK_QUEEN:
-		phaseBanner.show_text("THE BEDROCK QUEEN STIRS", Color(0.4, 0.85, 0.95))
-	else:
+	var banner = LevelSettings.get_boss_banner(type)
+	if banner.is_empty():
 		phaseBanner.show_text("HIVE CARRIER DETECTED", Color.RED)
+	else:
+		phaseBanner.show_text(banner[0], banner[1])
 	Juice.shake(10.0)
 	# easier levels get weaker bosses
 	boss = spawn_enemy(type, get_spawn_position(), Levels.get_current().get("boss_life_factor", 1.0))
@@ -315,21 +324,10 @@ func hurt_boss(percent : float):
 
 # public - dev console, every enemy explodes as if shot, returns how many
 func kill_all_enemies() -> int:
-	var count = 0
-	for enemy in active_enemies.values():
-		if _kill_enemy(enemy):
-			count += 1
-	return count
+	return spawner.kill_all()
 
 func _kill_enemy(enemy) -> bool:
-	# the worm stays in active_enemies during its death animation
-	for flag in DEAD_FLAGS:
-		if enemy.get(flag):
-			return false
-	for flag in DEAD_FLAGS:
-		enemy.set(flag, true)
-	enemy.explode()
-	return true
+	return spawner.kill(enemy)
 
 func _on_boss_spawn_requested(type : Enums.ENEMIES, pos : Vector2):
 	if enemy_count >= phase_guard.get_max_alive() + BOSS_EXTRA_ALIVE:
@@ -338,7 +336,7 @@ func _on_boss_spawn_requested(type : Enums.ENEMIES, pos : Vector2):
 
 # levels share waves, a level can swap an enemy for its own (level 2: scout -> pebble mite)
 func _level_enemy(type : Enums.ENEMIES) -> Enums.ENEMIES:
-	return Levels.get_current().get("replace", {}).get(type, type)
+	return spawner.level_enemy(type)
 
 func _on_boss_health_changed(value : int, max_value : int):
 	bossBar.max_value = max_value
@@ -349,23 +347,7 @@ func _on_boss_enraged():
 	Juice.shake(8.0)
 
 func spawn_enemy(type : Enums.ENEMIES, pos : Vector2, life_factor : float = 1.0):
-	var enemy = LevelSettings.get_enemy(type)
-	active_enemies[enemy.get_instance_id()] = enemy
-	enemy.connect("killed", _on_enemy_killed)
-	enemy.position = pos
-	enemy.Life = int(enemy.Life * life_factor)
-
-	# endless mode makes enemies stronger
-	if phase_guard.difficulty > 1.0:
-		enemy.Life = int(enemy.Life * phase_guard.difficulty)
-		enemy.Damage = int(enemy.Damage * phase_guard.difficulty)
-
-	world.add_child(enemy)
-	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
-
-	enemy_count = enemy_count + 1
-	informationBox.increaseEnemyCount()
-	return enemy
+	return spawner.spawn(type, pos, life_factor)
 
 func _on_bomb_taken(_type: Enums.WEAPONS):
 	bomb.shoot_on_start(self, player.getSatelitePosition(), player.getShootingVector())
@@ -377,65 +359,28 @@ func _on_weapon_bullet_number_change(value):
 
 # random point on a ring just outside the screen
 func get_spawn_position() -> Vector2:
-	for i in range(8):
-		var offset = Vector2(randf_range(SPAWN_MIN_DISTANCE, SPAWN_MAX_DISTANCE), 0).rotated(randf() * TAU)
-		var pos = player.global_position + offset
-		if pos.x > LevelSettings.MinX and pos.x < LevelSettings.MaxX and pos.y > LevelSettings.MinY and pos.y < LevelSettings.MaxY:
-			return pos
-
-	return _clamp_to_level(player.global_position + Vector2(SPAWN_MIN_DISTANCE, 0).rotated(randf() * TAU))
+	return spawner.spawn_position()
 
 func _clamp_to_level(pos : Vector2) -> Vector2:
-	return Vector2(clamp(pos.x, LevelSettings.MinX, LevelSettings.MaxX), clamp(pos.y, LevelSettings.MinY, LevelSettings.MaxY))
+	return spawner.clamp_to_level(pos)
 
 func get_combo_multiplier() -> int:
-	var multiplier = 1
-	for step in COMBO_STEPS:
-		if combo >= step:
-			multiplier += 1
-	return multiplier
+	return combo_tracker.multiplier()
 
 func _update_combo(delta):
-	if combo == 0:
-		return
-
-	combo_time_left -= delta
-	hud.set_combo_alpha(clamp(combo_time_left / (COMBO_TIMEOUT * 0.5), 0.2, 1.0))
-	if combo_time_left <= 0:
-		combo = 0
-		hud.set_combo(0, 1)
+	combo_tracker.update(delta)
 
 func _add_combo():
-	combo += 1
-	combo_time_left = COMBO_TIMEOUT
-	hud.set_combo(combo, get_combo_multiplier())
-	hud.set_combo_alpha(1.0)
-
-	var index = COMBO_STEPS.find(combo)
-	if index != -1:
-		phaseBanner.show_text(COMBO_NAMES[index], Color.MAGENTA)
-		Juice.shake(3.0)
+	combo_tracker.add_kill()
 
 func drop_xp(pos : Vector2, value : int):
-	# too many gems on the floor - add the value to an existing one
-	if XpGemScript.alive_count >= MAX_GEMS and XpGemScript.all.size() > 0:
-		XpGemScript.all.pick_random().add_value(value)
-		return
-
-	var gem = LevelSettings.get_xp_gem(value)
-	gem.position = pos + Vector2(randf_range(-8, 8), randf_range(-8, 8))
-	call_deferred("add_child", gem)
+	drops.drop_xp(pos, value)
 
 func drop_shard(pos : Vector2, value : int):
-	var shard = LevelSettings.get_shard(value)
-	shard.position = pos + Vector2(randf_range(-12, 12), randf_range(-12, 12))
-	call_deferred("add_child", shard)
+	drops.drop_shard(pos, value)
 
 func _on_enemy_killed(id : int):
-	enemy_count = enemy_count - 1
-	informationBox.decreaseEnemyCount()
-	var enemy = active_enemies[id]
-	active_enemies.erase(id)
+	var enemy = spawner.unregister(id)
 
 	if run_over:
 		return
@@ -445,16 +390,14 @@ func _on_enemy_killed(id : int):
 	_add_combo()
 	Juice.shake(0.8)
 
-	var enemy_name = enemy.get_enemy_name()
-	score.add_score(LevelSettings.get_points(enemy_name) * get_combo_multiplier())
-	drop_xp(enemy.position, LevelSettings.get_xp(enemy_name))
-	var shards = LevelSettings.get_shard_drop(enemy_name)
+	score.add_score(LevelSettings.get_points(enemy.enemy_kind) * get_combo_multiplier())
+	drop_xp(enemy.position, LevelSettings.get_xp(enemy.enemy_kind))
+	var shards = LevelSettings.get_shard_drop(enemy.enemy_kind)
 	if shards > 0:
 		drop_shard(enemy.position, shards)
 	addPerk(enemy.position)
 
-	if elites.has(id):
-		elites.erase(id)
+	if spawner.elites.has(id):
 		drop_xp(enemy.position, 50)
 		drop_shard(enemy.position, ELITE_SHARDS)
 		Juice.hitstop(0.08)
@@ -542,23 +485,11 @@ func _on_player_update_shield(value):
 	shieldBar.value = value
 
 func addPerk(pos : Vector2) -> bool:
-	var perk = LevelSettings.get_random_perk()
-	if perk == null:
-		return false
-
-	_place_perk(perk, pos)
-	return true
+	return drops.add_random_perk(pos)
 
 # public - dev console
 func drop_perk(type : Enums.PERKS, pos : Vector2):
-	_place_perk(LevelSettings.get_perk(type), pos)
-
-func _place_perk(perk, pos : Vector2):
-	if perk.get_perk_type() == Enums.PERKS.BOMB:
-		perk.connect("taken", _on_bomb_taken)
-
-	perk.position = pos
-	call_deferred("add_child", perk)
+	drops.drop_perk(type, pos)
 
 func find_nearest_enemy():
 	var result = null
@@ -573,22 +504,4 @@ func find_nearest_enemy():
 
 
 func _on_meteor_spawn_timer_timeout() -> void:
-	if meteor_count >= LevelSettings.MaxMeteorCount:
-		return
-
-	meteor_count += 1
-
-	var meteor = LevelSettings.get_random_meteor()
-	var tmp_pos = Vector2(randf_range(LevelSettings.MinX, LevelSettings.MaxX), randf_range(LevelSettings.MinY, LevelSettings.MaxY))
-	meteor.set_global_position(tmp_pos)
-	var temp_vel = Vector2(randf_range(-100.0, 100.0), randf_range(-100.0, 100.0))
-	meteor.velocity = temp_vel
-	meteor.connect("destroyed", _on_meteor_destroyed)
-	world.add_child(meteor)
-
-	informationBox.increaseMeteorCount()
-
-
-func _on_meteor_destroyed():
-	meteor_count = meteor_count - 1
-	informationBox.decreaseMeteorCount()
+	meteors.spawn()

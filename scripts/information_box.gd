@@ -27,15 +27,28 @@ func _ready() -> void:
 	bullet_counter.visible = showBulletCount
 	meteor_counter.visible = true
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+const FPS_REFRESH = 0.25
+var _fps_time = 0.0
+var _shown_enemies = -1
+var _shown_bullets = -1
+var _shown_meteors = -1
+
+# only the counters that changed get new text, a label relayouts on every write.
+# The FPS readout is refreshed a few times a second, it would flicker otherwise.
+func _process(delta: float) -> void:
 	if showFps == true:
-		fps_counter.text = "FPS: " + str(Engine.get_frames_per_second())
-	if showEnemyCount == true:
+		_fps_time += delta
+		if _fps_time >= FPS_REFRESH:
+			_fps_time = 0.0
+			fps_counter.text = "FPS: " + str(Engine.get_frames_per_second())
+	if showEnemyCount == true and enemyCount != _shown_enemies:
+		_shown_enemies = enemyCount
 		enemy_counter.text = "Enemies: " + str(enemyCount)
-	if showBulletCount == true:
+	if showBulletCount == true and bulletCount != _shown_bullets:
+		_shown_bullets = bulletCount
 		bullet_counter.text = "Bullets: " + str(bulletCount)
-	if showMeteorCount == true:
+	if showMeteorCount == true and meteorCount != _shown_meteors:
+		_shown_meteors = meteorCount
 		meteor_counter.text = "Meteors: " + str(meteorCount)
 
 func increaseMeteorCount():

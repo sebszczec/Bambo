@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-var floatingTextScene = preload("res://scenes/floating_text.tscn")
+var floatingTextScene = preload("res://scenes/effects/floating_text.tscn")
 
 @onready var satelite = $Satelite
 @onready var camera = $Camera2D
@@ -467,42 +467,10 @@ func _on_life_box_area_exited(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
 		_remove_damage_timer(area.get_parent().get_instance_id())
 
+# any other area the player touches is a pickup, each perk knows its own effect
 func handlePerk(area: Area2D):
-	if area.is_in_group("LifePerk"):
-		createLifeFloatingText("+" + str(area.Life), 2)
-		updateLife(area.Life)
-		return
-
-	if area.is_in_group("ShieldPerk"):
-		createShieldFloatingText("+" + str(area.Shield), 2)
-		updateShield(area.Shield)
-		return
-
-	if area.is_in_group("DamageUpPerk"):
-		createFloatingText("Damage +" + str(int(area.DamageUp)) + "%", Color.PURPLE,  2)
-		PlayerStatus.increase_damage(area.DamageUp)
-		return
-
-	if area.is_in_group("CriticChanceUpPerk"):
-		createFloatingText("Critic chance +" + str(int(area.CriticChanceUp)) + "%", Color.DEEP_PINK, 2)
-		PlayerStatus.increase_critic_chance(area.CriticChanceUp)
-		return
-
-	if area.is_in_group("CriticHitMultiplierPerk"):
-		createFloatingText("Critic multiplier +" + str(int(area.CriticHitMultiplier)) + "%", Color.CHARTREUSE, 2)
-		PlayerStatus.increase_critic_hit_multiplier(area.CriticHitMultiplier)
-		return
-
-	if area.is_in_group("MagnetPerk"):
-		createFloatingText("Magnet!", Color.GOLD, 2)
-		get_tree().call_group("XpGem", "attract")
-		get_tree().call_group("Shard", "attract")
-		return
-
-	if area.is_in_group("SpeedUpPerk"):
-		createFloatingText("Speed +" + str(int(area.SpeedUp)) + "%", Color.DODGER_BLUE, 2)
-		PlayerStatus.increase_speed(area.SpeedUp)
-		return
+	if area is Perk:
+		area.apply_to(self)
 
 
 func updateAfterBurner(value):

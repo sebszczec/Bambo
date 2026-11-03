@@ -5,12 +5,3 @@ enum PERKS {LIFE, SHIELD, DAMAGE_UP, CRITIC_CHANCE_UP, CRITIC_HIT_MULTIPLIER, SP
 enum ENEMIES { SCOUT, GUARD, HUNTER, BOSS, WORM_BOSS, PEBBLE_MITE, BOULDER_BEETLE, SHARD_WASP, QUARRY_MANTIS, BEDROCK_QUEEN }
 enum MASKS {PLAYER = 1, ENEMY = 8}
 enum PHASE { Survival, Boss, Endless }
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass

@@ -324,7 +324,7 @@ func _spawn(enemy_name : String, count : int) -> String:
 	if !ENEMY_NAMES.has(enemy_name):
 		return _err("spawn %s [n]" % "|".join(ENEMY_NAMES.keys()))
 	var type = ENEMY_NAMES[enemy_name]
-	if type in [Enums.ENEMIES.BOSS, Enums.ENEMIES.WORM_BOSS, Enums.ENEMIES.QUARRY_MANTIS, Enums.ENEMIES.BEDROCK_QUEEN]:
+	if LevelSettings.is_boss(type):
 		if game.boss != null:
 			return _err("a boss is already here (killall or hurtboss 100 first)")
 		game.spawn_boss(type)
