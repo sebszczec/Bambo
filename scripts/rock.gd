@@ -16,6 +16,8 @@ var rock_scene = preload("res://scenes/shared/rock.tscn")
 @export var NumberOfPieces : int = 3
 
 var is_dead : bool = false
+# pieces of a broken rock: they drop no mine and do not break each other
+var is_fragment : bool = false
 var rotation_speed : float = 0.0
 var r_direction : int = 1
 var world = null
@@ -73,6 +75,7 @@ func handle_destruction():
 		var rock = rock_scene.instantiate()
 		rock.scale = scale * 0.3
 		rock.NumberOfPieces = 0
+		rock.is_fragment = true
 		var temp_pos = Vector2(0, 0)
 		temp_pos.x = get_global_position().x + r * cos(i * angle)
 		temp_pos.y = get_global_position().y + r * sin(i * angle)
@@ -81,7 +84,9 @@ func handle_destruction():
 		rock.z_index = z_index - 1
 		world.call_deferred("add_child", rock)
 	
-	var mine = LevelSettings.get_random_mine_from_meteor()
+	var mine = null
+	if !is_fragment:
+		mine = LevelSettings.get_random_mine_from_meteor()
 	if mine != null:
 		mine.set_global_position(get_global_position())
 		world.call_deferred("add_child", mine)
@@ -91,11 +96,20 @@ func handle_destruction():
 
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Bullet") or area.is_in_group("Rock"):
-		if is_dead:
+	if area.is_in_group("Bullet"):
+		# the Bullet group also holds bombs, which have no from_mine
+		if area.get_parent().get("from_mine") == true:
 			return
-		
-		handle_destruction()
+	elif area.is_in_group("Rock"):
+		# fresh pieces start overlapping each other, they must not break each other
+		if is_fragment or area.get_parent().get("is_fragment") == true:
+			return
+	else:
+		return
+
+	if is_dead:
+		return
+	handle_destruction()
 		
 
 

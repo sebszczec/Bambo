@@ -10,15 +10,23 @@ god mode on, phases stopped, level-ups disabled, vsync off). Godot binary and fi
 
 ```bash
 GODOT="/d/Programy/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
-timeout 150 "$GODOT" --path . --script "$(pwd -W)/.claude/skills/perf-stress/scripts/stress.gd" -- --enemies=400 2>&1 \
-  | grep -E "frames|process|alive|gems|SCRIPT ERROR"
+timeout 170 "$GODOT" --path . --script "$(pwd -W)/.claude/skills/perf-stress/scripts/stress.gd" -- --enemies=400 > "$SP/stress.txt" 2>&1
+grep -E "frames\)|process .* ms|alive|gems|SCRIPT ERROR|INVARIANT|registry|beetles|chain t|mines ok|bullets expire" "$SP/stress.txt"
 ```
-Options after `--`: `--enemies=N` (mixed scout/scout/guard/hunter, default 400), `--gems=N` (default 600, capped by `MAX_GEMS`), `--only=nuke|magnet`.
+Options after `--`: `--enemies=N` (mixed scout/scout/guard/hunter, default 400), `--gems=N` (default 600, capped by `MAX_GEMS`),
+`--beetles=N` (boulder beetles in the beetle scenario, default 40), `--only=nuke|magnet|beetle|chain` (default: all four, in that order).
 Run **without** `--headless` (it opens a window for a few seconds) - headless uses a dummy renderer and hides GPU/draw costs.
 Run it 2x - single runs are noisy; compare `avg`/`p95` of the same window, the `max` is one frame.
 
+**Pass/fail** - a run is bad if any of these appear (grep them, don't just eyeball the timings):
+- `SCRIPT ERROR` anywhere (a crash signature, e.g. `Out of bounds get index` from the spawner registry)
+- `INVARIANT FAIL` (registry count != active enemies, mines above `MaxMinesFromMeteors`, mine blast bullets alive with no mine left)
+- an exit code other than 0
+
 Windows printed: `idle horde` (crowd right after spawning), `nuke` (`game._on_bomb_taken`), `magnet` (`call_group("XpGem", "attract")`),
-each with engine monitors (process/physics time, node count, draw calls, canvas items, **collision pairs**).
+`beetle` (40 boulder beetles charge the player, then every shell is exploded twice in the same frame), `chain` (12 rocks moved next to the
+ship, 4 broken by hand; rocks / mines / mine-blast bullets sampled each second for 6 s). Each frame window has engine monitors
+(process/physics time, node count, draw calls, canvas items, **collision pairs**).
 
 ## Before / after comparison
 Measure the last commit in a temporary worktree (in the scratchpad). `.import` files are gitignored, so copy them and `.godot`, then import:
@@ -41,6 +49,18 @@ rm -rf "$SP/base"; git worktree prune
 - High `nodes` jumping on kills = something instantiates per death (should come from `Juice` pools).
 - A single huge frame on the very first explosion is a first-use (shader/pipeline) cost - the harness does a warm-up kill to skip it.
 - The remaining crowd cost in god mode is enemies sitting on the player (contact damage timers) - in a real run the player is dead long before.
+- A ~1.2 s `idle horde` frame and an avg of 110-190 ms in that window was a real bug, not normal: bullets never expired, so the rock/mine chain filled the screen (see the regression below). If it comes back, check bullet lifetimes first.
+- Bullet-group areas also belong to bombs (StaticBody2D with no `from_mine`/`is_fragment`). Read such flags with `get("flag")`, not `.flag`, or the harness throws `Invalid access to property`.
+- **Pooled bullet lifetime**: `Bullet` arms its `LifeTimer` in `NOTIFICATION_POST_ENTER_TREE`. Never start a child Timer in `_enter_tree`: Godot prints `Unable to start the timer because it's not inside the scene tree` and the bullet lives forever. Commit 65d1878 moved the start into `_enter_tree` and caused the chain reaction.
+
+### Measured (400 enemies, one run each)
+| window | last commit 65d1878 (bullets never expire) | after timer fix |
+|---|---|---|
+| idle horde avg / max | 110-190 ms / 1.2 s | 9.7 / 48 ms |
+| idle horde nodes | ~7450 | ~7580 |
+| nuke avg / p95 | 2.0 / 4.0 ms | 1.7 / 3.4 ms |
+| nuke nodes | ~1200-1280 | ~940 |
+| magnet avg / p95 | 7.7 / 2.7 ms (one 940 ms frame) | 1.1 / 1.5 ms |
 
 ## Profiling single pieces
 To time a function per call, write a similar `SceneTree` script in the scratchpad: spawn enemies, then loop

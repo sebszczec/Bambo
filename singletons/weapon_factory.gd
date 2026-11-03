@@ -57,6 +57,8 @@ class Weapon:
 	var player_owned = false
 	# set by game logic for the ship's own weapons only (mines and enemies fire the same classes)
 	var is_player_weapon = false
+	# set by the mine that fires this weapon, its bullets pass over rocks
+	var from_mine = false
 	# auto weapons without a target in range do not fire
 	var needs_target = true
 	var extra_projectiles = 0
@@ -136,6 +138,7 @@ class Weapon:
 	func create_bullet(start_position: Vector2, direction: Vector2):
 		var bullet = Bullet.acquire(bullet_scene)
 		bullet.Type = type
+		bullet.from_mine = from_mine
 		bullet.set_collision_mask(collision_mask)
 		# Ricochet Plates: only player shots that hit enemies bounce
 		if can_bounce() and bullet.is_damaging_enemy():
@@ -323,6 +326,7 @@ class SmallBulletWave extends SmallBullet:
 			for i in range (0, bullet_count):
 				var bullet = Bullet.acquire(bullet_scene)
 				bullet.Type = type
+				bullet.from_mine = from_mine
 				bullet.set_collision_mask(collision_mask)
 				bullet.Speed = speed
 				bullet.LifeTime = 1

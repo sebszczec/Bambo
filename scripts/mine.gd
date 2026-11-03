@@ -28,7 +28,9 @@ var floatTextScene = preload("res://scenes/effects/floating_text.tscn")
 
 func _ready() -> void:
 	_world = get_tree().current_scene
+	add_to_group("Mine")
 	_weapon = WeaponFactory.get_weapon(Enums.WEAPONS.SMALL_WAVE, true, true)
+	_weapon.from_mine = true
 	_weapon.set_owner(_world)
 	_weapon.register_internal_nodes(self)
 	_weapon.set_modulate_color(Color.RED)

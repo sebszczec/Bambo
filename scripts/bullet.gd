@@ -25,6 +25,8 @@ const POOL_LIMIT = 256
 static var _pools : Dictionary = {}
 
 var velocity = Vector2(0, 0)
+# set by the weapon: a mine's blast ring, rocks ignore it so a blast cannot start a chain of mines
+var from_mine = false
 var _pool_key = ""
 var _parked = false
 var _defaults = {}
@@ -81,9 +83,10 @@ func _reset() -> void:
 	set_physics_process(true)
 
 
-# every time the bullet enters the tree it is armed: its weapon has set LifeTime by then
-func _enter_tree() -> void:
-	if _pool_key != "":
+# every time the bullet enters the tree it is armed: its weapon has set LifeTime by then.
+# POST_ENTER_TREE, not _enter_tree: a Timer cannot be started until its own node is in the tree
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_POST_ENTER_TREE and _pool_key != "":
 		var timer = get_node("LifeTimer")
 		timer.wait_time = LifeTime
 		timer.start()

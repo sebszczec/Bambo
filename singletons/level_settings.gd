@@ -75,6 +75,7 @@ var _perk_chances : Dictionary = {
 }
 
 var _meteor_mine_chance = 50
+var MaxMinesFromMeteors : int = 6
 
 var _perk_scenes : Dictionary = {
 	Enums.PERKS.LIFE : preload("res://scenes/perks/life_perk.tscn"),
@@ -213,6 +214,9 @@ func get_random_meteor():
 	return _meteor_scenes[randi_range(0, _meteor_scenes.size() - 1)].instantiate()
 	
 func get_random_mine_from_meteor():
+	# a mine blast can break more rocks, which drop more mines: cap the live mines so it cannot snowball
+	if get_tree().get_nodes_in_group("Mine").size() >= MaxMinesFromMeteors:
+		return null
 	if randi_range(0, 99) < _meteor_mine_chance:
 		return _mine_scene.instantiate()
 	return null

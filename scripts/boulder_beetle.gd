@@ -7,7 +7,7 @@ extends EnemyBase
 # Shooting it down first only shatters the shell, no blast. Once the charge has started
 # it cannot be stopped: bullets do nothing and the player has to run.
 
-enum STATE { WALK, CHARGE, BLOWN }
+enum STATE { WALK, CHARGE, BLOWN, SHATTERED }
 
 # walk frames that lead into a Charge animation through a bridge, the switch has no jump
 const EXIT_ANIMATIONS = { 8 : &"ChargeA", 35 : &"ChargeB" }
@@ -206,6 +206,12 @@ func explode():
 	if _state == STATE.CHARGE:
 		_blast_pending = true
 		return
+	# a second bullet in the same physics step still reaches a breaking shell: it dies only once,
+	# killed must be emitted once or the spawner unregisters an id it no longer has
+	if _state == STATE.SHATTERED:
+		return
+	isDead = true
+	_state = STATE.SHATTERED
 	Juice.play_sound(audio)
 	_stop()
 	scan.visible = false
