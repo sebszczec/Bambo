@@ -8,6 +8,18 @@ signal closed
 
 const CLICK_SOUND = preload("res://resources/shared/audio/sfx/Menu Selection Click.wav")
 const FPS_LIMITS = [0, 30, 60, 120, 144, 240]
+const GLOW_BLEND_MODES = [
+	[Environment.GLOW_BLEND_MODE_ADDITIVE, "Additive"],
+	[Environment.GLOW_BLEND_MODE_SOFTLIGHT, "Soft light"],
+	[Environment.GLOW_BLEND_MODE_REPLACE, "Replace"],
+	[Environment.GLOW_BLEND_MODE_MIX, "Mix"],
+]
+const TONEMAP_MODES = [
+	[Environment.TONE_MAPPER_LINEAR, "Linear"],
+	[Environment.TONE_MAPPER_REINHARDT, "Reinhard"],
+	[Environment.TONE_MAPPER_FILMIC, "Filmic"],
+	[Environment.TONE_MAPPER_ACES, "ACES"],
+]
 const VISUAL_OPTIONS = [
 	["show_fps", "Show FPS"],
 	["show_bullets_count", "Show bullets count"],
@@ -72,6 +84,7 @@ func _ready() -> void:
 
 	_add_visuals_page()
 	_add_graphics_page()
+	_add_hdr_page()
 	_add_audio_page()
 	_add_controls_page()
 	_tabs.tab_changed.connect(_on_tab_changed)
@@ -159,6 +172,20 @@ func _new_page(title : String) -> VBoxContainer:
 	return page
 
 
+# a page that scrolls, for the tabs with more rows than the panel shows
+func _new_scroll_page(title : String) -> VBoxContainer:
+	var scroll = ScrollContainer.new()
+	scroll.name = title
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_tabs.add_child(scroll)
+
+	var page = VBoxContainer.new()
+	page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	page.add_theme_constant_override("separation", 10)
+	scroll.add_child(page)
+	return page
+
+
 # a label on the left, the control on the right
 func _row(page : Control, label_text : String, control : Control) -> void:
 	var row = HBoxContainer.new()
@@ -227,7 +254,14 @@ func _add_graphics_page() -> void:
 	fps.item_selected.connect(_on_max_fps_selected)
 	_row(page, "Max FPS", fps)
 
-	# HDR needs a display that can show it, the rest of the HDR options follow the switch
+
+# ---- hdr ----
+
+func _add_hdr_page() -> void:
+	var page = _new_scroll_page("HDR")
+	var graphics = ConfigHandler.load_graphics()
+
+	# HDR needs a display that can show it, the rest of the HDR output options follow the switch
 	var hdr_supported = GameSettings.is_hdr_supported()
 	var hdr = CheckBox.new()
 	hdr.text = "HDR output" if hdr_supported else "HDR output (not supported by this display)"
@@ -236,9 +270,14 @@ func _add_graphics_page() -> void:
 	page.add_child(hdr)
 	_track(hdr)
 
-	var paper_white = _add_slider_row(page, "HDR paper white (nits)", 80, 400, 10, graphics["hdr_paper_white"], " nits", _on_paper_white_changed)
-	paper_white.editable = hdr.button_pressed and hdr_supported
-	hdr.toggled.connect(func(on): paper_white.editable = on)
+	var paper_white = _add_slider_row(page, "Paper white (nits)", 80, 400, 10, graphics["hdr_paper_white"], " nits", _on_paper_white_changed)
+	var peak = _add_slider_row(page, "Peak brightness (nits)", 400, 4000, 100, graphics["hdr_max_luminance"], " nits", _on_max_luminance_changed)
+	var output_sliders = [paper_white, peak]
+	for slider in output_sliders:
+		slider.editable = hdr.button_pressed and hdr_supported
+	hdr.toggled.connect(func(on):
+		for slider in output_sliders:
+			slider.editable = on)
 	hdr.toggled.connect(_on_hdr_toggled)
 
 	var hdr_2d = CheckBox.new()
@@ -247,6 +286,32 @@ func _add_graphics_page() -> void:
 	hdr_2d.toggled.connect(_on_hdr_2d_toggled)
 	page.add_child(hdr_2d)
 	_track(hdr_2d)
+
+	# bloom (glow) and tonemap, the values are copied onto every scene's environment
+	var bloom = CheckBox.new()
+	bloom.text = "Bloom"
+	bloom.button_pressed = graphics["bloom_enabled"]
+	bloom.toggled.connect(_save_graphics.bind("bloom_enabled"))
+	page.add_child(bloom)
+	_track(bloom)
+
+	_add_slider_row(page, "Glow intensity", 0, 2, 0.05, graphics["glow_intensity"], "", _save_graphics.bind("glow_intensity"), 2)
+	_add_slider_row(page, "Glow strength", 0, 2, 0.05, graphics["glow_strength"], "", _save_graphics.bind("glow_strength"), 2)
+	_add_slider_row(page, "Bloom amount", 0, 1, 0.01, graphics["glow_bloom"], "", _save_graphics.bind("glow_bloom"), 2)
+	_add_slider_row(page, "HDR glow threshold", 0, 4, 0.05, graphics["glow_hdr_threshold"], "", _save_graphics.bind("glow_hdr_threshold"), 2)
+	_add_slider_row(page, "HDR glow scale", 0, 4, 0.1, graphics["glow_hdr_scale"], "", _save_graphics.bind("glow_hdr_scale"), 1)
+	_add_slider_row(page, "HDR glow luminance cap", 1, 24, 0.5, graphics["glow_hdr_luminance_cap"], "", _save_graphics.bind("glow_hdr_luminance_cap"), 1)
+
+	var blend = _option_button(GLOW_BLEND_MODES, graphics["glow_blend_mode"])
+	blend.item_selected.connect(func(index): _save_graphics(GLOW_BLEND_MODES[index][0], "glow_blend_mode"))
+	_row(page, "Glow blend mode", blend)
+
+	var tonemap = _option_button(TONEMAP_MODES, graphics["tonemap_mode"])
+	tonemap.item_selected.connect(func(index): _save_graphics(TONEMAP_MODES[index][0], "tonemap_mode"))
+	_row(page, "Tonemap", tonemap)
+
+	_add_slider_row(page, "Tonemap exposure", 0, 4, 0.05, graphics["tonemap_exposure"], "", _save_graphics.bind("tonemap_exposure"), 2)
+	_add_slider_row(page, "Tonemap white", 1, 16, 0.1, graphics["tonemap_white"], "", _save_graphics.bind("tonemap_white"), 1)
 
 
 func _on_window_mode_selected(index : int) -> void:
@@ -274,8 +339,19 @@ func _on_paper_white_changed(value : float) -> void:
 	GameSettings.apply_graphics()
 
 
+func _on_max_luminance_changed(value : float) -> void:
+	ConfigHandler.save_graphics_setting("hdr_max_luminance", value)
+	GameSettings.apply_graphics()
+
+
 func _on_hdr_2d_toggled(toggled_on : bool) -> void:
 	ConfigHandler.save_graphics_setting("hdr_2d", toggled_on)
+	GameSettings.apply_graphics()
+
+
+# one saved graphics value, the key is bound by the caller
+func _save_graphics(value, key : String) -> void:
+	ConfigHandler.save_graphics_setting(key, value)
 	GameSettings.apply_graphics()
 
 
@@ -289,8 +365,9 @@ func _add_audio_page() -> void:
 	_add_slider_row(page, "Music volume", 0, 100, 5, audio["music_volume"], "%", _on_music_volume_changed)
 
 
-# a label, a slider and its value; on_change gets the new value
-func _add_slider_row(page : Control, label_text : String, min_value : float, max_value : float, step : float, value : float, unit : String, on_change : Callable) -> HSlider:
+# a label, a slider and its value; on_change gets the new value, decimals sets how the value is shown
+func _add_slider_row(page : Control, label_text : String, min_value : float, max_value : float, step : float, value : float, unit : String, on_change : Callable, decimals : int = 0) -> HSlider:
+	var format = "%%.%df%%s" % decimals
 	var slider = HSlider.new()
 	slider.min_value = min_value
 	slider.max_value = max_value
@@ -304,10 +381,10 @@ func _add_slider_row(page : Control, label_text : String, min_value : float, max
 	var shown = Label.new()
 	shown.custom_minimum_size.x = 120
 	shown.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	shown.text = "%d%s" % [value, unit]
+	shown.text = format % [value, unit]
 
 	slider.value_changed.connect(func(v : float):
-		shown.text = "%d%s" % [v, unit]
+		shown.text = format % [v, unit]
 		on_change.call(v))
 
 	var row = HBoxContainer.new()
