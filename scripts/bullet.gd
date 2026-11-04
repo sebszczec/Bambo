@@ -78,7 +78,9 @@ func _reset() -> void:
 	var effect = get_node("BulletEffect")
 	effect.scale = _effect_defaults["scale"]
 	effect.self_modulate = _effect_defaults["self_modulate"]
-	effect.restart()
+	# a plain Sprite2D trail (worm spit, mantis shard) has no restart, it is just shown again
+	if effect is GPUParticles2D:
+		effect.restart()
 	visible = true
 	set_physics_process(true)
 

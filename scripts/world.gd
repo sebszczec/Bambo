@@ -33,13 +33,16 @@ func _ready() -> void:
 			layer.add_child(sprite)
 
 func _apply_music() -> void:
+	# the player autoplays the scene track before this runs, a level's own track swaps it
 	var path = Levels.get_current().get("music", "")
-	if path == "":
+	if path != "":
+		_music.stream = load(path)
+		_music.volume_db = Levels.get_current().get("music_db", 0.0)
+	if _music.stream == null:
 		return
-	# the player autoplays the scene track before this runs, swap it and restart
-	var stream = load(path)
 	# *.import files are not committed, so the loop flag can't come from the import settings
-	stream.loop = true
-	_music.stream = stream
-	_music.volume_db = Levels.get_current().get("music_db", 0.0)
+	_music.stream.loop = true
+	# restart on finish as well, so the track keeps going even if the stream ignores the flag
+	if !_music.finished.is_connected(_music.play):
+		_music.finished.connect(_music.play)
 	_music.play()
