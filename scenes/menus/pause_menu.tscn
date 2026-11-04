@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cf76yjmqmhyiw"]
+[gd_scene load_steps=4 format=3 uid="uid://cf76yjmqmhyiw"]
 
 [ext_resource type="Script" uid="uid://c1v3uq5r26kj4" path="res://scripts/pause_menu.gd" id="1_hg4t4"]
 [ext_resource type="AudioStream" uid="uid://b3g3vso8s6i4q" path="res://resources/shared/audio/sfx/Menu Selection Click.wav" id="2_myx47"]
+[ext_resource type="PackedScene" path="res://scenes/menus/options_panel.tscn" id="3_options"]
 
 [node name="PauseMenu" type="Control"]
 process_mode = 3
@@ -49,6 +50,11 @@ theme_override_font_sizes/font_size = 20
 text = "Resume
 "
 
+[node name="OptionsButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Options"
+
 [node name="RestartButton" type="Button" parent="GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
@@ -69,9 +75,15 @@ text = "Quit
 stream = ExtResource("2_myx47")
 volume_db = 10.0
 
+[node name="OptionsPanel" parent="." instance=ExtResource("3_options")]
+visible = false
+
 [connection signal="focus_entered" from="GridContainer/ResumeButton" to="." method="_on_button_focus_changed"]
 [connection signal="mouse_entered" from="GridContainer/ResumeButton" to="." method="_on_resume_button_mouse_entered"]
 [connection signal="pressed" from="GridContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="focus_entered" from="GridContainer/OptionsButton" to="." method="_on_button_focus_changed"]
+[connection signal="mouse_entered" from="GridContainer/OptionsButton" to="." method="_on_options_button_mouse_entered"]
+[connection signal="pressed" from="GridContainer/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="focus_entered" from="GridContainer/QuitButton" to="." method="_on_button_focus_changed"]
 [connection signal="mouse_entered" from="GridContainer/QuitButton" to="." method="_on_quit_button_mouse_entered"]
 [connection signal="pressed" from="GridContainer/QuitButton" to="." method="_on_quit_button_pressed"]

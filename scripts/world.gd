@@ -41,6 +41,7 @@ func _apply_music() -> void:
 	if _music.stream == null:
 		return
 	# *.import files are not committed, so the loop flag can't come from the import settings
+	_music.bus = GameSettings.MUSIC_BUS
 	_music.stream.loop = true
 	# restart on finish as well, so the track keeps going even if the stream ignores the flag
 	if !_music.finished.is_connected(_music.play):

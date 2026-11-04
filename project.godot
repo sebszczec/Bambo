@@ -25,6 +25,7 @@ config/icon="res://icon.svg"
 
 Enums="*res://singletons/enums.gd"
 ConfigHandler="*res://singletons/config_handler.gd"
+GameSettings="*res://singletons/game_settings.gd"
 InputManager="*res://singletons/input_manager.gd"
 WeaponFactory="*res://singletons/weapon_factory.gd"
 LevelSettings="*res://singletons/level_settings.gd"

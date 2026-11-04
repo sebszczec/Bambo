@@ -1,6 +1,9 @@
 extends Control
 
 @onready var resumeButton = $GridContainer/ResumeButton
+@onready var optionsButton = $GridContainer/OptionsButton
+@onready var grid = $GridContainer
+@onready var options = $OptionsPanel
 
 var isPaused = false
 var isPlayerKilled = false
@@ -10,6 +13,7 @@ var player = null
 func _ready() -> void:
 	player = owner.find_child("Player")
 	player.connect("killed", _on_player_killed)
+	options.closed.connect(_close_options)
 
 func setPause(value):
 	if isPlayerKilled:
@@ -18,6 +22,7 @@ func setPause(value):
 	isPaused = value
 	get_tree().paused = isPaused
 	visible = isPaused
+	_hide_options()
 
 	if isPaused:
 		resumeButton.grab_focus()
@@ -29,6 +34,12 @@ func _is_level_up_open() -> bool:
 	return false
 
 func _unhandled_input(event: InputEvent) -> void:
+	# the options panel is closed first, the game stays paused
+	if options.visible and (event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel")):
+		_close_options()
+		get_viewport().set_input_as_handled()
+		return
+
 	if event.is_action_pressed("pause"):
 		# the upgrade cards already pause the game and would unpause it on pick
 		if !isPaused and _is_level_up_open():
@@ -42,6 +53,27 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_resume_button_pressed() -> void:
 	setPause(false)
+
+
+func _on_options_button_pressed() -> void:
+	grid.visible = false
+	options.visible = true
+	options.focus_current()
+
+
+# back in the pause grid, focus returns to the button that opened the panel
+func _close_options() -> void:
+	_hide_options()
+	optionsButton.grab_focus()
+
+
+func _hide_options() -> void:
+	options.visible = false
+	grid.visible = true
+
+
+func _on_options_button_mouse_entered() -> void:
+	optionsButton.grab_focus()
 
 
 func _on_restart_button_pressed() -> void:

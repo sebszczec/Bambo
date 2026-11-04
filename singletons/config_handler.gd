@@ -7,6 +7,13 @@ const INPUT_MODE_AUTO = "auto"
 const INPUT_MODE_GAMEPAD = "gamepad"
 const INPUT_MODE_KEYBOARD_MOUSE = "keyboard_mouse"
 
+const WINDOW_MODE_WINDOWED = "windowed"
+const WINDOW_MODE_FULLSCREEN = "fullscreen"
+const WINDOW_MODE_BORDERLESS = "borderless"
+
+# the pause menu and the settings screen both change these, the game objects listen
+signal visuals_changed
+
 const OLD_USER_DIR_NAME = "Bambo"
 
 # progress (completed levels, meta progression) lives in one file per save slot,
@@ -36,6 +43,18 @@ var _defaults : Dictionary = {
 		"show_damage_given" : true,
 		"show_bullets_count" : true,
 		"show_enemies_count" : true,
+	},
+	"Graphics" : {
+		"window_mode" : WINDOW_MODE_WINDOWED,
+		"vsync" : true,
+		"max_fps" : 0,
+		"hdr_output" : false,
+		"hdr_paper_white" : 200.0,
+		"hdr_2d" : true,
+	},
+	"Audio" : {
+		"master_volume" : 100,
+		"music_volume" : 100,
 	},
 	"Controls" : {
 		"input_mode" : INPUT_MODE_AUTO,
@@ -79,6 +98,15 @@ func _ready() -> void:
 func save_visuals_setting(key : String, value):
 	config.set_value("Visuals", key, value)
 	config.save(SETTINGS_FILE_PATH)
+	visuals_changed.emit()
+
+func save_graphics_setting(key : String, value):
+	config.set_value("Graphics", key, value)
+	config.save(SETTINGS_FILE_PATH)
+
+func save_audio_setting(key : String, value):
+	config.set_value("Audio", key, value)
+	config.save(SETTINGS_FILE_PATH)
 
 func save_controls_setting(key : String, value):
 	config.set_value("Controls", key, value)
@@ -91,6 +119,22 @@ func load_visuals():
 		visuals[key] = config.get_value("Visuals", key)
 
 	return visuals
+
+func load_graphics():
+	var graphics = {}
+
+	for key in config.get_section_keys("Graphics"):
+		graphics[key] = config.get_value("Graphics", key)
+
+	return graphics
+
+func load_audio():
+	var audio = {}
+
+	for key in config.get_section_keys("Audio"):
+		audio[key] = config.get_value("Audio", key)
+
+	return audio
 
 func load_controls():
 	var controls = {}

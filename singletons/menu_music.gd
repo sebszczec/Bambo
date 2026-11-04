@@ -7,6 +7,7 @@ const MENU_TRACK = preload("res://resources/shared/audio/music/Orbital Colossus.
 
 func _ready() -> void:
 	stream = MENU_TRACK
+	bus = GameSettings.MUSIC_BUS
 	# the old per scene AudioStreamPlayer2D sat at the screen corner, ~7 dB quieter
 	volume_db = -7.0
 

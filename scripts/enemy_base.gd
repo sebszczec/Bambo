@@ -56,9 +56,8 @@ func _ready() -> void:
 	set_physics_process(false)
 	call_deferred("skip_frame")
 
-	var visualSettings = ConfigHandler.load_visuals()
-	showDamage = visualSettings["show_damage_given"]
-	lifeBar.visible = _show_life_bar(visualSettings)
+	_apply_visuals()
+	ConfigHandler.visuals_changed.connect(_apply_visuals)
 	lifeBar.setColor(Color.GREEN)
 	lifeBar.setMaxValue(Life)
 	lifeBar.setValue(Life)
@@ -210,6 +209,13 @@ func _on_ready() -> void:
 
 func _show_life_bar(visualSettings: Dictionary) -> bool:
 	return visualSettings["show_enemies_lifebar"]
+
+
+# the pause menu can change these mid run
+func _apply_visuals() -> void:
+	var visualSettings = ConfigHandler.load_visuals()
+	showDamage = visualSettings["show_damage_given"]
+	lifeBar.visible = _show_life_bar(visualSettings)
 
 
 # stop timers, emitters and anything else that belongs to a living body

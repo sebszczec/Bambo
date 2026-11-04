@@ -16,16 +16,21 @@ var meteorCount = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	_apply_visuals()
+	ConfigHandler.visuals_changed.connect(_apply_visuals)
+	meteor_counter.visible = true
+
+# the pause menu can change these mid run
+func _apply_visuals() -> void:
 	var visualSettings = ConfigHandler.load_visuals()
-	
+
 	showFps = visualSettings["show_fps"]
 	showEnemyCount = visualSettings["show_enemies_count"]
 	showBulletCount = visualSettings["show_bullets_count"]
-	
+
 	fps_counter.visible = showFps
 	enemy_counter.visible = showEnemyCount
 	bullet_counter.visible = showBulletCount
-	meteor_counter.visible = true
 
 const FPS_REFRESH = 0.25
 var _fps_time = 0.0

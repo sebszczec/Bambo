@@ -72,12 +72,17 @@ func _ready() -> void:
 	lifeBar.setColor(Color.RED)
 	shieldBar.setColor(Color.DODGER_BLUE)
 
+	_apply_visuals()
+	ConfigHandler.visuals_changed.connect(_apply_visuals)
+	lifeBar.setMaxValue(PlayerStatus.MaxLife)
+	shieldBar.setMaxValue(PlayerStatus.MaxShield)
+
+# the pause menu can change these mid run
+func _apply_visuals() -> void:
 	var visualSettings = ConfigHandler.load_visuals()
 	showLifeBar = visualSettings["show_player_lifebar"]
 	showDamage = visualSettings["show_damage_taken"]
-	lifeBar.setMaxValue(PlayerStatus.MaxLife)
 	lifeBar.visible = showLifeBar
-	shieldBar.setMaxValue(PlayerStatus.MaxShield)
 	shieldBar.visible = showLifeBar
 
 	deathTimer.one_shot = true
