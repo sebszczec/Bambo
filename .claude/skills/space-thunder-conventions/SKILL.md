@@ -41,6 +41,16 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
 - Player finds enemies via `get_tree().get_first_node_in_group("player")` (lowercase group on the player node).
 - Finding a target: `GameLogic.find_enemy_near(pos, range, exclude)` returns the nearest living enemy (skips `isDead`); `find_nearest_enemy()` is the player-centred 1000 px version. Do not loop `active_enemies` by hand.
 - Enemy damage to player: player reads `enemy.Damage`, `enemy.IsDamageOverTime`, `enemy.DamageTickTime` from `area.get_parent()`.
+- **The parent of a hit area is not always an enemy.** Mines sit in group `"Enemy"` without `isDead`, `Life` or `handleDamage`;
+  bombs sit in `"Bullet"` without a `Bullet` base class. Read optional fields with `.get("isDead")` and optional
+  behaviour with `has_method("handleDamage")`; a bare `node.isDead` on an `area.get_parent()` crashes with
+  "Invalid access to property or key". Found by the `crash-audit` skill.
+- **Death is one-shot.** `explode()` does not guard itself; the caller must check `isDead` first (`EnemySpawner.kill()`,
+  `EnemyBase._on_bullet_hit` via `_accepts_hits()`, the burn tick). A second `killed` emit reaches `EnemySpawner.unregister`,
+  which indexes `active_enemies[id]` directly.
+- **Tables keyed by enum** (`LevelSettings._points_dict`, `_xp_dict`, `ENEMY_SCENE_PATHS`, `_perk_scenes`, `DamageValues`,
+  `WeaponFactory.get_weapon`): a new `Enums.ENEMIES` / `PERKS` / `WEAPONS` value must be added to every one, or the first
+  kill / spawn / pick crashes on a missing key. Check the tables in `singletons/level_settings.gd`, `singletons/damage_values.gd` and `singletons/weapon_factory.gd` when adding one.
 - Bullet damage to enemy: `PlayerStatus.get_damage_from_weapon(bullet.Type, self)` (the enemy passes itself as the hit target,
   bosses use `get_boss_damage_from_weapon(bullet.Type, _max_life, self)`); to player: `DamageValues.get_damage(bullet.Type)`.
   Bullets also apply burns (Slag Trails, `PlayerStatus.apply_burn`) and bounce off enemies (Ricochet, `BounceCount`).
@@ -67,5 +77,5 @@ New scripts come with `*.gd.uid` files - commit them together. `.godot/` and `*.
 Edit `.tscn` by hand carefully: keep `[ext_resource]` ids unique, update `load_steps`, keep `uid=` values unique (or omit them for new resources).
 
 ## Related skills
-`add-enemy`, `add-level`, `add-weapon`, `add-upgrade`, `asset-layout` (where art and sound live, moving files safely), `godot-check`, `perf-stress` (frame times for horde / nuke / magnet, before vs after), `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
+`add-enemy`, `add-level`, `add-weapon`, `add-upgrade`, `asset-layout` (where art and sound live, moving files safely), `godot-check`, `crash-audit` (static crash sweep: compile, scene wiring, node paths, risky patterns), `perf-stress` (frame times for horde / nuke / magnet, before vs after), `sprite-animation` (Gemini GIFs / MP4 videos / sprite sheets -> smooth AnimatedSprite2D).
 Visual style per level: `art_level1.md` (level 1, player, pickups, icons) and `art_level2.md` (level 2 rock bugs) in the repo root, used as the Gemini brief.

@@ -293,7 +293,7 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
 		if is_damaging_enemy():
 			if MaxHits > 0:
-				if !area.get_parent().isDead:
+				if !area.get_parent().get("isDead"):
 					_count_rock_hit()
 			elif !Piercing:
 				# Slag Trails: the shot sets the enemy it hits on fire
