@@ -11,7 +11,10 @@ const HUNTER = 2
 const BOSS = 3
 const WORM = 4
 const MITE = 5
-const BEETLE = 6
+const BEETLE = 6   # level 2 Boulder Beetle (guard slot)
+const WASP = 7     # level 2 Shard Wasp (hunter slot)
+const MANTIS = 8   # level 2 Quarry Mantis (mid boss)
+const QUEEN = 9    # level 2 Bedrock Queen (final boss)
 
 var shot = "l1_open"
 var game = null
@@ -154,13 +157,13 @@ func _run():
 			_ring([BEETLE, MITE, MITE], 30, 550, 850)
 			for i in 6:
 				await _wait(1.8)
-				_ring([BEETLE, MITE, HUNTER], 12, 650, 900)
+				_ring([BEETLE, MITE, WASP], 12, 650, 900)
 			await _wait(1.0)
 		"l2_nuke":
 			_stop_waves()
 			_give("w_orbit", 2)
 			_give("w_nova", 1)
-			_ring([MITE, MITE, BEETLE, HUNTER], 260, 350, 900)
+			_ring([MITE, MITE, BEETLE, WASP], 260, 350, 900)
 			await _wait(4.0)
 			game._on_bomb_taken(0)
 			await _wait(3.0)
@@ -170,7 +173,7 @@ func _run():
 			_stop_waves()
 			_kit()
 			await _wait(0.5)
-			game.spawn_boss(WORM)
+			game.spawn_boss(QUEEN)
 			game.boss.global_position = player.global_position + Vector2(-650, 100)
 			_ring([MITE, BEETLE, MITE], 15, 600, 900)
 			boss_floor = 0.3

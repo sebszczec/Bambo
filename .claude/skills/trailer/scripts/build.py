@@ -56,12 +56,12 @@ cards = {
 }
 for name, lines in cards.items():
     glow_text(lines, WORK / f"{name}.png", bg=(0, 0, 0))
-glow_text([("SURVIVE THE SWARM", 54, ACCENT, 560), ("LEVEL 1  FIRST CONTACT    LEVEL 2  ASTEROID SIEGE", 30, CYAN, 650)],
+glow_text([("SURVIVE THE SWARM", 66, ACCENT, 560), ("LEVEL 1  FIRST CONTACT    LEVEL 2  ASTEROID SIEGE", 38, CYAN, 660)],
           WORK / "o_end.png")
 
 SEG = [
     ("card", "c_open", 3.4),
-    ("shot", "l1_open", 0.2, 5.4, 1.0, None),
+    ("shot", "l1_open", 1.0, 5.4, 1.0, None),
     ("shot", "l1_swarm", 2.3, 8.3, 0.55, None),
     ("card", "c_hold", 2.4),
     ("shot", "l1_boss", 0.9, 4.9, 0.55, None),
@@ -73,9 +73,22 @@ SEG = [
     ("shot", "l2_beetle", 3.0, 8.0, 0.55, None),
     ("shot", "l2_worm", 0.8, 3.6, 0.55, None),
     ("shot", "l2_worm", 9.0, 11.2, 0.55, None),
-    ("shot", "l2_nuke", 1.5, 8.6, 0.6, None),
+    ("shot", "l2_nuke", 2.6, 6.6, 0.6, None),
     ("shot", "title", 0.5, 7.0, 0.0, "o_end"),
 ]
+
+# "short" variant: ~27 s cut-down for shorts and feeds, same shots and music logic
+if len(sys.argv) > 2 and sys.argv[2] == "short":
+    OUT = SP / "space_thunder_trailer_short.mp4"
+    SEG = [
+        ("card", "c_open", 2.5),
+        ("shot", "l1_open", 1.0, 5.4, 1.0, None),
+        ("shot", "l1_boss", 0.9, 4.9, 0.55, None),
+        ("card", "c_l2", 2.0),
+        ("shot", "l2_beetle", 3.0, 7.0, 0.55, None),
+        ("shot", "l2_nuke", 2.6, 6.6, 0.6, None),
+        ("shot", "title", 0.5, 7.0, 0.0, "o_end"),
+    ]
 
 parts = []
 for i, seg in enumerate(SEG):
