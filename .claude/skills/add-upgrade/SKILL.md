@@ -36,7 +36,7 @@ _add_stat("carbide", "Carbide Tips", "+12% damage", PERKS + "icon_carbide.png", 
 	func(): PlayerStatus.increase_damage(12), 1)
 ```
 Weapon entries (`_add_weapon`) have no level keys; `_is_available` reads them with `.get()`, so keep that when editing it.
-The level 2 design lives in `level2_bonuses.md` section 5.1 (status per card, "Implemented" / "Not implemented"). When a card is
+The level 2 design lives in `design_doc.md` Appendix B, section 5.1 (status per card, "Implemented" / "Not implemented"). When a card is
 implemented, update its status cell there and the pool rule note below the table.
 
 Level 2 card state at the time of writing: replaced level 1 cards hidden in level 2 = Damage, Precision, Lethality,

@@ -50,7 +50,7 @@ func _build_pool():
 		_apply_max_shield)
 	_add_stat("magnet", "Tractor beam", "+40% pickup radius", PERKS + "icon_tractor.png", 5,
 		func(): PlayerStatus.PickupRadius *= 1.4)
-	# level 2 only (levels.gd index 1): Asteroid Siege stat card, see level2_bonuses.md 5.1
+	# level 2 only (levels.gd index 1): Asteroid Siege stat card, see design_doc.md Appendix B 5.1
 	_add_stat("carbide", "Carbide Tips", "+12% damage", PERKS + "icon_carbide.png", 10,
 		func(): PlayerStatus.increase_damage(12), 1)
 	# level 2 only: Asteroid Siege replacement for Precision
