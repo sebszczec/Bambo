@@ -61,7 +61,7 @@ data = {
 7: {
 "bullet": "res://resources/levels/level2/weapons/tether_rocks/tether_rocks_rock.png",
 "desc": "Boulders circling your ship",
-"desc_up": "Bigger rocks, wider orbit. Lv 6: outer ring",
+"desc_up": "Bigger rocks, wider orbit, harder hits. Lv 6: outer ring",
 "icon": "res://resources/levels/level2/weapons/tether_rocks/tether_rocks_icon.png",
 "title": "Tether Rocks",
 "trail": Color(1.6, 0.9, 0.4, 1)

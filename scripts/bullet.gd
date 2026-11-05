@@ -18,6 +18,15 @@ class_name Bullet
 @export var BounceCount = 0
 # guided bullets turn towards Target by TurnRate radians per physics frame (see _steer)
 @export var TurnRate = 0.07
+# rocks (Tether Rocks): hits before the rock breaks, 0 for every other bullet
+var MaxHits = 0
+var HitsLeft = 0
+# a broken rock is invisible and deals no damage until RespawnIn runs out (counted by the weapon)
+var Spent = false
+var RespawnIn = 0.0
+const ROCK_RESPAWN_TIME = 5.0
+# multiplies the damage of this bullet's hits (see PlayerStatus.get_damage_from_weapon)
+var DamageScale = 1.0
 const BOUNCE_RANGE = 400.0
 const GUIDE_RANGE = 1200.0
 # a guided bullet without a live target searches this often (frames); a dead target is replaced at once
@@ -81,6 +90,12 @@ func _reset() -> void:
 	Guided = false
 	Target = null
 	_retarget_in = 0
+	MaxHits = 0
+	HitsLeft = 0
+	Spent = false
+	RespawnIn = 0.0
+	DamageScale = 1.0
+	modulate = Color.WHITE
 	velocity = Vector2.ZERO
 	rotation = 0.0
 	if _skin_node != null:
@@ -244,7 +259,31 @@ func is_damaging_player() -> bool:
 	return collision_mask & Enums.MASKS.PLAYER == Enums.MASKS.PLAYER
 
 func is_damaging_enemy() -> bool:
-	return collision_mask & Enums.MASKS.ENEMY == Enums.MASKS.ENEMY
+	return !Spent and collision_mask & Enums.MASKS.ENEMY == Enums.MASKS.ENEMY
+
+# public - the damage multiplier of any node in the "Bullet" group (bombs and mantis shards have none)
+static func damage_scale_of(node) -> float:
+	var scale = node.get("DamageScale")
+	return scale if scale != null else 1.0
+
+# public - a rock (Tether Rocks) is armed again with hits hits, full opacity
+func restore_hits(hits : int) -> void:
+	MaxHits = hits
+	HitsLeft = hits
+	Spent = false
+	RespawnIn = 0.0
+	visible = true
+	modulate.a = 1.0
+
+# a rock hit: it fades with every hit and breaks on the last one, then waits to respawn
+func _count_rock_hit() -> void:
+	HitsLeft -= 1
+	if HitsLeft <= 0:
+		Spent = true
+		RespawnIn = ROCK_RESPAWN_TIME
+		visible = false
+	else:
+		modulate.a = float(HitsLeft) / MaxHits
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	# a parked bullet still has its hit box until the deferred park runs
@@ -252,15 +291,19 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 		return
 
 	if area.is_in_group("Enemy"):
-		if is_damaging_enemy() and !Piercing:
-			# Slag Trails: the shot sets the enemy it hits on fire
-			PlayerStatus.apply_burn(area.get_parent(), Type)
-			if PierceCount > 0:
-				PierceCount -= 1
-			elif BounceCount > 0 and _bounce_to_next(area):
-				BounceCount -= 1
-			else:
-				dispose()
+		if is_damaging_enemy():
+			if MaxHits > 0:
+				if !area.get_parent().isDead:
+					_count_rock_hit()
+			elif !Piercing:
+				# Slag Trails: the shot sets the enemy it hits on fire
+				PlayerStatus.apply_burn(area.get_parent(), Type)
+				if PierceCount > 0:
+					PierceCount -= 1
+				elif BounceCount > 0 and _bounce_to_next(area):
+					BounceCount -= 1
+				else:
+					dispose()
 		return
 
 	if area.is_in_group("Player"):

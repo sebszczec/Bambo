@@ -328,7 +328,7 @@ func _flash_hit() -> void:
 
 
 func _damage_from_bullet(bullet):
-	return PlayerStatus.get_boss_damage_from_weapon(bullet.Type, _max_life, self)
+	return PlayerStatus.get_boss_damage_from_weapon(bullet.Type, _max_life, self, Bullet.damage_scale_of(bullet))
 
 
 func _label_position(bullet):

@@ -126,9 +126,10 @@ func get_delay_factor() -> float:
 	return 100.0 / FireRate
 
 # target = the enemy that is hit, needed for Fracture (hits are counted per enemy)
-func get_damage_from_weapon(weapon : Enums.WEAPONS, target = null):
+# scale = the bullet's own damage multiplier (Tether Rocks grow with their level)
+func get_damage_from_weapon(weapon : Enums.WEAPONS, target = null, scale : float = 1.0):
 	var damage = Damage.new()
-	damage.Value = 0.01 * BaseDamage * DamageValues.get_damage(weapon)
+	damage.Value = 0.01 * BaseDamage * DamageValues.get_damage(weapon) * scale
 	damage.Critical = false
 
 	if randf_range(0.0, 100.0) <= CriticalHitChance:
@@ -199,9 +200,9 @@ func _end_burn(target : Node, timer : Timer):
 const BOMB_BOSS_LIFE_PART = 0.1
 const FRACTURE_BONUS = 1.6
 
-func get_boss_damage_from_weapon(weapon : Enums.WEAPONS, max_life, target = null):
+func get_boss_damage_from_weapon(weapon : Enums.WEAPONS, max_life, target = null, scale : float = 1.0):
 	if weapon != Enums.WEAPONS.BOMB:
-		return get_damage_from_weapon(weapon, target)
+		return get_damage_from_weapon(weapon, target, scale)
 
 	var damage = Damage.new()
 	damage.Value = ceili(max_life * BOMB_BOSS_LIFE_PART)

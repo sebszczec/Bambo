@@ -240,7 +240,7 @@ func _flash_hit() -> void:
 
 
 func _damage_from_bullet(bullet):
-	return PlayerStatus.get_damage_from_weapon(bullet.Type, self)
+	return PlayerStatus.get_damage_from_weapon(bullet.Type, self, Bullet.damage_scale_of(bullet))
 
 
 # where the damage number appears, null lets it follow the ship

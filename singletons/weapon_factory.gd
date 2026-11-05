@@ -418,6 +418,9 @@ class Orbit extends Weapon:
 	# level 6 outer ring, turns the other way
 	const OUTER_RADIUS = 190.0
 	const OUTER_SPIN = -3.0
+	# a rock breaks after BASE_HITS + level hits; every level above 1 adds DAMAGE_PER_LEVEL to its damage
+	const BASE_HITS = 3
+	const DAMAGE_PER_LEVEL = 0.25
 
 	var blades : Array = []
 	var outer_blades : Array = []
@@ -449,6 +452,12 @@ class Orbit extends Weapon:
 	func get_outer_count() -> int:
 		return _stats()["outer"]
 
+	func hits_per_rock() -> int:
+		return BASE_HITS + level
+
+	func damage_scale() -> float:
+		return 1.0 + DAMAGE_PER_LEVEL * (level - 1)
+
 	func shoot(_owner: Node, _start_position: Vector2, _direction: Vector2):
 		pass
 
@@ -462,6 +471,17 @@ class Orbit extends Weapon:
 		outer_angle = wrapf(outer_angle + outer_spin * delta, 0, TAU)
 		_place_ring(blades, radius, angle, player)
 		_place_ring(outer_blades, outer_radius, outer_angle, player)
+		_update_rocks(blades, delta)
+		_update_rocks(outer_blades, delta)
+
+	# broken rocks count down to their respawn; every rock deals the damage of the current level
+	func _update_rocks(ring : Array, delta : float):
+		for rock in ring:
+			rock.DamageScale = damage_scale()
+			if rock.Spent:
+				rock.RespawnIn -= delta
+				if rock.RespawnIn <= 0.0:
+					rock.restore_hits(hits_per_rock())
 
 	# adds rocks until the ring holds count of them
 	func _grow_ring(ring : Array, count : int, player : Node2D):
@@ -470,6 +490,7 @@ class Orbit extends Weapon:
 			blade.Speed = 0
 			blade.LifeTime = 100000
 			blade.Piercing = true
+			blade.restore_hits(hits_per_rock())
 			object_owner.add_child(blade)
 			# the level skin paints the rocks (Tether Rocks); without one the blades keep the cyan tint.
 			# set after add_child: the tint node is only ready once the bullet is in the tree
