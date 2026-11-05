@@ -12,6 +12,8 @@ const DEATH_DELAY = 1.2
 const FLOATING_TEXT_SCENE = preload("res://scenes/effects/floating_text.tscn")
 
 @export var Life = 30
+# public - share of incoming damage absorbed, set by the overseer on new spawns
+@export var Armor : float = 0.0
 @export var Knockback = 200
 # public
 @export var Damage = 8
@@ -125,17 +127,19 @@ func explode() -> void:
 
 
 func handleDamage(damage, label_position = null) -> bool:
+	# armour takes a share of the hit, never below 1 so every shot still shows
+	var value = max(1, int(round(damage.Value * (1.0 - Armor))))
 	if showDamage and FloatingText.can_spawn(damage.Critical):
 		var damageText = FLOATING_TEXT_SCENE.instantiate()
 		damageText.RoundNumber = true
 		damageText.Big = damage.Critical
 		damageText.set_color(Color.YELLOW if damage.Critical else Color.WHITE)
-		damageText.Amount = str(damage.Value)
+		damageText.Amount = str(value)
 		add_child(damageText)
 		if label_position != null:
 			damageText.set_global_position(label_position)
 
-	Life = Life - damage.Value
+	Life = Life - value
 	lifeBar.setValue(Life)
 	_on_damage_taken()
 	return Life > 0

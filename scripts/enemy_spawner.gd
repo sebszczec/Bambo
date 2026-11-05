@@ -51,7 +51,10 @@ func spawn(type : Enums.ENEMIES, pos : Vector2, life_factor : float = 1.0):
 
 	# the overseer makes enemies tougher while the screen is too empty
 	if overseer != null:
-		enemy.Life = int(enemy.Life * overseer.toughness())
+		# defence is capped by the player's power, so a strong build keeps winning
+		var defence = overseer.clamp_defence(overseer.toughness(), overseer.armor())
+		enemy.Life = int(enemy.Life * defence.x)
+		enemy.Armor = defence.y
 		enemy.Damage = int(enemy.Damage * overseer.damage_multiplier())
 		if "Speed" in enemy:
 			enemy.Speed = enemy.Speed * (1.0 + (overseer.intensity - 1.0) * 0.1)

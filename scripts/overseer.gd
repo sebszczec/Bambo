@@ -22,6 +22,12 @@ const STRESS_LIFE = 0.35
 const STEP_SIZE = 0.5
 # spawn ring shrinks from 1.0 to this scale at max intensity (950 px -> ~690 px)
 const MIN_DISTANCE_SCALE = 0.72
+# share of player damage absorbed by new spawns at max intensity (0 at base)
+const MAX_ARMOR = 0.3
+# enemy durability (HP x armour) may not exceed this many times the player's power, so
+# a fully upgraded build always kills in a bounded time and the level stays winnable.
+# Pressure beyond that comes as more enemies only.
+const MAX_DURABILITY_PER_POWER = 2.5
 
 var intensity : float = 1.0
 var offscreen_ratio : float = 0.0
@@ -91,3 +97,27 @@ func toughness() -> float:
 # public
 func damage_multiplier() -> float:
 	return 1.0 + (intensity - 1.0) * 0.4
+
+
+# public - fraction of player damage a new spawn absorbs, rises with pressure
+func armor() -> float:
+	var t = clamp((intensity - 1.0) / (MAX_INTENSITY - 1.0), 0.0, 1.0)
+	return MAX_ARMOR * t
+
+
+# public - player damage output against the starting build: 1.0 at start, 2.0 at double the shots and damage
+func power() -> float:
+	var base_crit = 1.0 + PlayerStatus.DEFAULT_CRITICAL_HIT_CHANCE / 100.0 * (PlayerStatus.DEFAULT_CRITICAL_HIT_MULTIPLIER / 100.0 - 1.0)
+	var crit = 1.0 + PlayerStatus.CriticalHitChance / 100.0 * (PlayerStatus.CriticalHitMultiplier / 100.0 - 1.0)
+	return (PlayerStatus.BaseDamage / PlayerStatus.DEFAULT_BASE_DAMAGE) \
+		* (PlayerStatus.FireRate / PlayerStatus.DEFAULT_FIRE_RATE) \
+		* (1.0 + PlayerStatus.ProjectileCount) * (crit / base_crit)
+
+
+# public - keeps toughness and armour inside the power cap, returns [toughness, armour].
+# Armour is cut first; toughness only once armour is gone.
+func clamp_defence(toughness_value : float, armor_value : float) -> Vector2:
+	var cap = MAX_DURABILITY_PER_POWER * power()
+	var armour = min(armor_value, max(0.0, 1.0 - toughness_value / cap))
+	var tough = min(toughness_value, cap * (1.0 - armour))
+	return Vector2(tough, armour)
