@@ -65,8 +65,8 @@ func _build_pool():
 	# level 2 only: Asteroid Siege replacement for Multishot
 	_add_stat("extra_charges", "Extra Charges", "+1 projectile for every weapon", PERKS + "icon_extra_charges.png", 3,
 		func(): PlayerStatus.ProjectileCount += 1, 1)
-	# level 2 only: new card, straight shots bounce to the next enemy
-	_add_stat("ricochet", "Ricochet Plates", "Shots bounce once to the nearest enemy", PERKS + "icon_ricochet.png", 2,
+	# level 2 only: new card, straight shots and drill shells bounce to the next enemy
+	_add_stat("ricochet", "Ricochet Plates", "Straight shots and drill shells bounce to the nearest enemy. Each level: one more bounce", PERKS + "icon_ricochet.png", 2,
 		func(): PlayerStatus.Ricochet += 1, 1)
 	# level 2 only: every 6th hit on an enemy deals +60%, one hit sooner per level
 	_add_stat("fracture", "Fracture", "Every 6th hit on an enemy: +60% damage, 1 hit sooner per level", PERKS + "icon_fracture.png", 4,

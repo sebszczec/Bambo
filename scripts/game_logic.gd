@@ -19,6 +19,7 @@ const CROWDED_ZOOM = 1.0
 
 var XpGemScript = preload("res://scripts/xp_gem.gd")
 var RunHudScript = preload("res://scripts/run_hud.gd")
+var BossIndicatorScript = preload("res://scripts/boss_indicator.gd")
 var DevConsoleScript = preload("res://scripts/dev_console.gd")
 var levelUpMenuScene = preload("res://scenes/menus/level_up_menu.tscn")
 
@@ -48,6 +49,7 @@ var active_enemies : Dictionary:
 
 var spawner : EnemySpawner = null
 var boss = null
+var bossIndicator = null
 var run_over = false
 var kills = 0
 var combo_tracker : ComboTracker = null
@@ -92,6 +94,9 @@ func _ready() -> void:
 
 	hud = RunHudScript.new()
 	add_child(hud)
+	# last in the HUD, so the arrow is drawn over the other panels
+	bossIndicator = BossIndicatorScript.new()
+	hud.add_child(bossIndicator)
 	combo_tracker = ComboTracker.new(hud, phaseBanner)
 	drops = DropService.new(self, Callable(self, "_on_bomb_taken"))
 	meteors = MeteorSpawner.new(world, informationBox)
@@ -312,6 +317,7 @@ func spawn_boss(type : Enums.ENEMIES):
 	bossBar.max_value = boss.Life
 	bossBar.value = boss.Life
 	bossBar.visible = true
+	bossIndicator.set_boss(boss)
 
 # public - dev console, takes percent of the boss max life
 func hurt_boss(percent : float):
@@ -416,6 +422,7 @@ func _on_enemy_killed(id : int):
 func _on_boss_killed():
 	boss = null
 	bossBar.visible = false
+	bossIndicator.set_boss(null)
 	phase_guard.on_boss_killed()
 	Juice.hitstop(0.25, 0.02)
 	Juice.shake(14.0)

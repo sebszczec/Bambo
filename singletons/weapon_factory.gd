@@ -292,6 +292,10 @@ class BigBullet extends Weapon:
 		spread = 0.2
 		extra_projectiles = int(level >= 2) + int(level >= 4) + int(level >= 6)
 
+	# Ricochet Plates: the Drill Cannon's shells bounce (Fireworks shells do not)
+	func can_bounce() -> bool:
+		return type == Enums.WEAPONS.BIG
+
 	func create_bullet(start_position: Vector2, direction: Vector2):
 		var bullet = super.create_bullet(start_position, direction)
 		# the level can make the heavy shells pierce enemies (levels.gd "weapon_skin": pierce, pierce_level)
