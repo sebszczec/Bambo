@@ -13,16 +13,19 @@ Older notes used `D:\Programy\...`, which no longer exists here. Not on PATH. If
 ## Headless validation (preferred after edits)
 Run from the repo root (Bash):
 ```bash
-GODOT="/d/Programy/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
+GODOT="/c/Users/sebsz/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe"
 timeout 180 "$GODOT" --headless --path . --import 2>&1 | grep -E "ERROR|Parse Error|WARNING" \
   | grep -v -e "addons/godot_state_charts" -e "invalid UID" -e "leaked at exit" -e "still in use at exit" | head -50
 ```
 `--import` loads the project, reimports changed assets and compiles every script and autoload, so parse errors, missing `res://` paths and broken `.tscn` references show up as `ERROR` / `SCRIPT ERROR` lines. No output = clean. Takes ~1 min.
 
+**Fresh worktree or fresh clone:** the first run imports everything, and the log then fills with `Failed loading resource`, `Preload file ... has no resource loaders` and `Failed to load script "res://scripts/bullet.gd"` cascades that are not real errors. Run `--import` a second time and read only that run. The `crash-audit` skill does this as step 1.
+
 Filtered noise (always present, harmless): "invalid UID ... using text path instead" (`.import` files are gitignored) and RID/ObjectDB/resource leak messages at exit.
 A brand new texture reports `ERROR: Failed loading resource: res://....png` on the run that first imports it - run `--import` again, only the second run counts.
 Folders with an empty `.gdignore` (e.g. `resources/levels/level1/enemies/worm_boss/source/`) are skipped by Godot - used for source art that the game does not load.
-Known real warning: `scenes/bullet.tscn` references `res://scripts/Bullet.gd` (capital B) - breaks on case-sensitive export platforms until fixed.
+A clean second `--import` run has no `ERROR` or `WARNING` lines (verified on the crash-audit pass). Any such line after it is real.
+For static checks beyond compilation (signal targets, `$Node` paths, unguarded lookups) use the `crash-audit` skill.
 
 Single script:
 ```bash
