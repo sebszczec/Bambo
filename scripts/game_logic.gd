@@ -48,6 +48,8 @@ var active_enemies : Dictionary:
 		return spawner.active_enemies
 
 var spawner : EnemySpawner = null
+# per run, keeps the screen busy when the player clears it (see scripts/overseer.gd)
+var overseer : Overseer = null
 var boss = null
 var bossIndicator = null
 var run_over = false
@@ -101,6 +103,8 @@ func _ready() -> void:
 	drops = DropService.new(self, Callable(self, "_on_bomb_taken"))
 	meteors = MeteorSpawner.new(world, informationBox)
 	spawner = EnemySpawner.new(world, informationBox, phase_guard, player, Callable(self, "_on_enemy_killed"))
+	overseer = Overseer.new()
+	spawner.overseer = overseer
 	levelUpMenu = levelUpMenuScene.instantiate()
 	add_child(levelUpMenu)
 	if OS.is_debug_build():
@@ -243,6 +247,7 @@ func _on_max_shield_changed(value : float):
 	shieldBar.max_value = value
 
 func _on_time_changed(_seconds : int):
+	_update_overseer()
 	hud.set_time(phase_guard.get_time_text())
 	if phase_guard.current_phase == Enums.PHASE.Survival and phase_guard.elapsed >= phase_guard.run_length - 60:
 		hud.set_time_color(Color.RED)
@@ -274,15 +279,17 @@ func _on_difficulty_changed(value : float):
 	phaseBanner.show_text("DIFFICULTY x%0.2f" % value, Color.ORANGE_RED)
 
 func _on_phase_timeout(value):
+	var cap = int(phase_guard.get_max_alive() * overseer.intensity)
 	for step in value:
-		for i in range(step.count):
-			if enemy_count >= phase_guard.get_max_alive():
+		for i in range(overseer.scale(step.count)):
+			if enemy_count >= cap:
 				return
 			spawn_enemy(_level_enemy(step.enemy), get_spawn_position())
 
 func _on_swarm_requested(count : int):
 	phaseBanner.show_text("SWARM INCOMING!", Color.RED)
 	Juice.shake(4.0)
+	count = overseer.scale(count)
 	var start_angle = randf() * TAU
 	for i in range(count):
 		var offset = Vector2(SWARM_RADIUS, 0).rotated(start_angle + i * TAU / count)
@@ -368,6 +375,13 @@ func _on_bomb_taken(_type: Enums.WEAPONS):
 func _on_weapon_bullet_number_change(value):
 	informationBox.setBulletCount(value)
 
+func _update_overseer():
+	var max_hp = PlayerStatus.MaxLife + PlayerStatus.MaxShield
+	var life_fraction = (player.life + player.shield) / max_hp if max_hp > 0.0 else 1.0
+	var fill = float(enemy_count) / max(1.0, phase_guard.get_max_alive() * overseer.intensity)
+	if overseer.tick(phase_guard.elapsed, fill, life_fraction, phase_guard.is_boss_alive()):
+		phaseBanner.show_text("PRESSURE x%0.1f" % overseer.intensity, Color.ORANGE_RED)
+
 # random point on a ring just outside the screen
 func get_spawn_position() -> Vector2:
 	return spawner.spawn_position()
@@ -396,6 +410,7 @@ func _on_enemy_killed(id : int):
 	if run_over:
 		return
 
+	overseer.record_kill(phase_guard.elapsed, enemy.global_position.distance_to(player.global_position))
 	kills += 1
 	hud.set_kills(kills)
 	_add_combo()

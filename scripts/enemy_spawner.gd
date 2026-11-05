@@ -17,6 +17,8 @@ var _info = null
 var _phase_guard = null
 var _player = null
 var _on_killed : Callable
+# set by GameLogic, scales spawn distance and enemy stats with the pressure
+var overseer : Overseer = null
 
 
 func _init(world, info_box, phase_guard, player, on_killed : Callable) -> void:
@@ -46,6 +48,13 @@ func spawn(type : Enums.ENEMIES, pos : Vector2, life_factor : float = 1.0):
 	if _phase_guard.difficulty > 1.0:
 		enemy.Life = int(enemy.Life * _phase_guard.difficulty)
 		enemy.Damage = int(enemy.Damage * _phase_guard.difficulty)
+
+	# the overseer makes enemies tougher while the screen is too empty
+	if overseer != null:
+		enemy.Life = int(enemy.Life * overseer.toughness())
+		enemy.Damage = int(enemy.Damage * overseer.damage_multiplier())
+		if "Speed" in enemy:
+			enemy.Speed = enemy.Speed * (1.0 + (overseer.intensity - 1.0) * 0.1)
 
 	_world.add_child(enemy)
 	enemy.setup_rotation(deg_to_rad(randi_range(0, 360)))
@@ -87,13 +96,16 @@ func kill(enemy) -> bool:
 
 # public - random point on a ring just outside the screen
 func spawn_position() -> Vector2:
+	var scale = overseer.distance_scale() if overseer != null else 1.0
+	var near = SPAWN_MIN_DISTANCE * scale
+	var far = SPAWN_MAX_DISTANCE * scale
 	for i in range(8):
-		var offset = Vector2(randf_range(SPAWN_MIN_DISTANCE, SPAWN_MAX_DISTANCE), 0).rotated(randf() * TAU)
+		var offset = Vector2(randf_range(near, far), 0).rotated(randf() * TAU)
 		var pos = _player.global_position + offset
 		if pos.x > LevelSettings.MinX and pos.x < LevelSettings.MaxX and pos.y > LevelSettings.MinY and pos.y < LevelSettings.MaxY:
 			return pos
 
-	return clamp_to_level(_player.global_position + Vector2(SPAWN_MIN_DISTANCE, 0).rotated(randf() * TAU))
+	return clamp_to_level(_player.global_position + Vector2(near, 0).rotated(randf() * TAU))
 
 
 # public
