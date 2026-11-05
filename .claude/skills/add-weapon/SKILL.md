@@ -38,6 +38,21 @@ Rules:
 - Burn hook: every player bullet hit on an enemy in `bullet.gd` calls `PlayerStatus.apply_burn(area.get_parent(), Type)`
   (Slag Trails, no-op at level 0). New player bullets get this automatically through the same handler; bullets that
   bypass `_on_hit_box_area_entered` do not burn.
+- Guided shots (homing rockets): `bullet.gd` steers a bullet with `Guided = true` towards `Target` by `TurnRate`
+  (0.07 rad per physics frame, exported). Contract:
+  - A target that is dead (`isDead`) or freed is replaced **at once** by the nearest living enemy to the bullet
+    (`GameLogic.find_enemy_near(pos, GUIDE_RANGE = 1200)`). With no enemy in range the bullet flies straight and searches
+    again every `RETARGET_FRAMES` (8) frames, so a rocket picks up enemies that come into range later.
+  - A bounce (Ricochet) moves `Target` to the enemy it bounced to, so guidance stays on the new enemy.
+  - Pooling: `_reset()` clears `Guided`, `Target`, `TurnRate` and the search timer. A new guided weapon must set `Guided` (and
+    optionally `Target`) **after** `create_bullet()`, never in `setup()`.
+  - Current users: `SmallHomingBullet` (`Guided` from `create_bullet`, so it guides from the start) and
+    `SmallHomingBulletWithDelay` (flies straight 0.1 s, then `Guided` on its lock-on timer).
+  - Need a new target finder? Use `GameLogic.find_enemy_near(pos, range, exclude)`. It skips dead enemies; do not scan
+    `active_enemies` by hand.
+  - Verify with a scene test (see `godot-check`, "Headless unit checks"): a fake `GameLogic` in group `GameLogic` with
+    `active_enemies` and `find_enemy_near`, kill the target, check `Target` changes within a frame. A `--script` test cannot load
+    `bullet.gd` (it references the `PlayerStatus` autoload), so attach the test to a temporary scene and run it as the main scene.
 
 ## 3a. Player weapon - offer it on level up
 `singletons/upgrades.gd` `_build_pool()`:

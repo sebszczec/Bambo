@@ -285,7 +285,8 @@ func _on_swarm_requested(count : int):
 
 func _on_elite_requested():
 	phaseBanner.show_text("ELITE INCOMING", Color.MAGENTA)
-	var elite = spawn_enemy(Enums.ENEMIES.GUARD, get_spawn_position(), ELITE_LIFE_FACTOR)
+	# the elite is a level enemy too (level 2: the guard becomes a boulder beetle)
+	var elite = spawn_enemy(_level_enemy(Enums.ENEMIES.GUARD), get_spawn_position(), ELITE_LIFE_FACTOR)
 	elite.scale = Vector2(ELITE_SCALE, ELITE_SCALE)
 	elite.modulate = Color(1.6, 0.6, 1.6)
 	spawner.elites[elite.get_instance_id()] = true
@@ -330,6 +331,10 @@ func _kill_enemy(enemy) -> bool:
 	return spawner.kill(enemy)
 
 func _on_boss_spawn_requested(type : Enums.ENEMIES, pos : Vector2):
+	# the boss is hit inside a physics callback, new bodies must wait for the flush to end
+	_spawn_boss_minion.call_deferred(type, pos)
+
+func _spawn_boss_minion(type : Enums.ENEMIES, pos : Vector2):
 	if enemy_count >= phase_guard.get_max_alive() + BOSS_EXTRA_ALIVE:
 		return
 	spawn_enemy(_level_enemy(type), pos)
@@ -491,13 +496,20 @@ func addPerk(pos : Vector2) -> bool:
 func drop_perk(type : Enums.PERKS, pos : Vector2):
 	drops.drop_perk(type, pos)
 
+# public - nearest living enemy to the player, within 1000 px
 func find_nearest_enemy():
+	return find_enemy_near(player.global_position, 1000.0)
+
+# public - nearest living enemy to pos within max_range, exclude is skipped (a bounce keeps off the enemy it left)
+func find_enemy_near(pos : Vector2, max_range : float, exclude = null):
 	var result = null
-	var tmp = 1000000 # max distance 1000 px
+	var best = max_range * max_range
 	for enemy in active_enemies.values():
-		var distance = player.position.distance_squared_to(enemy.position)
-		if distance < tmp:
-			tmp = distance
+		if enemy == exclude or enemy.isDead:
+			continue
+		var distance = pos.distance_squared_to(enemy.global_position)
+		if distance < best:
+			best = distance
 			result = enemy
 
 	return result

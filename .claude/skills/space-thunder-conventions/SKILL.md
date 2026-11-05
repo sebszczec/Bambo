@@ -13,7 +13,7 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
 - `singletons/` - autoloads (registered in `project.godot` `[autoload]`):
   - `Enums` - `WEAPONS`, `PERKS`, `ENEMIES`, `MASKS {PLAYER=1, ENEMY=8}`, `PHASE`.
   - `LevelSettings` - level bounds, points/xp per enemy kind, floor-perk drop chances (per 1000), enemy scenes loaded per level (`activate_level`), preloaded perks/meteors/gems.
-  - Reuse layer: `scripts/enemy_base.gd` (`EnemyBase`), `scripts/boss_base.gd` (`BossBase`), `scripts/bullet.gd` (pooled per scene, `Bullet.acquire`), `scripts/enemy_spawner.gd` (registry, spawn, kills), `scripts/drop_service.gd`, `scripts/combo_tracker.gd`, `scripts/meteor_spawner.gd`, `scripts/level_def.gd` (level data resources).
+  - Reuse layer: `scripts/enemy_base.gd` (`EnemyBase`), `scripts/boss_base.gd` (`BossBase`), `scripts/bullet.gd` (pooled per scene, `Bullet.acquire`; guided shots steer to `Target`, retarget when it dies, see `add-weapon`), `scripts/enemy_spawner.gd` (registry, spawn, kills), `scripts/drop_service.gd`, `scripts/combo_tracker.gd`, `scripts/meteor_spawner.gd`, `scripts/level_def.gd` (level data resources).
   - Scenes live in folders by owner: `scenes/levels/level1|level2`, `scenes/menus`, `scenes/perks`, `scenes/effects`, `scenes/shared`.
   - `DamageValues` - min/max damage per `Enums.WEAPONS`.
   - `WeaponFactory` - `get_weapon(type, damaging_player, damaging_enemy)` + all weapon classes (inner classes of `Weapon`).
@@ -39,6 +39,7 @@ Addon: `addons/godot_state_charts` (third-party, do not edit).
 - Bodies: enemy and boss `CharacterBody2D` use `collision_layer = 8`, `collision_mask = 2` (rocks only). The player body
   (layer 1, mask 2) does not collide with enemies; an enemy masking layer 1 gets pushed along by the player and looks glued to it.
 - Player finds enemies via `get_tree().get_first_node_in_group("player")` (lowercase group on the player node).
+- Finding a target: `GameLogic.find_enemy_near(pos, range, exclude)` returns the nearest living enemy (skips `isDead`); `find_nearest_enemy()` is the player-centred 1000 px version. Do not loop `active_enemies` by hand.
 - Enemy damage to player: player reads `enemy.Damage`, `enemy.IsDamageOverTime`, `enemy.DamageTickTime` from `area.get_parent()`.
 - Bullet damage to enemy: `PlayerStatus.get_damage_from_weapon(bullet.Type, self)` (the enemy passes itself as the hit target,
   bosses use `get_boss_damage_from_weapon(bullet.Type, _max_life, self)`); to player: `DamageValues.get_damage(bullet.Type)`.

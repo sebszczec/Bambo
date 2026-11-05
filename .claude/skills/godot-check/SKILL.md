@@ -5,9 +5,10 @@ description: Validate the Space Thunder Godot project headlessly - parse all GDS
 
 # Checking and running the project
 
-Godot binary (4.7.2, console build prints to stdout):
-`D:\Programy\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-(the `.exe` part of the first path is a folder). Not on PATH. If it is missing, ask the user for the Godot path.
+Godot binary (4.7.2, console build prints to stdout). On this machine it is at
+`C:\Users\sebsz\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
+(the `.exe` part of the path is a folder). Bash form: `/c/Users/sebsz/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe`.
+Older notes used `D:\Programy\...`, which no longer exists here. Not on PATH. If neither path works, ask the user for the Godot path.
 
 ## Headless validation (preferred after edits)
 Run from the repo root (Bash):
@@ -80,6 +81,14 @@ For logic that does not need a playable scene (pool filtering, PlayerStatus effe
   Real enemy scenes need a player and a game scene; without them they throw `global_position` errors on every physics frame
   and the run never finishes (killed by `timeout`).
 - Do the timing with `await create_timer(t).timeout` in `_run()`, and `quit(0 / 1)` at the end so the exit code shows the result.
+- A `--script` test cannot load any script that uses an autoload: `scripts/bullet.gd` (uses `PlayerStatus`) fails with
+  `Compile Error: Identifier not found: PlayerStatus`. For those, use a scene test instead:
+  1. `res://_<name>.gd` as `extends Node`, the test runs from `_ready()` with `await get_tree().physics_frame` between checks
+     (`func frames(k)` helper), and ends with `get_tree().quit(0 or 1)`.
+  2. `res://_<name>.tscn` with one `Node` root that has the script (`[gd_scene load_steps=2 format=3]`, `[ext_resource ... id="1"]`, `script = ExtResource("1")`).
+  3. Run `"$GODOT" --headless --path . res://_<name>.tscn 2>&1 | grep -E "^(ok|FAIL|RESULT)|SCRIPT ERROR"`, then delete
+     both files and the `.gd.uid`. The autoloads work here, and the fake enemies can be `Node2D`s with `isDead`.
+- Example that passed: the guided bullet check (kill a target, `Target` moves to the next enemy within a frame) used this recipe.
 
 ## Performance
 Frame-time measurements (horde, nuke, magnet, before vs after a change): use the `perf-stress` skill.

@@ -171,7 +171,8 @@ func apply_burn(target : Node, weapon : Enums.WEAPONS):
 	timer.start()
 
 func _burn_tick(target : Node, timer : Timer):
-	if !is_instance_valid(target) or target.is_queued_for_deletion() or target.get("Life") <= 0:
+	# a dying enemy (nuke, dev kill) is already reported, the burn must not explode it again
+	if !is_instance_valid(target) or target.is_queued_for_deletion() or target.get("isDead") or target.get("Life") <= 0:
 		_end_burn(target, timer)
 		return
 	target.set_meta("burn_ticks", target.get_meta("burn_ticks") - 1)

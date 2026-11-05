@@ -237,9 +237,11 @@ class SmallHomingBullet extends SmallBullet:
 		else:
 			super.shoot(owner, start_position, direction)
 
+	# rockets steer to the nearest living enemy, and to another one when their target dies
 	func create_bullet(start_position: Vector2, direction: Vector2):
 		var bullet = super.create_bullet(start_position, direction)
 		apply_rocket_look(bullet)
+		bullet.Guided = true
 		return bullet
 
 class SmallHomingBulletWithDelay extends SmallBullet:
@@ -269,11 +271,13 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 
 			updateBulletNumber(1)
 
+	# the rocket flies straight for a moment, then locks on and guides like the other rockets
 	func _homing_timer_on_timeout(bullet):
-		var enemy = object_owner.find_nearest_enemy()
+		bullet.Guided = true
+		var enemy = object_owner.find_enemy_near(bullet.global_position, Bullet.GUIDE_RANGE)
 		if enemy != null:
 			enemy.set_mark()
-			bullet.velocity = enemy.position - bullet.position
+			bullet.Target = enemy
 
 class BigBullet extends Weapon:
 	func setup():

@@ -16,7 +16,12 @@ class_name Bullet
 @export var PierceCount = 0
 # bounces left: after an enemy hit the bullet turns to the nearest other enemy (Ricochet Plates, level 2)
 @export var BounceCount = 0
+# guided bullets turn towards Target by TurnRate radians per physics frame (see _steer)
+@export var TurnRate = 0.07
 const BOUNCE_RANGE = 400.0
+const GUIDE_RANGE = 1200.0
+# a guided bullet without a live target searches this often (frames); a dead target is replaced at once
+const RETARGET_FRAMES = 8
 const POOL_LIMIT = 256
 
 @onready var lifeTimer = $LifeTimer
@@ -33,6 +38,10 @@ var _defaults = {}
 var _effect_defaults = {}
 var _sprite_visibility = []
 var _skin_node = null
+# set by the weapon: a guided bullet steers to its Target, and looks for a new one when it dies
+var Guided = false
+var Target = null
+var _retarget_in = 0
 
 signal freeing
 
@@ -53,7 +62,7 @@ static func acquire(scene : PackedScene) -> Bullet:
 
 # the scene's own values, read before any weapon configures the bullet
 func _capture_defaults() -> void:
-	_defaults = {"Speed": Speed, "LifeTime": LifeTime, "Piercing": Piercing, "PierceCount": PierceCount, "BounceCount": BounceCount}
+	_defaults = {"Speed": Speed, "LifeTime": LifeTime, "Piercing": Piercing, "PierceCount": PierceCount, "BounceCount": BounceCount, "TurnRate": TurnRate}
 	var effect = get_node("BulletEffect")
 	_effect_defaults = {"scale": effect.scale, "self_modulate": effect.self_modulate}
 	for child in get_children():
@@ -68,6 +77,10 @@ func _reset() -> void:
 	Piercing = _defaults["Piercing"]
 	PierceCount = _defaults["PierceCount"]
 	BounceCount = _defaults["BounceCount"]
+	TurnRate = _defaults["TurnRate"]
+	Guided = false
+	Target = null
+	_retarget_in = 0
 	velocity = Vector2.ZERO
 	rotation = 0.0
 	if _skin_node != null:
@@ -104,11 +117,40 @@ func _physics_process(_delta):
 	if Speed == 0:
 		return
 
+	if Guided:
+		_steer()
 	rotation = PI / 2 + atan2(velocity.y, velocity.x)
 	velocity = velocity.normalized() * Speed
 	# no move_and_collide - hits are found by the HitBox areas, a physical stop on
 	# a body bigger than its hit box (boss capsule) left bullets stuck on its hull
 	global_position += velocity
+
+# turns towards the target, at most TurnRate per frame. A dead or freed target is replaced at once,
+# without one the bullet searches every RETARGET_FRAMES and flies straight meanwhile
+func _steer() -> void:
+	if !_has_live_target():
+		if Target != null or _retarget_in <= 0:
+			Target = _find_target()
+			_retarget_in = RETARGET_FRAMES
+		else:
+			_retarget_in -= 1
+	if Target == null:
+		return
+
+	var turn = wrapf((Target.global_position - global_position).angle() - velocity.angle(), -PI, PI)
+	velocity = velocity.rotated(clamp(turn, -TurnRate, TurnRate))
+
+
+func _has_live_target() -> bool:
+	return Target != null and is_instance_valid(Target) and !Target.isDead and !Target.is_queued_for_deletion()
+
+
+func _find_target():
+	var game = get_tree().get_first_node_in_group("GameLogic")
+	if game == null:
+		return null
+	return game.find_enemy_near(global_position, GUIDE_RANGE)
+
 
 func set_modulate_color(color : Color):
 	bolid.self_modulate = color
@@ -163,18 +205,11 @@ func _bounce_to_next(hit: Area2D) -> bool:
 	var game = get_tree().get_first_node_in_group("GameLogic")
 	if game == null:
 		return false
-	var hit_enemy = hit.get_parent()
-	var best = null
-	var best_distance = BOUNCE_RANGE
-	for enemy in game.active_enemies.values():
-		if enemy == hit_enemy or enemy.isDead:
-			continue
-		var distance = global_position.distance_to(enemy.global_position)
-		if distance < best_distance:
-			best_distance = distance
-			best = enemy
+	var best = game.find_enemy_near(global_position, BOUNCE_RANGE, hit.get_parent())
 	if best == null:
 		return false
+	# a guided bullet keeps guiding on the enemy it bounced to
+	Target = best
 	velocity = (best.global_position - global_position).normalized() * velocity.length()
 	return true
 

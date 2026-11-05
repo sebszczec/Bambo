@@ -34,6 +34,8 @@ func level_enemy(type : Enums.ENEMIES) -> Enums.ENEMIES:
 
 # public
 func spawn(type : Enums.ENEMIES, pos : Vector2, life_factor : float = 1.0):
+	# a spawn path skipped level_enemy(): the other level's enemy would be loaded
+	assert(LevelSettings.is_level_enemy(type), "enemy %d is not part of the active level" % type)
 	var enemy = LevelSettings.get_enemy(type)
 	active_enemies[enemy.get_instance_id()] = enemy
 	enemy.connect("killed", _on_killed)

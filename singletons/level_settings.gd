@@ -183,6 +183,11 @@ func activate_level(index : int) -> void:
 				ResourceLoader.load_threaded_request(path)
 
 
+# public - true when the enemy belongs to the level that is loaded (see activate_level)
+func is_level_enemy(enemy : Enums.ENEMIES) -> bool:
+	return _active_level >= 0 and _active_level < LEVEL_ENEMIES.size() and LEVEL_ENEMIES[_active_level].has(enemy)
+
+
 func _is_enemy_of_level(path : String, index : int) -> bool:
 	if index < 0 or index >= LEVEL_ENEMIES.size():
 		return false
