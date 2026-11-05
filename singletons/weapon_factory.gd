@@ -226,7 +226,7 @@ class SmallHomingBullet extends SmallBullet:
 	func apply_level():
 		shooting_delay = 1.2 * pow(0.85, level - 1)
 		speed = 9
-		life_time = 1.5
+		life_time = 3.5
 		spread = 0.35
 		extra_projectiles = level - 1
 
@@ -249,7 +249,7 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 		super.setup()
 		shooting_delay = 0.2
 		speed = 10
-		life_time = 1
+		life_time = 3
 		type = Enums.WEAPONS.SMALL_HOMING_WIHT_DELAY
 
 	func shoot(owner: Node, start_position: Vector2, direction: Vector2):
@@ -274,10 +274,10 @@ class SmallHomingBulletWithDelay extends SmallBullet:
 	# the rocket flies straight for a moment, then locks on and guides like the other rockets
 	func _homing_timer_on_timeout(bullet):
 		bullet.Guided = true
-		var enemy = object_owner.find_enemy_near(bullet.global_position, Bullet.GUIDE_RANGE)
+		var enemy = bullet.find_free_target()
 		if enemy != null:
 			enemy.set_mark()
-			bullet.Target = enemy
+			bullet.lock_on(enemy)
 
 class BigBullet extends Weapon:
 	func setup():

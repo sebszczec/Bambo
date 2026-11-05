@@ -500,12 +500,13 @@ func drop_perk(type : Enums.PERKS, pos : Vector2):
 func find_nearest_enemy():
 	return find_enemy_near(player.global_position, 1000.0)
 
-# public - nearest living enemy to pos within max_range, exclude is skipped (a bounce keeps off the enemy it left)
-func find_enemy_near(pos : Vector2, max_range : float, exclude = null):
+# public - nearest living enemy to pos within max_range, exclude is skipped (a bounce keeps off the enemy it left),
+# skip_claimed leaves out enemies another rocket is locked on (bosses are never skipped)
+func find_enemy_near(pos : Vector2, max_range : float, exclude = null, skip_claimed : bool = false):
 	var result = null
 	var best = max_range * max_range
 	for enemy in active_enemies.values():
-		if enemy == exclude or enemy.isDead:
+		if enemy == exclude or enemy.isDead or (skip_claimed and Bullet.is_claimed(enemy)):
 			continue
 		var distance = pos.distance_squared_to(enemy.global_position)
 		if distance < best:

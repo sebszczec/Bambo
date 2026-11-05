@@ -130,7 +130,7 @@ func _physics_process(_delta):
 func _steer() -> void:
 	if !_has_live_target():
 		if Target != null or _retarget_in <= 0:
-			Target = _find_target()
+			lock_on(find_free_target())
 			_retarget_in = RETARGET_FRAMES
 		else:
 			_retarget_in -= 1
@@ -145,11 +145,37 @@ func _has_live_target() -> bool:
 	return Target != null and is_instance_valid(Target) and !Target.isDead and !Target.is_queued_for_deletion()
 
 
-func _find_target():
+# public - nearest living enemy in range that no other rocket is locked on, bosses can be shared
+func find_free_target():
 	var game = get_tree().get_first_node_in_group("GameLogic")
 	if game == null:
 		return null
-	return game.find_enemy_near(global_position, GUIDE_RANGE)
+	return game.find_enemy_near(global_position, GUIDE_RANGE, null, true)
+
+
+# public - locks the rocket on an enemy (null drops the lock), the claim keeps other rockets off it
+func lock_on(enemy) -> void:
+	if enemy == Target:
+		return
+	_release_target()
+	Target = enemy
+	if enemy != null and !is_claimed_by_boss(enemy):
+		enemy.set_meta("rocket_claims", enemy.get_meta("rocket_claims", 0) + 1)
+
+
+# drops the claim on the current target, the rocket no longer counts on it
+func _release_target() -> void:
+	if Target != null and is_instance_valid(Target) and !is_claimed_by_boss(Target):
+		Target.set_meta("rocket_claims", max(0, Target.get_meta("rocket_claims", 0) - 1))
+
+
+# public - an enemy already claimed by a rocket is skipped when looking for a target (bosses excepted)
+static func is_claimed(enemy) -> bool:
+	return !is_claimed_by_boss(enemy) and enemy.get_meta("rocket_claims", 0) > 0
+
+
+static func is_claimed_by_boss(enemy) -> bool:
+	return enemy is BossBase
 
 
 func set_modulate_color(color : Color):
@@ -175,6 +201,7 @@ func dispose():
 	if _parked or is_queued_for_deletion():
 		return
 
+	_release_target()
 	_parked = true
 	freeing.emit(self)
 	if _pool_key == "":
@@ -209,7 +236,7 @@ func _bounce_to_next(hit: Area2D) -> bool:
 	if best == null:
 		return false
 	# a guided bullet keeps guiding on the enemy it bounced to
-	Target = best
+	lock_on(best)
 	velocity = (best.global_position - global_position).normalized() * velocity.length()
 	return true
 

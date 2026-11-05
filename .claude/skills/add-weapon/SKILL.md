@@ -44,6 +44,11 @@ Rules:
     (`GameLogic.find_enemy_near(pos, GUIDE_RANGE = 1200)`). With no enemy in range the bullet flies straight and searches
     again every `RETARGET_FRAMES` (8) frames, so a rocket picks up enemies that come into range later.
   - A bounce (Ricochet) moves `Target` to the enemy it bounced to, so guidance stays on the new enemy.
+  - Claims: rockets must not share a target, except bosses. `bullet.lock_on(enemy)` puts a `rocket_claims` count on the
+    enemy meta, and it is released when the rocket retargets or is disposed. Target search uses `find_free_target()`
+    (`find_enemy_near(..., skip_claimed = true)`), so a claimed enemy is skipped. A rocket with no free enemy flies straight
+    and keeps searching. Always set targets through `lock_on()`, never `Target = ...` directly.
+  - Lifetime: `SmallHomingBullet` 3.5 s, `SmallHomingBulletWithDelay` 3 s (`life_time`, set before `add_child`).
   - Pooling: `_reset()` clears `Guided`, `Target`, `TurnRate` and the search timer. A new guided weapon must set `Guided` (and
     optionally `Target`) **after** `create_bullet()`, never in `setup()`.
   - Current users: `SmallHomingBullet` (`Guided` from `create_bullet`, so it guides from the start) and
