@@ -136,7 +136,9 @@ func flash(item : CanvasItem, duration : float = 0.07):
 func is_flashing(item : CanvasItem) -> bool:
 	return _flashing.has(item.get_instance_id())
 
-func _end_flash(item : CanvasItem, id : int):
+# item is untyped on purpose - it can be freed while the timer runs and a typed
+# argument would make the bound call fail before is_instance_valid can check it
+func _end_flash(item, id : int):
 	if !_flashing.has(id):
 		return
 
