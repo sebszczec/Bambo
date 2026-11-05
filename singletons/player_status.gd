@@ -11,8 +11,10 @@ var FireRate : float = 100
 var ProjectileCount : int = 0
 # bounces of straight player shots after an enemy hit (Ricochet Plates)
 var Ricochet : int = 0
-# Fracture level: every (7 - Fracture)th hit on an enemy deals FRACTURE_BONUS (Fracture card)
+# Fracture level: every (7 - Fracture)th hit on any enemy deals FRACTURE_BONUS (Fracture card)
 var Fracture : int = 0
+# enemy hits counted for Fracture, across all enemies
+var FractureHits : int = 0
 # Slag Trails level: shots burn the enemy they hit for Slag * 15 % of the hit damage over 2 s
 var Slag : int = 0
 var Armor : float = 0
@@ -61,6 +63,7 @@ func reset():
 	ProjectileCount = 0
 	Ricochet = 0
 	Fracture = 0
+	FractureHits = 0
 	Slag = 0
 	Armor = 0
 	Regen = 0
@@ -125,7 +128,7 @@ func increase_max_shield(value : float):
 func get_delay_factor() -> float:
 	return 100.0 / FireRate
 
-# target = the enemy that is hit, needed for Fracture (hits are counted per enemy)
+# target = the enemy that is hit, a hit on an enemy counts towards Fracture
 # scale = the bullet's own damage multiplier (Tether Rocks grow with their level)
 func get_damage_from_weapon(weapon : Enums.WEAPONS, target = null, scale : float = 1.0):
 	var damage = Damage.new()
@@ -136,11 +139,10 @@ func get_damage_from_weapon(weapon : Enums.WEAPONS, target = null, scale : float
 		damage.Value *= 0.01 * CriticalHitMultiplier
 		damage.Critical = true
 
-	# Fracture: every hit-th hit on the same enemy deals +60 % (hit = 7 - Fracture, so 6 at level 1, 3 at level 4)
+	# Fracture: every hit-th hit on any enemy deals +60 % (hit = 7 - Fracture, so 6 at level 1, 3 at level 4)
 	if target != null and Fracture > 0:
-		var hits = target.get_meta("fracture_hits", 0) + 1
-		target.set_meta("fracture_hits", hits)
-		if hits % (7 - Fracture) == 0:
+		FractureHits += 1
+		if FractureHits % (7 - Fracture) == 0:
 			damage.Value *= FRACTURE_BONUS
 
 	return damage

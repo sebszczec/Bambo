@@ -68,8 +68,8 @@ func _build_pool():
 	# level 2 only: new card, straight shots and drill shells bounce to the next enemy
 	_add_stat("ricochet", "Ricochet Plates", "Straight shots and drill shells bounce to the nearest enemy. Each level: one more bounce", PERKS + "icon_ricochet.png", 3,
 		func(): PlayerStatus.Ricochet += 1, 1)
-	# level 2 only: every 6th hit on an enemy deals +60%, one hit sooner per level
-	_add_stat("fracture", "Fracture", "Every 6th hit on an enemy: +60% damage, 1 hit sooner per level", PERKS + "icon_fracture.png", 4,
+	# level 2 only: every 6th hit on any enemy deals +60%, one hit sooner per level
+	_add_stat("fracture", "Fracture", "Every 6th enemy hit: +60% damage, 1 hit sooner per level", PERKS + "icon_fracture.png", 4,
 		func(): PlayerStatus.Fracture += 1, 1)
 	# level 2 only: shots burn the enemy they hit for 15 % of the hit damage per level, over 2 s
 	_add_stat("slag", "Slag Trails", "Shots burn enemies: 15% of hit damage over 2 s per level", PERKS + "icon_slag_trails.png", 4,
